@@ -1,0 +1,4 @@
+date,tool,items_committed,items_delivered,setup_minutes_before,setup_minutes_after,config_errors_before,config_errors_after,cross_tasks
+2026-03-30,HIL regression harness,3,2,45,45,12,12,1
+2026-06-30,Config diff tool,3,3,45,34,12,7,3
+2026-08-24,Session log automation,3,2,38,22,7,3,4

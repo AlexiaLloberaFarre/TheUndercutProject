@@ -1,0 +1,37 @@
+{
+  "role": "Simulator Control Systems Engineer",
+  "group": "Controls & Systems Group (CSG)",
+  "note": "Accountability wording is a condensed paraphrase of the role's eight key accountabilities as described in the framework brief. Confirm against the actual job description before sharing.",
+  "accountabilities": [
+    {"id": "A1", "short": "Reliable DIL chassis control systems", "text": "Deliver reliable, performant on-car chassis control systems within the driver-in-the-loop simulator."},
+    {"id": "A2", "short": "SECU release packages", "text": "Prepare and manage SECU software release packages for simulator events, including calibrations, logging configuration and version control."},
+    {"id": "A3", "short": "Guidance to drivers & engineers", "text": "Provide guidance on control-system behaviour to drivers, race engineers and vehicle performance groups during sessions."},
+    {"id": "A4", "short": "Deep system familiarity", "text": "Maintain deep familiarity with on-car ECU software and hardware and with the DIL simulator systems."},
+    {"id": "A5", "short": "Simulator tooling & HIL", "text": "Develop simulator systems and tooling, including dSPACE hardware-in-the-loop capability."},
+    {"id": "A6", "short": "Bridge DIL and car", "text": "Bridge DIL and car control systems; catalogue and maintain documentation on differences between them."},
+    {"id": "A7", "short": "Objective fault feedback", "text": "Provide analytical, objective feedback on faults and liaise across functions to close them out."},
+    {"id": "A8", "short": "Wider CSG contribution", "text": "Contribute to the wider Controls & Systems Group across rigs, dynos, tests and car tasks."}
+  ],
+  "phases": [
+    {"id": "P0", "name": "Observe & baseline", "window": "Days 0–30", "start_day": 0, "end_day": 30,
+     "intent": "No targets yet. Shadow sessions, map the real toolchain, establish which KPIs are measurable with existing data.",
+     "deliverable": "One-page proposed measurement plan + open questions.",
+     "checklist": ["Shadow at least 6 DIL sessions end-to-end", "Map the actual toolchain (SECU generation, dSPACE stack, logging, ATLAS/System Monitor)", "Identify Alpine's existing CSG KPI structures to plug into", "Mark each of the 22 KPIs measurable / needs-instrumentation / drop", "Agree the stakeholder-survey rater groups with the Head of CSG"]},
+    {"id": "P1", "name": "Instrument & baseline numbers", "window": "Days 30–60", "start_day": 30, "end_day": 60,
+     "intent": "Stand up lightweight capture. Record baselines with no judgement attached.",
+     "deliverable": "Populated baseline dataset for the headline KPIs.",
+     "checklist": ["Add session-log fields: scheduled vs productive minutes, disruption cause", "Add fault fields in Jira/Azure DevOps: severity, root cause, recurrence link", "Tag SECU releases in Git for lead-time and buffer measurement", "Create the DIL-vs-car difference catalogue page", "Run the first data pull end-to-end into this tool"]},
+    {"id": "P2", "name": "Agree targets & first review", "window": "Days 60–90", "start_day": 60, "end_day": 90,
+     "intent": "Convert baselines into 6–8 headline KPIs with the manager and hold the first formal check-in.",
+     "deliverable": "Agreed headline scorecard with owned targets.",
+     "checklist": ["Select the 6–8 headline KPIs with the Head of CSG", "Replace every illustrative target with an agreed one", "Drop or redesign any KPI that could not be measured cleanly", "Hold the 30-60-90 review with the scorecard as the artefact"]},
+    {"id": "P3", "name": "Consolidate", "window": "Months 3–6", "start_day": 90, "end_day": 180,
+     "intent": "Automate collection so the scorecard is a by-product of the work, not extra admin.",
+     "deliverable": "Automated pipeline + first improvement trends.",
+     "checklist": ["Automate collection from session logs, Git and the ticket system", "Grow the difference catalogue toward completeness", "Publish the known-fault playbook", "Show the first improvement trend on two headline KPIs"]},
+    {"id": "P4", "name": "Ongoing cadence", "window": "Quarterly + annual", "start_day": 180, "end_day": null,
+     "intent": "Quarterly refresh of development OKRs, stakeholder survey and trend review; annual full scorecard review.",
+     "deliverable": "Quarterly review pack; annual scorecard revision.",
+     "checklist": ["Refresh 2–3 development OKRs each quarter", "Run the quarterly stakeholder survey (≥3 raters per group)", "Re-baseline targets each quarter while the rig beds in", "Retire or replace low-value KPIs annually"]}
+  ]
+}

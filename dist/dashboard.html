@@ -1,0 +1,1688 @@
+<title>Simulator KPI Tracker</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Saira:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+/* ---- tokens ------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --plane:      #eef1f5;
+  --surface:    #fbfcfd;
+  --surface-2:  #f4f6f9;
+  --ink:        #0e1621;
+  --ink-2:      #465365;
+  --muted:      #75839a;
+  --line:       #dde3ec;
+  --line-2:     #c8d1de;
+  --accent:     #17539f;
+  --accent-soft:#e4edfa;
+
+  --good:       #0ca30c;
+  --warn:       #fab219;
+  --bad:        #d03b3b;
+  --neutral:    #75839a;
+  --good-soft:  #e3f4e3;
+  --warn-soft:  #fdf3dd;
+  --bad-soft:   #fae5e5;
+  --neutral-soft:#e9edf3;
+
+  --series-1:   #2a78d6;
+  --series-2:   #eb6834;
+  --series-3:   #1baf7a;
+  --series-4:   #eda100;
+
+  --grid:       #e5eaf2;
+  --axis:       #c8d1de;
+
+  --radius:     4px;
+  --shadow:     0 1px 2px rgba(14,22,33,.06), 0 8px 24px -16px rgba(14,22,33,.28);
+  --font-display: 'Saira', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --plane:      #0a0e13;
+    --surface:    #131a22;
+    --surface-2:  #19212b;
+    --ink:        #f1f5fa;
+    --ink-2:      #aab7c8;
+    --muted:      #808fa3;
+    --line:       #253040;
+    --line-2:     #334154;
+    --accent:     #6fa8ff;
+    --accent-soft:#17263c;
+    --good-soft:  #112a15;
+    --warn-soft:  #2e2510;
+    --bad-soft:   #331617;
+    --neutral-soft:#1d2632;
+    --series-1:   #3987e5;
+    --series-2:   #d95926;
+    --series-3:   #199e70;
+    --series-4:   #c98500;
+    --grid:       #202b38;
+    --axis:       #334154;
+    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane:      #0a0e13;
+  --surface:    #131a22;
+  --surface-2:  #19212b;
+  --ink:        #f1f5fa;
+  --ink-2:      #aab7c8;
+  --muted:      #808fa3;
+  --line:       #253040;
+  --line-2:     #334154;
+  --accent:     #6fa8ff;
+  --accent-soft:#17263c;
+  --good-soft:  #112a15;
+  --warn-soft:  #2e2510;
+  --bad-soft:   #331617;
+  --neutral-soft:#1d2632;
+  --series-1:   #3987e5;
+  --series-2:   #d95926;
+  --series-3:   #199e70;
+  --series-4:   #c98500;
+  --grid:       #202b38;
+  --axis:       #334154;
+  --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+/* ---- base --------------------------------------------------------------- */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--plane);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+a { color: var(--accent); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- shell -------------------------------------------------------------- */
+.shell { max-width: 1320px; margin: 0 auto; padding: 0 20px 72px; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--plane) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 20px;
+}
+.topbar-inner { max-width: 1320px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand h1 { font-size: 17px; text-transform: uppercase; letter-spacing: .04em; }
+.brand .tag {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid currentColor; border-radius: 2px; padding: 1px 5px;
+}
+.control { display: flex; align-items: center; gap: 6px; }
+.control label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+input[type="date"], input[type="number"], input[type="text"], select, textarea {
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: var(--radius);
+  padding: 5px 7px; min-width: 0;
+}
+textarea { font-family: var(--font-body); }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius);
+  padding: 5px 10px; font-size: 12px; cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-primary:hover { color: #fff; filter: brightness(1.08); }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn-ghost:hover { color: var(--bad); border-color: var(--line-2); }
+
+nav.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin: 0 -20px 22px; padding: 0 20px; overflow-x: auto; }
+nav.tabs button {
+  background: none; border: 0; border-bottom: 2px solid transparent;
+  padding: 11px 14px; cursor: pointer; color: var(--muted); white-space: nowrap;
+  font-family: var(--font-display); font-size: 13px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em;
+}
+nav.tabs button:hover { color: var(--ink); }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* ---- panels ------------------------------------------------------------- */
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.panel-head {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding: 13px 16px; border-bottom: 1px solid var(--line);
+}
+.panel-head h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; }
+.panel-head .hint { font-size: 12px; color: var(--muted); margin-left: auto; }
+.panel-body { padding: 16px; }
+.grid { display: grid; gap: 14px; }
+.split { display: grid; gap: 14px; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+.split-even { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+.cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+@media (max-width: 1000px) { .split, .split-even { grid-template-columns: minmax(0, 1fr); } }
+.section { margin-bottom: 22px; }
+.section > .eyebrow { display: block; margin-bottom: 8px; }
+
+/* ---- programme strip ---------------------------------------------------- */
+.programme { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.phase { background: var(--surface); padding: 11px 13px; position: relative; }
+.phase.done { background: var(--surface-2); }
+.phase.current { background: var(--accent-soft); }
+.phase .id { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; color: var(--muted); }
+.phase.current .id { color: var(--accent); }
+.phase .name { font-family: var(--font-display); font-weight: 600; font-size: 13px; margin-top: 2px; }
+.phase .window { font-size: 11px; color: var(--muted); }
+.phase .bar { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--accent); }
+
+/* ---- tiles -------------------------------------------------------------- */
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.tile {
+  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--neutral);
+  border-radius: var(--radius); padding: 13px 14px; cursor: pointer; text-align: left; width: 100%;
+  display: flex; flex-direction: column; gap: 9px; box-shadow: var(--shadow);
+}
+.tile:hover { border-color: var(--line-2); border-left-color: inherit; transform: translateY(-1px); }
+.tile.s-on-target { border-left-color: var(--good); }
+.tile.s-watch { border-left-color: var(--warn); }
+.tile.s-off-target { border-left-color: var(--bad); }
+.tile.s-baseline, .tile.s-pending, .tile.s-no-data { border-left-color: var(--neutral); }
+.tile .name { font-family: var(--font-display); font-weight: 600; font-size: 13.5px; line-height: 1.25; }
+.tile .value { display: flex; align-items: baseline; gap: 5px; }
+.tile .value .v { font-family: var(--font-mono); font-weight: 600; font-size: 28px; letter-spacing: -.02em; }
+.tile .value .u { font-size: 12px; color: var(--muted); }
+.tile .meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 11px; color: var(--muted); }
+.tile .spark { height: 34px; }
+
+/* ---- status chips ------------------------------------------------------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 2px; border: 1px solid transparent; white-space: nowrap;
+}
+.chip .glyph { font-size: 11px; line-height: 1; }
+.chip.s-on-target { background: var(--good-soft); color: #0a7d0a; border-color: color-mix(in srgb, var(--good) 35%, transparent); }
+.chip.s-watch     { background: var(--warn-soft); color: #8a6300; border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.chip.s-off-target{ background: var(--bad-soft);  color: #b32f2f; border-color: color-mix(in srgb, var(--bad) 35%, transparent); }
+.chip.s-baseline, .chip.s-pending, .chip.s-no-data { background: var(--neutral-soft); color: var(--ink-2); border-color: var(--line-2); }
+:root[data-theme="dark"] .chip.s-on-target { color: #6ede6e; }
+:root[data-theme="dark"] .chip.s-watch { color: #f0c256; }
+:root[data-theme="dark"] .chip.s-off-target { color: #f08383; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .chip.s-on-target { color: #6ede6e; }
+  :root:not([data-theme="light"]) .chip.s-watch { color: #f0c256; }
+  :root:not([data-theme="light"]) .chip.s-off-target { color: #f08383; }
+}
+.chip.headline { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.chip.plain { background: var(--surface-2); color: var(--ink-2); border-color: var(--line); }
+
+.trend { font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 3px; }
+.trend.improving { color: #0a7d0a; }
+.trend.worsening { color: #b32f2f; }
+.trend.flat, .trend.new { color: var(--muted); }
+:root[data-theme="dark"] .trend.improving { color: #6ede6e; }
+:root[data-theme="dark"] .trend.worsening { color: #f08383; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .trend.improving { color: #6ede6e; }
+  :root:not([data-theme="light"]) .trend.worsening { color: #f08383; }
+}
+
+/* ---- tables ------------------------------------------------------------- */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line-2);
+  position: sticky; top: 0; background: var(--surface); z-index: 2;
+}
+td.n, th.n { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tbody tr:hover { background: var(--surface-2); }
+tbody tr.clickable { cursor: pointer; }
+.table-scroll { overflow-x: auto; }
+.table-scroll table { min-width: 720px; }
+
+/* ---- category matrix ---------------------------------------------------- */
+.matrix { display: grid; grid-template-columns: minmax(180px, 1fr) auto; gap: 4px 14px; align-items: center; }
+.matrix .cat { font-size: 13px; }
+.matrix .dots { display: flex; gap: 4px; }
+.dot {
+  width: 24px; height: 22px; border-radius: 3px; border: 1px solid var(--line-2);
+  display: grid; place-items: center; font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  cursor: pointer; background: var(--surface-2); color: var(--ink-2);
+}
+.dot.s-on-target { background: var(--good-soft); border-color: color-mix(in srgb, var(--good) 40%, transparent); color: #0a7d0a; }
+.dot.s-watch { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 50%, transparent); color: #8a6300; }
+.dot.s-off-target { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 40%, transparent); color: #b32f2f; }
+:root[data-theme="dark"] .dot.s-on-target { color: #6ede6e; }
+:root[data-theme="dark"] .dot.s-watch { color: #f0c256; }
+:root[data-theme="dark"] .dot.s-off-target { color: #f08383; }
+
+/* ---- charts ------------------------------------------------------------- */
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; overflow: visible; }
+.chart .tip {
+  position: absolute; pointer-events: none; z-index: 10;
+  background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 7px 9px; font-size: 12px; min-width: 128px;
+  transform: translate(-50%, -110%); opacity: 0; transition: opacity .1s;
+}
+.chart .tip.on { opacity: 1; }
+.chart .tip .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.chart .tip .v { font-family: var(--font-mono); font-weight: 600; font-size: 15px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--ink-2); }
+.legend span.key { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend i.dash { background: none; border-top: 2px dashed var(--muted); height: 0; }
+
+/* ---- detail drawer ------------------------------------------------------ */
+.scrim { position: fixed; inset: 0; background: rgba(10,14,19,.42); z-index: 40; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(660px, 100%);
+  background: var(--surface); border-left: 1px solid var(--line-2); z-index: 41;
+  display: flex; flex-direction: column; box-shadow: -18px 0 48px -28px rgba(0,0,0,.6);
+}
+.drawer-head { padding: 16px 18px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: flex-start; }
+.drawer-body { padding: 18px; overflow-y: auto; }
+.drawer h3 { font-size: 17px; }
+.defn { display: grid; grid-template-columns: 108px 1fr; gap: 7px 14px; font-size: 13px; }
+.defn dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.defn dd { margin: 0; }
+.formula { font-family: var(--font-mono); font-size: 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 7px 9px; }
+.note {
+  border-left: 2px solid var(--accent); background: var(--accent-soft);
+  padding: 8px 11px; font-size: 12.5px; border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* ---- forms -------------------------------------------------------------- */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 11px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select { width: 100%; }
+.field .help { font-size: 11px; color: var(--muted); }
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.toast {
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--plane); padding: 9px 15px; border-radius: var(--radius);
+  font-size: 13px; z-index: 60; box-shadow: var(--shadow);
+}
+
+/* ---- rollout ------------------------------------------------------------ */
+.check { display: flex; gap: 9px; align-items: flex-start; padding: 6px 0; font-size: 13px; }
+.check input { margin-top: 3px; accent-color: var(--accent); }
+.check.done span { color: var(--muted); text-decoration: line-through; }
+
+/* ---- proposal ----------------------------------------------------------- */
+.paper { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 34px 38px; box-shadow: var(--shadow); max-width: 860px; }
+.paper h2 { font-size: 21px; margin-bottom: 3px; }
+.paper h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 22px 0 8px; }
+.paper p { margin: 0 0 10px; }
+.paper ol, .paper ul { margin: 0 0 10px; padding-left: 20px; }
+.paper li { margin-bottom: 4px; }
+.rule { height: 1px; background: var(--line); margin: 16px 0; }
+
+@media print {
+  .topbar, nav.tabs, .no-print { display: none !important; }
+  body { background: #fff; }
+  .paper { border: 0; box-shadow: none; padding: 0; max-width: none; }
+}
+
+@media (max-width: 860px) {
+  .programme { grid-template-columns: 1fr 1fr; }
+  .paper { padding: 22px 20px; }
+  .paper ul[style] { columns: 1 !important; }
+  .defn { grid-template-columns: 1fr; }
+  .drawer { width: 100%; }
+}
+</style>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <h1>Simulator KPI Tracker</h1>
+      <span class="tag">draft v1</span>
+    </div>
+    <div class="control">
+      <label for="start-date">Programme start</label>
+      <input type="date" id="start-date">
+    </div>
+    <div class="control">
+      <label for="as-of">As at</label>
+      <input type="date" id="as-of">
+    </div>
+    <div class="control"><span class="eyebrow" id="head-meta"></span></div>
+    <button class="btn" id="theme-btn">Theme</button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+  <main id="main"></main>
+
+  <footer style="margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)">
+    <p style="margin:0 0 6px">
+      A personal, self-proposed measurement framework for a Simulator Control Systems Engineer role — a draft to align on with a manager, not an employer document, and not affiliated with or endorsed by any team.
+      All records shipped with this page are fictional sample data.
+    </p>
+    <p style="margin:0">
+      Every target is illustrative and adapted from adjacent domains (reliability engineering MTBF/MTTR, DORA release metrics, software-quality defect KPIs, HIL test automation, model-coverage practice); none is a confirmed benchmark for any team.
+      Edits are stored only in this browser. Nothing here should be tied to compensation or used to apportion blame.
+    </p>
+  </footer>
+</div>
+
+<div id="drawer-root"></div>
+
+<script>window.PAYLOAD = {"generated_at":"2026-08-24T10:34:09","seeded_from":"data/sample","meta":{"version":"1.0","status":"draft-for-alignment","disclaimer":"Every target below is an illustrative starting point adapted from adjacent domains (reliability engineering, DORA release metrics, software-quality defect KPIs, HIL test automation, model-coverage practice). None is confirmed Alpine practice. Targets are to be baselined and agreed with the Head of CSG before they mean anything.","role":"Simulator Control Systems Engineer","group":"Controls & Systems Group (CSG)","accountability_note":"Accountability wording is a condensed paraphrase of the role's eight key accountabilities as described in the framework brief. Confirm against the actual job description before sharing."},"categories":[{"id":"C1","name":"Simulator Reliability & Availability","accountabilities":["A1"],"series":1,"intent":"Booked DIL time is scarce and expensive. This category answers: when the simulator was booked, did the control systems work?"},{"id":"C2","name":"SECU Release Quality & Cadence","accountabilities":["A2"],"series":2,"intent":"A failed release on session day burns irreplaceable driver time. Throughput and stability are read together, never one traded for the other."},{"id":"C3","name":"Fault Diagnosis & Turnaround","accountabilities":["A3","A7"],"series":3,"intent":"How fast faults are handled under session pressure, and whether they stay fixed."},{"id":"C4","name":"System Familiarity & Model Fidelity","accountabilities":["A4","A6"],"series":4,"intent":"Correlation is the point of the simulator. This category tracks whether the DIL mirrors the car."},{"id":"C5","name":"Documentation & Knowledge Bridging","accountabilities":["A6"],"series":1,"intent":"The institutional memory that de-risks the team's bus factor — a named deliverable of the role."},{"id":"C6","name":"Communication & Stakeholder Satisfaction","accountabilities":["A3","A7"],"series":2,"intent":"Much of the role's value is judged by the people it supports. A structured survey turns that into a trackable signal."},{"id":"C7","name":"Technical Development & Tooling","accountabilities":["A5","A8"],"series":3,"intent":"The 'make things better' half of the role, plus the wider CSG work that otherwise goes invisible at review."}],"accountabilities":[{"id":"A1","short":"Reliable DIL chassis control systems","text":"Deliver reliable, performant on-car chassis control systems within the driver-in-the-loop simulator."},{"id":"A2","short":"SECU release packages","text":"Prepare and manage SECU software release packages for simulator events, including calibrations, logging configuration and version control."},{"id":"A3","short":"Guidance to drivers & engineers","text":"Provide guidance on control-system behaviour to drivers, race engineers and vehicle performance groups during sessions."},{"id":"A4","short":"Deep system familiarity","text":"Maintain deep familiarity with on-car ECU software and hardware and with the DIL simulator systems."},{"id":"A5","short":"Simulator tooling & HIL","text":"Develop simulator systems and tooling, including dSPACE hardware-in-the-loop capability."},{"id":"A6","short":"Bridge DIL and car","text":"Bridge DIL and car control systems; catalogue and maintain documentation on differences between them."},{"id":"A7","short":"Objective fault feedback","text":"Provide analytical, objective feedback on faults and liaise across functions to close them out."},{"id":"A8","short":"Wider CSG contribution","text":"Contribute to the wider Controls & Systems Group across rigs, dynos, tests and car tasks."}],"phases":[{"id":"P0","name":"Observe & baseline","window":"Days 0–30","start_day":0,"end_day":30,"intent":"No targets yet. Shadow sessions, map the real toolchain, establish which KPIs are measurable with existing data.","deliverable":"One-page proposed measurement plan + open questions.","checklist":["Shadow at least 6 DIL sessions end-to-end","Map the actual toolchain (SECU generation, dSPACE stack, logging, ATLAS/System Monitor)","Identify Alpine's existing CSG KPI structures to plug into","Mark each of the 22 KPIs measurable / needs-instrumentation / drop","Agree the stakeholder-survey rater groups with the Head of CSG"]},{"id":"P1","name":"Instrument & baseline numbers","window":"Days 30–60","start_day":30,"end_day":60,"intent":"Stand up lightweight capture. Record baselines with no judgement attached.","deliverable":"Populated baseline dataset for the headline KPIs.","checklist":["Add session-log fields: scheduled vs productive minutes, disruption cause","Add fault fields in Jira/Azure DevOps: severity, root cause, recurrence link","Tag SECU releases in Git for lead-time and buffer measurement","Create the DIL-vs-car difference catalogue page","Run the first data pull end-to-end into this tool"]},{"id":"P2","name":"Agree targets & first review","window":"Days 60–90","start_day":60,"end_day":90,"intent":"Convert baselines into 6–8 headline KPIs with the manager and hold the first formal check-in.","deliverable":"Agreed headline scorecard with owned targets.","checklist":["Select the 6–8 headline KPIs with the Head of CSG","Replace every illustrative target with an agreed one","Drop or redesign any KPI that could not be measured cleanly","Hold the 30-60-90 review with the scorecard as the artefact"]},{"id":"P3","name":"Consolidate","window":"Months 3–6","start_day":90,"end_day":180,"intent":"Automate collection so the scorecard is a by-product of the work, not extra admin.","deliverable":"Automated pipeline + first improvement trends.","checklist":["Automate collection from session logs, Git and the ticket system","Grow the difference catalogue toward completeness","Publish the known-fault playbook","Show the first improvement trend on two headline KPIs"]},{"id":"P4","name":"Ongoing cadence","window":"Quarterly + annual","start_day":180,"end_day":null,"intent":"Quarterly refresh of development OKRs, stakeholder survey and trend review; annual full scorecard review.","deliverable":"Quarterly review pack; annual scorecard revision.","checklist":["Refresh 2–3 development OKRs each quarter","Run the quarterly stakeholder survey (≥3 raters per group)","Re-baseline targets each quarter while the rig beds in","Retire or replace low-value KPIs annually"]}],"kpis":[{"id":"K1.1","slug":"dil-availability","name":"DIL Control-System Availability","category":"C1","accountabilities":["A1"],"headline":true,"phase":"P1","metric":"availability_pct","dataset":"sessions","period":"month","unit":"%","decimals":1,"direction":"up","target":98,"amber":95,"what":"Share of scheduled simulator time in which chassis control systems were fully operational.","why":"Booked DIL time is a scarce, high-value resource; lost time costs car-development throughput directly.","method":"Per-session log of scheduled vs productive minutes, with a disruption cause on every loss.","formula":"Σ productive minutes ÷ Σ scheduled minutes × 100","cadence":"Logged per session, rolled up monthly and quarterly.","tools":["Session log fields","Python rollup"],"companions":[{"metric":"scheduled_minutes","name":"Scheduled minutes","unit":"min","decimals":0},{"metric":"lost_minutes","name":"Lost minutes","unit":"min","decimals":0}],"note":"Cultural anchor, not a target: the F1 Standard ECU's public field record is zero reported in-race failures since 2008 (manufacturer statement, McLaren Applied)."},{"id":"K1.2","slug":"control-attributable-loss","name":"Control-Attributable Session Loss","category":"C1","accountabilities":["A1"],"headline":false,"phase":"P1","metric":"control_loss_count","dataset":"sessions","period":"quarter","unit":"sessions/qtr","decimals":0,"direction":"down","target":1,"amber":3,"what":"Sessions delayed, shortened or scrapped by a control-system or SECU issue — as distinct from motion platform, models or IT.","why":"Isolates the share of downtime this role actually owns, so availability is not read as a personal score for someone else's outage.","method":"Count of control-attributable disruptions, with every loss root-caused into a category.","formula":"count(sessions where disruption cause = control system)","cadence":"Per session; reviewed monthly, targeted quarterly.","tools":["Session log disruption-cause field"],"companions":[{"metric":"control_loss_pct","name":"Share of all sessions","unit":"%","decimals":1}]},{"id":"K1.3","slug":"mtbf-mttr","name":"Control-Fault MTBF / MTTR","category":"C1","accountabilities":["A1"],"headline":false,"phase":"P1","metric":"mtbf_hours","dataset":"sessions","period":"quarter","unit":"h","decimals":1,"direction":"up","target":40,"amber":25,"what":"Mean operating hours between control-system faults, and mean time to restore during a session.","why":"MTBF shows the system getting more robust; MTTR shows responsiveness under pressure. Availability alone hides which one moved.","method":"Operational hours and fault counts from the session log; restore time captured per fault.","formula":"MTBF = operational hours ÷ fault count · MTTR = Σ restore minutes ÷ fault count","cadence":"Monthly; targeted quarterly.","tools":["Session log","Fault tickets"],"companions":[{"metric":"mttr_minutes","name":"In-session MTTR","unit":"min","decimals":1,"direction":"down","target":10,"amber":20}]},{"id":"K2.1","slug":"release-first-time-pass","name":"Release First-Time-Pass Rate","category":"C2","accountabilities":["A2"],"headline":true,"phase":"P1","metric":"release_ftpr_pct","dataset":"releases","period":"quarter","unit":"%","decimals":1,"direction":"up","target":95,"amber":88,"what":"Share of SECU release packages that deploy and run correctly on session day with no hotfix and no rollback.","why":"The direct analogue of the DORA change-failure rate. Elite performers sit near a 5% change-failure rate; here the cost of failure is driver time that cannot be bought back.","method":"Release register: one row per package, flagged for session-day intervention or rollback.","formula":"releases with no session-day intervention ÷ total releases × 100","cadence":"Per release / per event.","tools":["Git release tags","Jira or Azure DevOps"],"companions":[{"metric":"release_count","name":"Releases in period","unit":"","decimals":0}]},{"id":"K2.2","slug":"escaped-defects","name":"Escaped-Defect Rate & Detection Efficiency","category":"C2","accountabilities":["A2"],"headline":true,"phase":"P1","metric":"defect_detection_efficiency_pct","dataset":"releases","period":"quarter","unit":"%","decimals":1,"direction":"up","target":90,"amber":80,"what":"Defects found live in session that pre-event HIL and bench testing should have caught, expressed as detection efficiency.","why":"The truest measure of pre-release test effectiveness. Mature teams sustain 85–95% detection efficiency; the severity split matters more than the headline number.","method":"Every defect tagged found-before or found-after release, with severity.","formula":"defects found pre-release ÷ (pre-release + escaped) × 100","cadence":"Per event; trended quarterly.","tools":["Defect tracker with severity + fix-version fields"],"companions":[{"metric":"sev1_escapes","name":"Sev-1 escapes","unit":"","decimals":0,"direction":"down","target":0,"amber":0},{"metric":"escaped_per_release","name":"Escapes per release","unit":"","decimals":2,"direction":"down","target":1,"amber":2}],"note":"Read as a process signal, never as blame. An escape should start a test-coverage conversation, not a search for who let it through."},{"id":"K2.3","slug":"release-readiness-buffer","name":"Release Lead Time & Readiness Buffer","category":"C2","accountabilities":["A2"],"headline":false,"phase":"P1","metric":"release_buffer_compliance_pct","dataset":"releases","period":"quarter","unit":"%","decimals":1,"direction":"up","target":100,"amber":85,"what":"Share of packages validated and staged at least one working day before session day, plus the median lead time from spec freeze to validated package.","why":"A healthy buffer is what removes session-day risk. Lead time is the throughput half of the pair — a fast release that lands at 6am on session day is not a good release.","method":"Timestamps from ticket or spec-freeze to validated-package Git tag; buffer measured against the event date.","formula":"releases with buffer ≥ 24h ÷ total releases × 100","cadence":"Per release.","tools":["Git tags","Event calendar"],"companions":[{"metric":"release_lead_time_hours_median","name":"Median lead time","unit":"h","decimals":1,"direction":"down","target":72,"amber":120},{"metric":"release_buffer_hours_median","name":"Median buffer","unit":"h","decimals":1,"direction":"up","target":24,"amber":12}]},{"id":"K2.4","slug":"hil-regression","name":"HIL Regression Pass Rate & Automated Coverage","category":"C2","accountabilities":["A2","A5"],"headline":false,"phase":"P2","metric":"hil_pass_rate_pct","dataset":"releases","period":"quarter","unit":"%","decimals":1,"direction":"up","target":100,"amber":95,"what":"Share of automated HIL regression cases passing on each release candidate, and the share of SECU functions covered by at least one automated case.","why":"Automated regression is what stops a small fix creating a new control problem somewhere else. Coverage growth is the leading indicator; pass rate is the gate.","method":"dSPACE AutomationDesk pass/fail logs parsed per release; coverage from the function register.","formula":"cases passed ÷ cases run × 100 · coverage = functions with ≥1 automated case ÷ total functions × 100","cadence":"Per release; coverage reviewed quarterly.","tools":["dSPACE AutomationDesk","ControlDesk","Python log parser"],"companions":[{"metric":"hil_automation_coverage_pct","name":"Automated coverage","unit":"%","decimals":1,"direction":"up","target":70,"amber":50}]},{"id":"K3.1","slug":"fault-resolution-time","name":"In-Session Fault Resolution Time","category":"C3","accountabilities":["A3","A7"],"headline":true,"phase":"P1","metric":"fault_resolution_minutes_median","dataset":"faults","period":"month","unit":"min","decimals":1,"direction":"down","target":15,"amber":30,"what":"Median time from fault raised to workaround or fix while the session is live.","why":"The pressurised-environment competency the role is hired for. Median plus the long tail says more than an average.","method":"Session log timestamps, segmented by fault class so the playbook can target the worst class.","formula":"median(resolved_at − raised_at) over in-session faults","cadence":"Per session; monthly trend.","tools":["Session log","Fault tickets"],"companions":[{"metric":"fault_resolution_minutes_p90","name":"90th percentile (the tail)","unit":"min","decimals":1,"direction":"down","target":45,"amber":75},{"metric":"fault_count","name":"Faults in period","unit":"","decimals":0}]},{"id":"K3.2","slug":"root-cause-closure","name":"Root-Cause Closure Rate","category":"C3","accountabilities":["A7"],"headline":false,"phase":"P1","metric":"root_cause_closure_pct","dataset":"faults","period":"month","unit":"%","decimals":1,"direction":"up","target":90,"amber":75,"what":"Share of faults with a documented root cause and corrective action closed within the agreed SLA.","why":"Speed of the workaround is not the same as quality of the fix. This is what stops the same fault reappearing next event.","method":"Ticket system with a mandatory root-cause field and an SLA clock.","formula":"faults root-caused within SLA ÷ resolved faults × 100","cadence":"Monthly.","tools":["Jira or Azure DevOps"],"companions":[{"metric":"root_cause_days_median","name":"Median days to root cause","unit":"d","decimals":1,"direction":"down","target":5,"amber":10}]},{"id":"K3.3","slug":"fault-recurrence","name":"Fault Recurrence Rate","category":"C3","accountabilities":["A7"],"headline":false,"phase":"P2","metric":"fault_recurrence_pct","dataset":"faults","period":"quarter","unit":"%","decimals":1,"direction":"down","target":5,"amber":12,"what":"Share of faults that reappear after being marked resolved.","why":"Tests the durability of the fix rather than the speed of it — the counterweight that keeps resolution time honest.","method":"Linked or duplicate tickets against the original fault ID.","formula":"recurring faults ÷ resolved faults × 100","cadence":"Quarterly.","tools":["Ticket link graph"],"companions":[]},{"id":"K4.1","slug":"dil-car-alignment","name":"DIL-vs-Car Configuration Alignment","category":"C4","accountabilities":["A4","A6"],"headline":true,"phase":"P2","metric":"config_alignment_pct","dataset":"config","period":"month","unit":"%","decimals":1,"direction":"up","target":99,"amber":95,"what":"Share of tracked control-system parameters where the DIL SECU matches the current car standard, or carries a documented and justified difference.","why":"Correlation is the whole point of the simulator. An undocumented difference is worse than a known one — it silently degrades every conclusion drawn from the session.","method":"Automated diff of DIL vs car configuration exports; a difference counts as aligned only if it is deliberately documented.","formula":"(matched items + documented differences) ÷ tracked items × 100","cadence":"Per baseline update; monthly rollup.","tools":["System Monitor / SQL Race exports","Python diff","ATLAS"],"companions":[{"metric":"undocumented_diff_count","name":"Undocumented differences","unit":"","decimals":0,"direction":"down","target":0,"amber":3}]},{"id":"K4.2","slug":"baseline-currency","name":"Baseline Currency","category":"C4","accountabilities":["A4","A6"],"headline":false,"phase":"P2","metric":"baseline_currency_days_median","dataset":"config","period":"quarter","unit":"d","decimals":1,"direction":"down","target":14,"amber":28,"what":"Lag between a car-side SECU software or calibration change and the corresponding DIL baseline update.","why":"Stale baselines degrade correlation quietly — nothing fails, the answers are just wrong.","method":"Date of car release compared with date DIL baseline updated, per release.","formula":"median(DIL baseline date − car release date)","cadence":"Per release.","tools":["Release register","Git tags"],"companions":[]},{"id":"K4.3","slug":"model-coverage","name":"Model & Requirements Test Coverage","category":"C4","accountabilities":["A4","A5"],"headline":false,"phase":"P3","metric":"model_coverage_pct","dataset":"coverage","period":"quarter","unit":"%","decimals":1,"direction":"up","target":90,"amber":75,"what":"Decision, condition, MC/DC and signal-range coverage of the control models in this remit.","why":"Coverage gaps surface missing requirements and unintended functionality — the cheapest place to find a defect is before it reaches the rig.","method":"Simulink Coverage cumulative reports, aggregated across models under remit.","formula":"mean of decision, condition, MC/DC and signal-range coverage","cadence":"Per model change; quarterly rollup.","tools":["Simulink Coverage","MATLAB/Simulink"],"companions":[{"metric":"mcdc_pct","name":"MC/DC coverage (the hard one)","unit":"%","decimals":1,"direction":"up","target":85,"amber":70}]},{"id":"K5.1","slug":"difference-catalogue","name":"DIL-vs-Car Difference Catalogue Completeness","category":"C5","accountabilities":["A6"],"headline":true,"phase":"P1","metric":"catalogue_completeness_pct","dataset":"documentation","period":"month","unit":"%","decimals":1,"direction":"up","target":95,"amber":80,"what":"Share of known configuration and usage differences captured in one maintained catalogue.","why":"A named deliverable of the role, and the institutional memory that stops the team depending on one person's head.","method":"Documented differences over differences identified in periodic audits.","formula":"documented differences ÷ identified differences × 100","cadence":"Monthly build-up; quarterly audit.","tools":["Confluence or SharePoint"],"companions":[{"metric":"catalogue_gap","name":"Known but undocumented","unit":"","decimals":0,"direction":"down","target":0,"amber":5}]},{"id":"K5.2","slug":"documentation-freshness","name":"Documentation Freshness","category":"C5","accountabilities":["A6"],"headline":false,"phase":"P3","metric":"doc_freshness_pct","dataset":"documentation","period":"quarter","unit":"%","decimals":1,"direction":"up","target":90,"amber":75,"what":"Share of catalogue and procedure pages reviewed or updated within the agreed window.","why":"Documentation only earns trust if it is current. A stale page is consulted once and then never again.","method":"Platform last-reviewed timestamps, 90-day window.","formula":"pages reviewed within window ÷ total pages × 100","cadence":"Quarterly.","tools":["Confluence / SharePoint metadata"],"companions":[]},{"id":"K5.3","slug":"sop-coverage","name":"Procedure / SOP Coverage","category":"C5","accountabilities":["A6"],"headline":false,"phase":"P3","metric":"sop_coverage_pct","dataset":"documentation","period":"quarter","unit":"%","decimals":1,"direction":"up","target":100,"amber":80,"what":"Recurring simulator procedures with a signed-off SOP, against the total identified.","why":"Reduces setup error and removes the operator dependence on one engineer being in the room.","method":"SOP register reviewed against the procedure inventory.","formula":"signed-off SOPs ÷ identified procedures × 100","cadence":"Quarterly.","tools":["SOP register"],"companions":[]},{"id":"K6.1","slug":"stakeholder-satisfaction","name":"Stakeholder Satisfaction (360-style)","category":"C6","accountabilities":["A3","A7"],"headline":true,"phase":"P2","metric":"stakeholder_satisfaction_mean","dataset":"survey","period":"quarter","unit":"/5","decimals":2,"direction":"up","target":4.0,"amber":3.5,"what":"Short periodic rating from drivers, race engineers, vehicle performance and the Simulator Section Leader on clarity of guidance, responsiveness and confidence in the rig.","why":"Much of this role's value is judged subjectively by the people it supports. A structured survey turns corridor opinion into a trackable signal.","method":"Anonymous 3–5 question survey per group, aggregated as the mean of group means so no group dominates.","formula":"mean over rater groups of (group mean rating)","cadence":"Quarterly, or per major event block.","tools":["MS Forms or SurveyMonkey","Python aggregation"],"companions":[{"metric":"survey_respondents","name":"Respondents","unit":"","decimals":0},{"metric":"survey_groups_below_floor","name":"Groups below 3-rater floor","unit":"","decimals":0,"direction":"down","target":0,"amber":1}],"note":"Anonymity floor: a group returning fewer than 3 raters is merged with an adjacent group before reporting, never published alone."},{"id":"K6.2","slug":"fidelity-confidence","name":"Simulator Fidelity Confidence","category":"C6","accountabilities":["A3","A4"],"headline":false,"phase":"P2","metric":"fidelity_confidence_mean","dataset":"survey","period":"quarter","unit":"/5","decimals":2,"direction":"up","target":4.0,"amber":3.5,"what":"Driver and engineer confidence that simulator control-system behaviour matches the car, corroborated with an objective sim-vs-track delta where data allow.","why":"Fidelity confidence is what makes simulator time actionable for setup decisions. Subjective and objective must be read together — either alone misleads.","method":"Survey item paired with an ATLAS-derived delta on selected channels.","formula":"mean(fidelity item) · objective delta = mean |sim − track| on tracked channels","cadence":"Per event block; quarterly rollup.","tools":["Survey","ATLAS","Python correlation scripts"],"companions":[{"metric":"correlation_delta_mean","name":"Objective sim-vs-track delta","unit":"%","decimals":2,"direction":"down","target":2.0,"amber":4.0}]},{"id":"K6.3","slug":"debrief-contribution","name":"Debrief Contribution & Turnaround","category":"C6","accountabilities":["A3"],"headline":false,"phase":"P1","metric":"debrief_on_time_pct","dataset":"sessions","period":"month","unit":"%","decimals":1,"direction":"up","target":100,"amber":90,"what":"Timeliness and usefulness of post-session control-system input into the standard debrief.","why":"The simulator's value is realised in the debrief loop. Input that arrives after the decision has been made counts for nothing.","method":"Structured post-session debrief template with a due time and a usefulness rating from the receiving engineer.","formula":"debriefs submitted on time ÷ sessions × 100","cadence":"Per session.","tools":["Debrief template","Session log"],"companions":[{"metric":"debrief_usefulness_mean","name":"Usefulness rating","unit":"/5","decimals":2,"direction":"up","target":4.0,"amber":3.5}]},{"id":"K7.1","slug":"development-delivery","name":"Development Delivery Rate","category":"C7","accountabilities":["A5"],"headline":false,"phase":"P2","metric":"development_delivery_pct","dataset":"development","period":"quarter","unit":"%","decimals":1,"direction":"up","target":80,"amber":60,"what":"Improvements, tools and HIL capabilities delivered against a jointly agreed quarterly roadmap.","why":"Keeps the development half of the role visible and prioritised rather than squeezed out by session support.","method":"OKR-style: 2–3 focus items per quarter, committed with the manager at the start of the cycle.","formula":"roadmap items delivered ÷ items committed × 100","cadence":"Quarterly.","tools":["Roadmap board"],"companions":[{"metric":"items_delivered","name":"Items delivered","unit":"","decimals":0}]},{"id":"K7.2","slug":"operator-effort-reduction","name":"Operator-Effort / Setup-Time Reduction","category":"C7","accountabilities":["A5"],"headline":false,"phase":"P3","metric":"setup_time_reduction_pct","dataset":"development","period":"quarter","unit":"%","decimals":1,"direction":"up","target":20,"amber":10,"what":"Measured reduction in manual setup time and configuration-error rate from tooling built in this role.","why":"Turns 'I built a tool' into 'the rig gains X minutes every session' — the form of the claim that survives a review conversation.","method":"Before/after setup timing on the same procedure, plus configuration-error counts.","formula":"(setup minutes before − after) ÷ before × 100","cadence":"Per tool; quarterly rollup.","tools":["Setup timing log","Config-error log"],"companions":[{"metric":"minutes_saved_per_session","name":"Minutes saved per session","unit":"min","decimals":1,"direction":"up","target":10,"amber":5},{"metric":"config_error_reduction_pct","name":"Config-error reduction","unit":"%","decimals":1,"direction":"up","target":50,"amber":25}]},{"id":"K7.3","slug":"csg-cross-task","name":"CSG Cross-Task Contribution","category":"C7","accountabilities":["A8"],"headline":false,"phase":"P2","metric":"cross_task_count","dataset":"development","period":"quarter","unit":"tasks/qtr","decimals":0,"direction":"up","target":3,"amber":1,"what":"Support delivered to the wider Controls & Systems Group on rigs, dynos, tests and car tasks.","why":"The role explicitly includes non-simulator CSG work. Logging it stops that contribution being invisible at review time.","method":"A simple log of cross-group tasks and their outcomes — count is the prompt, the outcomes are the substance.","formula":"count(cross-group tasks in quarter)","cadence":"Quarterly.","tools":["Contribution log"],"companions":[],"note":"Deliberately a weak quantitative signal. Read the outcome notes, not the count."}],"datasets":{"sessions":[{"date":"2026-01-07","session_id":"DIL-20260107-1","scheduled_minutes":540.0,"productive_minutes":498.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":31.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.6},{"date":"2026-01-08","session_id":"DIL-20260108-2","scheduled_minutes":480.0,"productive_minutes":425.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":68.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.7},{"date":"2026-01-12","session_id":"DIL-20260112-3","scheduled_minutes":480.0,"productive_minutes":428.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":62.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.6},{"date":"2026-01-14","session_id":"DIL-20260114-4","scheduled_minutes":480.0,"productive_minutes":427.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":63.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.5},{"date":"2026-01-15","session_id":"DIL-20260115-5","scheduled_minutes":420.0,"productive_minutes":384.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":33.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.2},{"date":"2026-01-19","session_id":"DIL-20260119-6","scheduled_minutes":420.0,"productive_minutes":377.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":49.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.6},{"date":"2026-01-21","session_id":"DIL-20260121-7","scheduled_minutes":540.0,"productive_minutes":512.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.5},{"date":"2026-01-22","session_id":"DIL-20260122-8","scheduled_minutes":480.0,"productive_minutes":444.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":26.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-01-26","session_id":"DIL-20260126-9","scheduled_minutes":540.0,"productive_minutes":490.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":49.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.1},{"date":"2026-01-28","session_id":"DIL-20260128-10","scheduled_minutes":420.0,"productive_minutes":391.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":17.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.5},{"date":"2026-01-29","session_id":"DIL-20260129-11","scheduled_minutes":420.0,"productive_minutes":378.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":45.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.6},{"date":"2026-02-02","session_id":"DIL-20260202-1","scheduled_minutes":480.0,"productive_minutes":442.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":37.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":3.2},{"date":"2026-02-04","session_id":"DIL-20260204-2","scheduled_minutes":540.0,"productive_minutes":496.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":44.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.7},{"date":"2026-02-05","session_id":"DIL-20260205-3","scheduled_minutes":540.0,"productive_minutes":505.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":23.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":3.8},{"date":"2026-02-09","session_id":"DIL-20260209-4","scheduled_minutes":480.0,"productive_minutes":449.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":21.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":3.3},{"date":"2026-02-11","session_id":"DIL-20260211-5","scheduled_minutes":540.0,"productive_minutes":508.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":16.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":3.9},{"date":"2026-02-12","session_id":"DIL-20260212-6","scheduled_minutes":420.0,"productive_minutes":389.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":27.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.7},{"date":"2026-02-16","session_id":"DIL-20260216-7","scheduled_minutes":540.0,"productive_minutes":516.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.5},{"date":"2026-02-18","session_id":"DIL-20260218-8","scheduled_minutes":480.0,"productive_minutes":435.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":51.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.3},{"date":"2026-02-19","session_id":"DIL-20260219-9","scheduled_minutes":480.0,"productive_minutes":446.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":27.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.4},{"date":"2026-02-23","session_id":"DIL-20260223-10","scheduled_minutes":480.0,"productive_minutes":446.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":28.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-02-25","session_id":"DIL-20260225-11","scheduled_minutes":480.0,"productive_minutes":418.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":89.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.7},{"date":"2026-02-26","session_id":"DIL-20260226-12","scheduled_minutes":480.0,"productive_minutes":443.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":35.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.2},{"date":"2026-03-02","session_id":"DIL-20260302-1","scheduled_minutes":540.0,"productive_minutes":514.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":10.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-03-04","session_id":"DIL-20260304-2","scheduled_minutes":540.0,"productive_minutes":499.0,"disruption_cause":"it","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.3},{"date":"2026-03-05","session_id":"DIL-20260305-3","scheduled_minutes":480.0,"productive_minutes":461.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.3},{"date":"2026-03-09","session_id":"DIL-20260309-4","scheduled_minutes":480.0,"productive_minutes":447.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":32.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-03-11","session_id":"DIL-20260311-5","scheduled_minutes":480.0,"productive_minutes":444.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":39.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-03-12","session_id":"DIL-20260312-6","scheduled_minutes":480.0,"productive_minutes":441.0,"disruption_cause":"vehicle_model","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-03-16","session_id":"DIL-20260316-7","scheduled_minutes":480.0,"productive_minutes":448.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":29.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-03-18","session_id":"DIL-20260318-8","scheduled_minutes":420.0,"productive_minutes":393.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":23.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.5},{"date":"2026-03-19","session_id":"DIL-20260319-9","scheduled_minutes":480.0,"productive_minutes":445.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":35.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.4},{"date":"2026-03-23","session_id":"DIL-20260323-10","scheduled_minutes":540.0,"productive_minutes":498.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":47.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-03-25","session_id":"DIL-20260325-11","scheduled_minutes":480.0,"productive_minutes":446.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":34.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.6},{"date":"2026-03-26","session_id":"DIL-20260326-12","scheduled_minutes":480.0,"productive_minutes":449.0,"disruption_cause":"other","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":3.9},{"date":"2026-03-30","session_id":"DIL-20260330-13","scheduled_minutes":540.0,"productive_minutes":519.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-04-01","session_id":"DIL-20260401-1","scheduled_minutes":420.0,"productive_minutes":399.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":15.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.1},{"date":"2026-04-02","session_id":"DIL-20260402-2","scheduled_minutes":540.0,"productive_minutes":500.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":48.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.7},{"date":"2026-04-06","session_id":"DIL-20260406-3","scheduled_minutes":480.0,"productive_minutes":461.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":8.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.6},{"date":"2026-04-08","session_id":"DIL-20260408-4","scheduled_minutes":480.0,"productive_minutes":447.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":39.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-04-09","session_id":"DIL-20260409-5","scheduled_minutes":540.0,"productive_minutes":514.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":17.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":4.0},{"date":"2026-04-13","session_id":"DIL-20260413-6","scheduled_minutes":540.0,"productive_minutes":501.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":46.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-04-15","session_id":"DIL-20260415-7","scheduled_minutes":420.0,"productive_minutes":385.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":48.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-04-16","session_id":"DIL-20260416-8","scheduled_minutes":480.0,"productive_minutes":464.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-04-20","session_id":"DIL-20260420-9","scheduled_minutes":420.0,"productive_minutes":395.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":24.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.5},{"date":"2026-04-22","session_id":"DIL-20260422-10","scheduled_minutes":420.0,"productive_minutes":395.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":25.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.2},{"date":"2026-04-23","session_id":"DIL-20260423-11","scheduled_minutes":480.0,"productive_minutes":453.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":24.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":3.5},{"date":"2026-04-27","session_id":"DIL-20260427-12","scheduled_minutes":540.0,"productive_minutes":522.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-04-29","session_id":"DIL-20260429-13","scheduled_minutes":420.0,"productive_minutes":398.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":18.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.1},{"date":"2026-04-30","session_id":"DIL-20260430-14","scheduled_minutes":540.0,"productive_minutes":491.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":68.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.5},{"date":"2026-05-04","session_id":"DIL-20260504-1","scheduled_minutes":420.0,"productive_minutes":399.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":21.0,"debrief_due":true,"debrief_on_time":false,"debrief_usefulness":3.8},{"date":"2026-05-06","session_id":"DIL-20260506-2","scheduled_minutes":540.0,"productive_minutes":520.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":12.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.3},{"date":"2026-05-07","session_id":"DIL-20260507-3","scheduled_minutes":480.0,"productive_minutes":456.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":24.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-05-11","session_id":"DIL-20260511-4","scheduled_minutes":480.0,"productive_minutes":457.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":23.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.2},{"date":"2026-05-13","session_id":"DIL-20260513-5","scheduled_minutes":540.0,"productive_minutes":525.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-05-14","session_id":"DIL-20260514-6","scheduled_minutes":540.0,"productive_minutes":525.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-05-18","session_id":"DIL-20260518-7","scheduled_minutes":480.0,"productive_minutes":459.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":17.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-05-20","session_id":"DIL-20260520-8","scheduled_minutes":540.0,"productive_minutes":515.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":22.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-05-21","session_id":"DIL-20260521-9","scheduled_minutes":480.0,"productive_minutes":459.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":17.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-05-25","session_id":"DIL-20260525-10","scheduled_minutes":480.0,"productive_minutes":446.0,"disruption_cause":"control_system","control_faults":2.0,"fault_restore_minutes":47.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-05-27","session_id":"DIL-20260527-11","scheduled_minutes":480.0,"productive_minutes":459.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":17.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.3},{"date":"2026-05-28","session_id":"DIL-20260528-12","scheduled_minutes":480.0,"productive_minutes":461.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":13.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.7},{"date":"2026-06-01","session_id":"DIL-20260601-1","scheduled_minutes":480.0,"productive_minutes":458.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":27.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-06-03","session_id":"DIL-20260603-2","scheduled_minutes":480.0,"productive_minutes":461.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":19.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-06-04","session_id":"DIL-20260604-3","scheduled_minutes":480.0,"productive_minutes":467.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":7.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-06-08","session_id":"DIL-20260608-4","scheduled_minutes":480.0,"productive_minutes":464.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":14.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.3},{"date":"2026-06-10","session_id":"DIL-20260610-5","scheduled_minutes":480.0,"productive_minutes":463.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":16.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.9},{"date":"2026-06-11","session_id":"DIL-20260611-6","scheduled_minutes":480.0,"productive_minutes":461.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":20.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.5},{"date":"2026-06-15","session_id":"DIL-20260615-7","scheduled_minutes":540.0,"productive_minutes":529.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.5},{"date":"2026-06-17","session_id":"DIL-20260617-8","scheduled_minutes":480.0,"productive_minutes":470.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-06-18","session_id":"DIL-20260618-9","scheduled_minutes":420.0,"productive_minutes":401.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":22.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.1},{"date":"2026-06-22","session_id":"DIL-20260622-10","scheduled_minutes":480.0,"productive_minutes":460.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":22.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-06-24","session_id":"DIL-20260624-11","scheduled_minutes":480.0,"productive_minutes":469.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":3.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-06-25","session_id":"DIL-20260625-12","scheduled_minutes":480.0,"productive_minutes":462.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":18.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.2},{"date":"2026-06-29","session_id":"DIL-20260629-13","scheduled_minutes":480.0,"productive_minutes":464.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":13.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":3.8},{"date":"2026-07-01","session_id":"DIL-20260701-1","scheduled_minutes":540.0,"productive_minutes":524.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":18.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.6},{"date":"2026-07-02","session_id":"DIL-20260702-2","scheduled_minutes":480.0,"productive_minutes":470.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":6.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-07-06","session_id":"DIL-20260706-3","scheduled_minutes":420.0,"productive_minutes":414.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-07-08","session_id":"DIL-20260708-4","scheduled_minutes":480.0,"productive_minutes":473.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.2},{"date":"2026-07-09","session_id":"DIL-20260709-5","scheduled_minutes":420.0,"productive_minutes":414.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.5},{"date":"2026-07-13","session_id":"DIL-20260713-6","scheduled_minutes":480.0,"productive_minutes":473.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-07-15","session_id":"DIL-20260715-7","scheduled_minutes":540.0,"productive_minutes":530.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":4.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.2},{"date":"2026-07-16","session_id":"DIL-20260716-8","scheduled_minutes":420.0,"productive_minutes":411.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":7.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.6},{"date":"2026-07-20","session_id":"DIL-20260720-9","scheduled_minutes":540.0,"productive_minutes":528.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":9.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.2},{"date":"2026-07-22","session_id":"DIL-20260722-10","scheduled_minutes":480.0,"productive_minutes":462.0,"disruption_cause":"other","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.6},{"date":"2026-07-23","session_id":"DIL-20260723-11","scheduled_minutes":480.0,"productive_minutes":471.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":3.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.6},{"date":"2026-07-27","session_id":"DIL-20260727-12","scheduled_minutes":480.0,"productive_minutes":473.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.3},{"date":"2026-07-29","session_id":"DIL-20260729-13","scheduled_minutes":540.0,"productive_minutes":525.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":15.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.0},{"date":"2026-07-30","session_id":"DIL-20260730-14","scheduled_minutes":480.0,"productive_minutes":473.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.3},{"date":"2026-08-03","session_id":"DIL-20260803-1","scheduled_minutes":480.0,"productive_minutes":476.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.7},{"date":"2026-08-05","session_id":"DIL-20260805-2","scheduled_minutes":420.0,"productive_minutes":416.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-08-06","session_id":"DIL-20260806-3","scheduled_minutes":540.0,"productive_minutes":517.0,"disruption_cause":"motion_platform","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-08-10","session_id":"DIL-20260810-4","scheduled_minutes":420.0,"productive_minutes":383.0,"disruption_cause":"other","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.3},{"date":"2026-08-12","session_id":"DIL-20260812-5","scheduled_minutes":480.0,"productive_minutes":471.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":10.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.8},{"date":"2026-08-13","session_id":"DIL-20260813-6","scheduled_minutes":480.0,"productive_minutes":476.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.4},{"date":"2026-08-17","session_id":"DIL-20260817-7","scheduled_minutes":480.0,"productive_minutes":476.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.5},{"date":"2026-08-19","session_id":"DIL-20260819-8","scheduled_minutes":420.0,"productive_minutes":411.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":12.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.6},{"date":"2026-08-20","session_id":"DIL-20260820-9","scheduled_minutes":420.0,"productive_minutes":411.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":11.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.8},{"date":"2026-08-24","session_id":"DIL-20260824-10","scheduled_minutes":540.0,"productive_minutes":530.0,"disruption_cause":"control_system","control_faults":1.0,"fault_restore_minutes":12.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.6},{"date":"2026-08-26","session_id":"DIL-20260826-11","scheduled_minutes":480.0,"productive_minutes":476.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.6},{"date":"2026-08-27","session_id":"DIL-20260827-12","scheduled_minutes":420.0,"productive_minutes":416.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.8},{"date":"2026-08-31","session_id":"DIL-20260831-13","scheduled_minutes":420.0,"productive_minutes":416.0,"disruption_cause":"none","control_faults":0.0,"fault_restore_minutes":0.0,"debrief_due":true,"debrief_on_time":true,"debrief_usefulness":4.7}],"releases":[{"release_id":"SECU-2026.001","event_at":"2026-01-25T08:00","spec_frozen_at":"2026-01-18T08:26","validated_at":"2026-01-24T21:01","session_day_intervention":false,"rollback":false,"defects_pre_release":10.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":1.0,"hil_cases_run":40.0,"hil_cases_passed":40.0,"functions_total":84.0,"functions_automated":26.0},{"release_id":"SECU-2026.002","event_at":"2026-01-25T08:00","spec_frozen_at":"2026-01-18T22:45","validated_at":"2026-01-24T23:42","session_day_intervention":false,"rollback":false,"defects_pre_release":6.0,"escaped_sev1":0.0,"escaped_sev2":1.0,"escaped_sev3":1.0,"hil_cases_run":40.0,"hil_cases_passed":39.0,"functions_total":84.0,"functions_automated":26.0},{"release_id":"SECU-2026.003","event_at":"2026-01-07T08:00","spec_frozen_at":"2025-12-31T17:15","validated_at":"2026-01-06T16:26","session_day_intervention":true,"rollback":false,"defects_pre_release":8.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":40.0,"hil_cases_passed":40.0,"functions_total":84.0,"functions_automated":26.0},{"release_id":"SECU-2026.004","event_at":"2026-02-17T08:00","spec_frozen_at":"2026-02-11T17:31","validated_at":"2026-02-16T12:30","session_day_intervention":true,"rollback":false,"defects_pre_release":5.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":52.0,"hil_cases_passed":52.0,"functions_total":84.0,"functions_automated":31.0},{"release_id":"SECU-2026.005","event_at":"2026-02-27T08:00","spec_frozen_at":"2026-02-21T19:30","validated_at":"2026-02-26T10:43","session_day_intervention":true,"rollback":true,"defects_pre_release":8.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":1.0,"hil_cases_run":52.0,"hil_cases_passed":52.0,"functions_total":84.0,"functions_automated":31.0},{"release_id":"SECU-2026.006","event_at":"2026-02-09T08:00","spec_frozen_at":"2026-02-03T18:56","validated_at":"2026-02-08T22:41","session_day_intervention":false,"rollback":false,"defects_pre_release":5.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":1.0,"hil_cases_run":52.0,"hil_cases_passed":52.0,"functions_total":84.0,"functions_automated":31.0},{"release_id":"SECU-2026.007","event_at":"2026-03-24T08:00","spec_frozen_at":"2026-03-18T19:30","validated_at":"2026-03-23T06:00","session_day_intervention":false,"rollback":false,"defects_pre_release":8.0,"escaped_sev1":0.0,"escaped_sev2":1.0,"escaped_sev3":0.0,"hil_cases_run":65.0,"hil_cases_passed":64.0,"functions_total":84.0,"functions_automated":36.0},{"release_id":"SECU-2026.008","event_at":"2026-03-15T08:00","spec_frozen_at":"2026-03-09T06:34","validated_at":"2026-03-14T16:02","session_day_intervention":true,"rollback":false,"defects_pre_release":8.0,"escaped_sev1":0.0,"escaped_sev2":1.0,"escaped_sev3":1.0,"hil_cases_run":65.0,"hil_cases_passed":65.0,"functions_total":84.0,"functions_automated":36.0},{"release_id":"SECU-2026.009","event_at":"2026-04-27T08:00","spec_frozen_at":"2026-04-21T14:02","validated_at":"2026-04-26T02:06","session_day_intervention":false,"rollback":false,"defects_pre_release":7.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":77.0,"hil_cases_passed":77.0,"functions_total":84.0,"functions_automated":41.0},{"release_id":"SECU-2026.010","event_at":"2026-04-25T08:00","spec_frozen_at":"2026-04-19T18:22","validated_at":"2026-04-24T00:48","session_day_intervention":false,"rollback":false,"defects_pre_release":10.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":1.0,"hil_cases_run":77.0,"hil_cases_passed":76.0,"functions_total":84.0,"functions_automated":41.0},{"release_id":"SECU-2026.011","event_at":"2026-04-10T08:00","spec_frozen_at":"2026-04-04T17:20","validated_at":"2026-04-09T02:53","session_day_intervention":false,"rollback":false,"defects_pre_release":10.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":77.0,"hil_cases_passed":77.0,"functions_total":84.0,"functions_automated":41.0},{"release_id":"SECU-2026.012","event_at":"2026-05-07T08:00","spec_frozen_at":"2026-05-02T09:02","validated_at":"2026-05-06T07:13","session_day_intervention":false,"rollback":false,"defects_pre_release":10.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":1.0,"hil_cases_run":90.0,"hil_cases_passed":90.0,"functions_total":84.0,"functions_automated":46.0},{"release_id":"SECU-2026.013","event_at":"2026-05-26T08:00","spec_frozen_at":"2026-05-21T05:17","validated_at":"2026-05-25T00:08","session_day_intervention":false,"rollback":false,"defects_pre_release":6.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":90.0,"hil_cases_passed":90.0,"functions_total":84.0,"functions_automated":46.0},{"release_id":"SECU-2026.014","event_at":"2026-06-15T08:00","spec_frozen_at":"2026-06-10T14:37","validated_at":"2026-06-14T00:27","session_day_intervention":false,"rollback":false,"defects_pre_release":12.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":1.0,"hil_cases_run":102.0,"hil_cases_passed":101.0,"functions_total":84.0,"functions_automated":51.0},{"release_id":"SECU-2026.015","event_at":"2026-06-26T08:00","spec_frozen_at":"2026-06-21T10:42","validated_at":"2026-06-24T22:01","session_day_intervention":false,"rollback":false,"defects_pre_release":8.0,"escaped_sev1":0.0,"escaped_sev2":1.0,"escaped_sev3":0.0,"hil_cases_run":102.0,"hil_cases_passed":101.0,"functions_total":84.0,"functions_automated":51.0},{"release_id":"SECU-2026.016","event_at":"2026-06-23T08:00","spec_frozen_at":"2026-06-17T21:23","validated_at":"2026-06-21T15:59","session_day_intervention":false,"rollback":false,"defects_pre_release":11.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":102.0,"hil_cases_passed":101.0,"functions_total":84.0,"functions_automated":51.0},{"release_id":"SECU-2026.017","event_at":"2026-07-19T08:00","spec_frozen_at":"2026-07-14T05:23","validated_at":"2026-07-17T11:24","session_day_intervention":false,"rollback":false,"defects_pre_release":14.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":115.0,"hil_cases_passed":115.0,"functions_total":84.0,"functions_automated":57.0},{"release_id":"SECU-2026.018","event_at":"2026-07-20T08:00","spec_frozen_at":"2026-07-15T21:15","validated_at":"2026-07-18T19:07","session_day_intervention":false,"rollback":false,"defects_pre_release":14.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":1.0,"hil_cases_run":115.0,"hil_cases_passed":115.0,"functions_total":84.0,"functions_automated":57.0},{"release_id":"SECU-2026.019","event_at":"2026-07-15T08:00","spec_frozen_at":"2026-07-10T15:22","validated_at":"2026-07-13T08:53","session_day_intervention":false,"rollback":false,"defects_pre_release":10.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":115.0,"hil_cases_passed":115.0,"functions_total":84.0,"functions_automated":57.0},{"release_id":"SECU-2026.020","event_at":"2026-08-09T08:00","spec_frozen_at":"2026-08-05T04:10","validated_at":"2026-08-07T15:34","session_day_intervention":false,"rollback":false,"defects_pre_release":13.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":128.0,"hil_cases_passed":127.0,"functions_total":84.0,"functions_automated":62.0},{"release_id":"SECU-2026.021","event_at":"2026-08-23T08:00","spec_frozen_at":"2026-08-19T16:31","validated_at":"2026-08-21T15:37","session_day_intervention":false,"rollback":false,"defects_pre_release":14.0,"escaped_sev1":0.0,"escaped_sev2":0.0,"escaped_sev3":0.0,"hil_cases_run":128.0,"hil_cases_passed":128.0,"functions_total":84.0,"functions_automated":62.0}],"faults":[{"fault_id":"F-0001","session_id":"DIL-20260107-1","raised_at":"2026-01-07T12:22","resolved_at":"2026-01-07T12:53","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-01-14T12:22","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0002","session_id":"DIL-20260108-2","raised_at":"2026-01-08T11:41","resolved_at":"2026-01-08T11:53","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-01-11T11:41","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0003","session_id":"DIL-20260108-2","raised_at":"2026-01-08T13:44","resolved_at":"2026-01-08T14:40","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-01-10T13:44","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0004","session_id":"DIL-20260112-3","raised_at":"2026-01-12T10:00","resolved_at":"2026-01-12T10:20","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-01-24T10:00","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0005","session_id":"DIL-20260112-3","raised_at":"2026-01-12T12:28","resolved_at":"2026-01-12T13:10","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-01-16T12:28","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0006","session_id":"DIL-20260114-4","raised_at":"2026-01-14T11:02","resolved_at":"2026-01-14T12:05","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-01-15T11:02","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0007","session_id":"DIL-20260115-5","raised_at":"2026-01-15T13:58","resolved_at":"2026-01-15T14:31","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-01-27T13:58","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0008","session_id":"DIL-20260119-6","raised_at":"2026-01-19T11:59","resolved_at":"2026-01-19T12:26","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-01-26T11:59","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0009","session_id":"DIL-20260119-6","raised_at":"2026-01-19T09:19","resolved_at":"2026-01-19T09:41","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-01-20T09:19","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0010","session_id":"DIL-20260122-8","raised_at":"2026-01-22T13:58","resolved_at":"2026-01-22T14:24","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-01-23T13:58","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0011","session_id":"DIL-20260126-9","raised_at":"2026-01-26T09:39","resolved_at":"2026-01-26T10:03","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-01-27T09:39","sla_days":5.0,"recurrence_of":"F-0010"},{"fault_id":"F-0012","session_id":"DIL-20260126-9","raised_at":"2026-01-26T10:05","resolved_at":"2026-01-26T10:30","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-01-30T10:05","sla_days":5.0,"recurrence_of":"F-0003"},{"fault_id":"F-0013","session_id":"DIL-20260128-10","raised_at":"2026-01-28T11:49","resolved_at":"2026-01-28T12:06","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-02-01T11:49","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0014","session_id":"DIL-20260129-11","raised_at":"2026-01-29T13:22","resolved_at":"2026-01-29T14:07","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-01-31T13:22","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0015","session_id":"DIL-20260202-1","raised_at":"2026-02-02T10:59","resolved_at":"2026-02-02T11:36","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-02-03T10:59","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0016","session_id":"DIL-20260204-2","raised_at":"2026-02-04T13:21","resolved_at":"2026-02-04T14:05","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-02-08T13:21","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0017","session_id":"DIL-20260205-3","raised_at":"2026-02-05T11:23","resolved_at":"2026-02-05T11:46","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-02-08T11:23","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0018","session_id":"DIL-20260209-4","raised_at":"2026-02-09T12:46","resolved_at":"2026-02-09T13:07","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-02-12T12:46","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0019","session_id":"DIL-20260211-5","raised_at":"2026-02-11T10:04","resolved_at":"2026-02-11T10:20","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-02-14T10:04","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0020","session_id":"DIL-20260212-6","raised_at":"2026-02-12T12:22","resolved_at":"2026-02-12T12:49","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-02-19T12:22","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0021","session_id":"DIL-20260218-8","raised_at":"2026-02-18T10:27","resolved_at":"2026-02-18T11:18","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-02-27T10:27","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0022","session_id":"DIL-20260219-9","raised_at":"2026-02-19T10:43","resolved_at":"2026-02-19T11:10","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-02-26T10:43","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0023","session_id":"DIL-20260223-10","raised_at":"2026-02-23T11:18","resolved_at":"2026-02-23T11:46","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-02-25T11:18","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0024","session_id":"DIL-20260225-11","raised_at":"2026-02-25T09:34","resolved_at":"2026-02-25T10:04","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-02-28T09:34","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0025","session_id":"DIL-20260225-11","raised_at":"2026-02-25T12:57","resolved_at":"2026-02-25T13:56","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-03-02T12:57","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0026","session_id":"DIL-20260226-12","raised_at":"2026-02-26T11:00","resolved_at":"2026-02-26T11:35","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-03-07T11:00","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0027","session_id":"DIL-20260302-1","raised_at":"2026-03-02T14:00","resolved_at":"2026-03-02T14:10","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-03-03T14:00","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0028","session_id":"DIL-20260309-4","raised_at":"2026-03-09T12:52","resolved_at":"2026-03-09T13:24","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-03-21T12:52","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0029","session_id":"DIL-20260311-5","raised_at":"2026-03-11T10:16","resolved_at":"2026-03-11T10:55","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-03-12T10:16","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0030","session_id":"DIL-20260316-7","raised_at":"2026-03-16T12:00","resolved_at":"2026-03-16T12:29","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-03-17T12:00","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0031","session_id":"DIL-20260318-8","raised_at":"2026-03-18T13:04","resolved_at":"2026-03-18T13:27","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-03-22T13:04","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0032","session_id":"DIL-20260319-9","raised_at":"2026-03-19T09:31","resolved_at":"2026-03-19T09:47","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-03-31T09:31","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0033","session_id":"DIL-20260319-9","raised_at":"2026-03-19T09:18","resolved_at":"2026-03-19T09:37","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-03-22T09:18","sla_days":5.0,"recurrence_of":"F-0003"},{"fault_id":"F-0034","session_id":"DIL-20260323-10","raised_at":"2026-03-23T11:04","resolved_at":"2026-03-23T11:51","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-04-04T11:04","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0035","session_id":"DIL-20260325-11","raised_at":"2026-03-25T10:27","resolved_at":"2026-03-25T11:01","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-03-30T10:27","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0036","session_id":"DIL-20260401-1","raised_at":"2026-04-01T11:31","resolved_at":"2026-04-01T11:46","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-04-03T11:31","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0037","session_id":"DIL-20260402-2","raised_at":"2026-04-02T10:08","resolved_at":"2026-04-02T10:38","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-04-06T10:08","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0038","session_id":"DIL-20260402-2","raised_at":"2026-04-02T12:17","resolved_at":"2026-04-02T12:35","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-04-11T12:17","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0039","session_id":"DIL-20260406-3","raised_at":"2026-04-06T13:20","resolved_at":"2026-04-06T13:28","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-04-18T13:20","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0040","session_id":"DIL-20260408-4","raised_at":"2026-04-08T10:02","resolved_at":"2026-04-08T10:26","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-04-10T10:02","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0041","session_id":"DIL-20260408-4","raised_at":"2026-04-08T12:15","resolved_at":"2026-04-08T12:30","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-04-12T12:15","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0042","session_id":"DIL-20260409-5","raised_at":"2026-04-09T11:58","resolved_at":"2026-04-09T12:15","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-04-11T11:58","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0043","session_id":"DIL-20260413-6","raised_at":"2026-04-13T12:18","resolved_at":"2026-04-13T12:42","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-04-18T12:18","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0044","session_id":"DIL-20260413-6","raised_at":"2026-04-13T12:08","resolved_at":"2026-04-13T12:30","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-04-15T12:08","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0045","session_id":"DIL-20260415-7","raised_at":"2026-04-15T13:02","resolved_at":"2026-04-15T13:28","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-04-18T13:02","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0046","session_id":"DIL-20260415-7","raised_at":"2026-04-15T11:31","resolved_at":"2026-04-15T11:53","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-04-16T11:31","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0047","session_id":"DIL-20260420-9","raised_at":"2026-04-20T09:15","resolved_at":"2026-04-20T09:39","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-04-27T09:15","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0048","session_id":"DIL-20260422-10","raised_at":"2026-04-22T10:07","resolved_at":"2026-04-22T10:32","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-05-01T10:07","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0049","session_id":"DIL-20260423-11","raised_at":"2026-04-23T10:01","resolved_at":"2026-04-23T10:25","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-05-05T10:01","sla_days":5.0,"recurrence_of":"F-0032"},{"fault_id":"F-0050","session_id":"DIL-20260429-13","raised_at":"2026-04-29T09:42","resolved_at":"2026-04-29T10:00","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-04-30T09:42","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0051","session_id":"DIL-20260430-14","raised_at":"2026-04-30T11:35","resolved_at":"2026-04-30T12:09","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-05-12T11:35","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0052","session_id":"DIL-20260430-14","raised_at":"2026-04-30T13:19","resolved_at":"2026-04-30T13:53","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-05-05T13:19","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0053","session_id":"DIL-20260504-1","raised_at":"2026-05-04T12:17","resolved_at":"2026-05-04T12:38","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-05-16T12:17","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0054","session_id":"DIL-20260506-2","raised_at":"2026-05-06T09:48","resolved_at":"2026-05-06T10:00","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-05-10T09:48","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0055","session_id":"DIL-20260507-3","raised_at":"2026-05-07T09:44","resolved_at":"2026-05-07T10:08","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-05-09T09:44","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0056","session_id":"DIL-20260511-4","raised_at":"2026-05-11T09:06","resolved_at":"2026-05-11T09:29","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-05-20T09:06","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0057","session_id":"DIL-20260518-7","raised_at":"2026-05-18T11:49","resolved_at":"2026-05-18T12:06","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-05-22T11:49","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0058","session_id":"DIL-20260520-8","raised_at":"2026-05-20T09:25","resolved_at":"2026-05-20T09:47","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-05-29T09:25","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0059","session_id":"DIL-20260521-9","raised_at":"2026-05-21T11:49","resolved_at":"2026-05-21T12:06","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-05-26T11:49","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0060","session_id":"DIL-20260525-10","raised_at":"2026-05-25T09:19","resolved_at":"2026-05-25T09:41","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-06-03T09:19","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0061","session_id":"DIL-20260525-10","raised_at":"2026-05-25T11:09","resolved_at":"2026-05-25T11:34","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-05-29T11:09","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0062","session_id":"DIL-20260527-11","raised_at":"2026-05-27T11:47","resolved_at":"2026-05-27T12:04","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-05-31T11:47","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0063","session_id":"DIL-20260528-12","raised_at":"2026-05-28T13:49","resolved_at":"2026-05-28T14:02","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-06-06T13:49","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0064","session_id":"DIL-20260601-1","raised_at":"2026-06-01T11:43","resolved_at":"2026-06-01T12:10","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-06-05T11:43","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0065","session_id":"DIL-20260603-2","raised_at":"2026-06-03T12:15","resolved_at":"2026-06-03T12:34","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-06-04T12:15","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0066","session_id":"DIL-20260604-3","raised_at":"2026-06-04T12:39","resolved_at":"2026-06-04T12:46","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-06-09T12:39","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0067","session_id":"DIL-20260608-4","raised_at":"2026-06-08T10:10","resolved_at":"2026-06-08T10:24","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-06-12T10:10","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0068","session_id":"DIL-20260610-5","raised_at":"2026-06-10T09:54","resolved_at":"2026-06-10T10:10","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-06-17T09:54","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0069","session_id":"DIL-20260611-6","raised_at":"2026-06-11T12:44","resolved_at":"2026-06-11T13:04","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-06-13T12:44","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0070","session_id":"DIL-20260618-9","raised_at":"2026-06-18T11:39","resolved_at":"2026-06-18T12:01","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-06-22T11:39","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0071","session_id":"DIL-20260622-10","raised_at":"2026-06-22T11:29","resolved_at":"2026-06-22T11:51","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-06-25T11:29","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0072","session_id":"DIL-20260624-11","raised_at":"2026-06-24T10:27","resolved_at":"2026-06-24T10:30","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-06-25T10:27","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0073","session_id":"DIL-20260625-12","raised_at":"2026-06-25T12:42","resolved_at":"2026-06-25T13:00","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-06-29T12:42","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0074","session_id":"DIL-20260629-13","raised_at":"2026-06-29T09:36","resolved_at":"2026-06-29T09:49","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-06-30T09:36","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0075","session_id":"DIL-20260701-1","raised_at":"2026-07-01T12:17","resolved_at":"2026-07-01T12:35","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-07-03T12:17","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0076","session_id":"DIL-20260702-2","raised_at":"2026-07-02T09:46","resolved_at":"2026-07-02T09:52","in_session":true,"fault_class":"Model interface","root_cause_closed_at":"2026-07-05T09:46","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0077","session_id":"DIL-20260715-7","raised_at":"2026-07-15T09:24","resolved_at":"2026-07-15T09:28","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-07-20T09:24","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0078","session_id":"DIL-20260716-8","raised_at":"2026-07-16T13:07","resolved_at":"2026-07-16T13:14","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-07-20T13:07","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0079","session_id":"DIL-20260720-9","raised_at":"2026-07-20T11:27","resolved_at":"2026-07-20T11:36","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-07-25T11:27","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0080","session_id":"DIL-20260723-11","raised_at":"2026-07-23T09:12","resolved_at":"2026-07-23T09:15","in_session":true,"fault_class":"Power-up sequence","root_cause_closed_at":"2026-07-27T09:12","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0081","session_id":"DIL-20260729-13","raised_at":"2026-07-29T12:24","resolved_at":"2026-07-29T12:39","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-08-01T12:24","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0082","session_id":"DIL-20260812-5","raised_at":"2026-08-12T11:40","resolved_at":"2026-08-12T11:50","in_session":true,"fault_class":"Sensor scaling","root_cause_closed_at":"2026-08-17T11:40","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0083","session_id":"DIL-20260819-8","raised_at":"2026-08-19T13:27","resolved_at":"2026-08-19T13:39","in_session":true,"fault_class":"Logging config","root_cause_closed_at":"2026-08-20T13:27","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0084","session_id":"DIL-20260820-9","raised_at":"2026-08-20T13:02","resolved_at":"2026-08-20T13:13","in_session":true,"fault_class":"CAN timeout","root_cause_closed_at":"2026-08-24T13:02","sla_days":5.0,"recurrence_of":""},{"fault_id":"F-0085","session_id":"DIL-20260824-10","raised_at":"2026-08-24T09:58","resolved_at":"2026-08-24T10:10","in_session":true,"fault_class":"Calibration mismatch","root_cause_closed_at":"2026-08-25T09:58","sla_days":5.0,"recurrence_of":""}],"config":[{"date":"2026-01-28","tracked_items":412.0,"matched_items":365.0,"documented_diffs":18.0,"undocumented_diffs":29.0,"car_release_date":"2026-01-10","dil_baseline_date":"2026-02-05"},{"date":"2026-02-28","tracked_items":412.0,"matched_items":363.0,"documented_diffs":22.0,"undocumented_diffs":27.0,"car_release_date":"2026-02-05","dil_baseline_date":"2026-02-28"},{"date":"2026-03-28","tracked_items":412.0,"matched_items":364.0,"documented_diffs":26.0,"undocumented_diffs":22.0,"car_release_date":"2026-03-09","dil_baseline_date":"2026-03-29"},{"date":"2026-04-28","tracked_items":412.0,"matched_items":366.0,"documented_diffs":30.0,"undocumented_diffs":16.0,"car_release_date":"2026-04-10","dil_baseline_date":"2026-04-28"},{"date":"2026-05-28","tracked_items":412.0,"matched_items":362.0,"documented_diffs":34.0,"undocumented_diffs":16.0,"car_release_date":"2026-05-03","dil_baseline_date":"2026-05-18"},{"date":"2026-06-28","tracked_items":412.0,"matched_items":363.0,"documented_diffs":38.0,"undocumented_diffs":11.0,"car_release_date":"2026-06-10","dil_baseline_date":"2026-06-23"},{"date":"2026-07-28","tracked_items":412.0,"matched_items":366.0,"documented_diffs":42.0,"undocumented_diffs":4.0,"car_release_date":"2026-07-08","dil_baseline_date":"2026-07-18"},{"date":"2026-08-28","tracked_items":412.0,"matched_items":366.0,"documented_diffs":46.0,"undocumented_diffs":0.0,"car_release_date":"2026-08-02","dil_baseline_date":"2026-08-10"}],"coverage":[{"date":"2026-03-25","model":"brake-by-wire","decision_pct":70.3,"condition_pct":68.3,"mcdc_pct":59.3,"signal_range_pct":72.3},{"date":"2026-03-25","model":"differential","decision_pct":68.0,"condition_pct":66.0,"mcdc_pct":57.0,"signal_range_pct":70.0},{"date":"2026-03-25","model":"power-steering","decision_pct":70.2,"condition_pct":68.2,"mcdc_pct":59.2,"signal_range_pct":72.2},{"date":"2026-06-25","model":"brake-by-wire","decision_pct":80.7,"condition_pct":78.7,"mcdc_pct":69.7,"signal_range_pct":82.7},{"date":"2026-06-25","model":"differential","decision_pct":85.5,"condition_pct":83.5,"mcdc_pct":74.5,"signal_range_pct":87.5},{"date":"2026-06-25","model":"power-steering","decision_pct":85.9,"condition_pct":83.9,"mcdc_pct":74.9,"signal_range_pct":87.9},{"date":"2026-08-25","model":"brake-by-wire","decision_pct":96.6,"condition_pct":94.6,"mcdc_pct":85.6,"signal_range_pct":98.6},{"date":"2026-08-25","model":"differential","decision_pct":96.7,"condition_pct":94.7,"mcdc_pct":85.7,"signal_range_pct":98.7},{"date":"2026-08-25","model":"power-steering","decision_pct":96.4,"condition_pct":94.4,"mcdc_pct":85.4,"signal_range_pct":98.4}],"documentation":[{"date":"2026-01-28","differences_identified":48.0,"differences_documented":15.0,"pages_total":22.0,"pages_fresh":15.0,"procedures_identified":17.0,"sops_signed_off":3.0},{"date":"2026-02-28","differences_identified":50.0,"differences_documented":20.0,"pages_total":27.0,"pages_fresh":20.0,"procedures_identified":17.0,"sops_signed_off":4.0},{"date":"2026-03-28","differences_identified":52.0,"differences_documented":26.0,"pages_total":32.0,"pages_fresh":24.0,"procedures_identified":17.0,"sops_signed_off":6.0},{"date":"2026-04-28","differences_identified":54.0,"differences_documented":31.0,"pages_total":37.0,"pages_fresh":29.0,"procedures_identified":17.0,"sops_signed_off":8.0},{"date":"2026-05-28","differences_identified":57.0,"differences_documented":38.0,"pages_total":42.0,"pages_fresh":35.0,"procedures_identified":17.0,"sops_signed_off":10.0},{"date":"2026-06-28","differences_identified":59.0,"differences_documented":45.0,"pages_total":47.0,"pages_fresh":40.0,"procedures_identified":17.0,"sops_signed_off":12.0},{"date":"2026-07-28","differences_identified":61.0,"differences_documented":52.0,"pages_total":52.0,"pages_fresh":46.0,"procedures_identified":17.0,"sops_signed_off":14.0},{"date":"2026-08-28","differences_identified":64.0,"differences_documented":60.0,"pages_total":58.0,"pages_fresh":52.0,"procedures_identified":17.0,"sops_signed_off":16.0}],"survey":[{"date":"2026-03-26","rater_group":"Drivers","respondents":4.0,"clarity":3.7,"responsiveness":3.8,"fidelity_confidence":3.45,"overall":3.55},{"date":"2026-03-26","rater_group":"Race engineers","respondents":6.0,"clarity":3.49,"responsiveness":3.59,"fidelity_confidence":3.24,"overall":3.34},{"date":"2026-03-26","rater_group":"Vehicle performance","respondents":5.0,"clarity":3.55,"responsiveness":3.65,"fidelity_confidence":3.3,"overall":3.4},{"date":"2026-03-26","rater_group":"Simulator section lead","respondents":2.0,"clarity":3.67,"responsiveness":3.77,"fidelity_confidence":3.42,"overall":3.52},{"date":"2026-06-26","rater_group":"Drivers","respondents":4.0,"clarity":4.0,"responsiveness":4.1,"fidelity_confidence":3.75,"overall":3.85},{"date":"2026-06-26","rater_group":"Race engineers","respondents":6.0,"clarity":4.2,"responsiveness":4.3,"fidelity_confidence":3.95,"overall":4.05},{"date":"2026-06-26","rater_group":"Vehicle performance","respondents":5.0,"clarity":3.87,"responsiveness":3.97,"fidelity_confidence":3.62,"overall":3.72},{"date":"2026-06-26","rater_group":"Simulator section lead","respondents":2.0,"clarity":3.86,"responsiveness":3.96,"fidelity_confidence":3.61,"overall":3.71},{"date":"2026-08-26","rater_group":"Drivers","respondents":4.0,"clarity":4.33,"responsiveness":4.43,"fidelity_confidence":4.08,"overall":4.18},{"date":"2026-08-26","rater_group":"Race engineers","respondents":6.0,"clarity":4.55,"responsiveness":4.65,"fidelity_confidence":4.3,"overall":4.4},{"date":"2026-08-26","rater_group":"Vehicle performance","respondents":5.0,"clarity":4.32,"responsiveness":4.42,"fidelity_confidence":4.07,"overall":4.17},{"date":"2026-08-26","rater_group":"Simulator section lead","respondents":2.0,"clarity":4.39,"responsiveness":4.49,"fidelity_confidence":4.14,"overall":4.24}],"correlation":[{"date":"2026-03-26","channel":"brake pressure","sim_vs_track_delta_pct":5.9},{"date":"2026-03-26","channel":"steering torque","sim_vs_track_delta_pct":4.91},{"date":"2026-03-26","channel":"diff lock","sim_vs_track_delta_pct":5.11},{"date":"2026-03-26","channel":"throttle map","sim_vs_track_delta_pct":5.77},{"date":"2026-06-26","channel":"brake pressure","sim_vs_track_delta_pct":4.04},{"date":"2026-06-26","channel":"steering torque","sim_vs_track_delta_pct":4.08},{"date":"2026-06-26","channel":"diff lock","sim_vs_track_delta_pct":3.32},{"date":"2026-06-26","channel":"throttle map","sim_vs_track_delta_pct":4.02},{"date":"2026-08-26","channel":"brake pressure","sim_vs_track_delta_pct":2.18},{"date":"2026-08-26","channel":"steering torque","sim_vs_track_delta_pct":2.16},{"date":"2026-08-26","channel":"diff lock","sim_vs_track_delta_pct":1.4},{"date":"2026-08-26","channel":"throttle map","sim_vs_track_delta_pct":2.13}],"development":[{"date":"2026-03-30","tool":"HIL regression harness","items_committed":3.0,"items_delivered":2.0,"setup_minutes_before":45.0,"setup_minutes_after":45.0,"config_errors_before":12.0,"config_errors_after":12.0,"cross_tasks":1.0},{"date":"2026-06-30","tool":"Config diff tool","items_committed":3.0,"items_delivered":3.0,"setup_minutes_before":45.0,"setup_minutes_after":34.0,"config_errors_before":12.0,"config_errors_after":7.0,"cross_tasks":3.0},{"date":"2026-08-24","tool":"Session log automation","items_committed":3.0,"items_delivered":2.0,"setup_minutes_before":38.0,"setup_minutes_after":22.0,"config_errors_before":7.0,"config_errors_after":3.0,"cross_tasks":4.0}]},"programme":{"start_date":"2026-01-06","as_of":"2026-08-24","targets_agreed":false,"overrides":{}}};</script>
+<script>/* Metric engine — the browser mirror of kpi_framework/metrics.py + scoring.py.
+   Every formula here has a Python twin, and tests/test_parity.py runs both over
+   the same records and fails if any value disagrees. Change one, change both. */
+const KPI = (() => {
+  'use strict';
+
+  const NUMERIC = new Set(['scheduled_minutes','productive_minutes','control_faults','fault_restore_minutes',
+    'debrief_usefulness','defects_pre_release','escaped_sev1','escaped_sev2','escaped_sev3','hil_cases_run',
+    'hil_cases_passed','functions_total','functions_automated','sla_days','tracked_items','matched_items',
+    'documented_diffs','undocumented_diffs','decision_pct','condition_pct','mcdc_pct','signal_range_pct',
+    'differences_identified','differences_documented','pages_total','pages_fresh','procedures_identified',
+    'sops_signed_off','respondents','clarity','responsiveness','fidelity_confidence','overall',
+    'sim_vs_track_delta_pct','items_committed','items_delivered','setup_minutes_before','setup_minutes_after',
+    'config_errors_before','config_errors_after','cross_tasks']);
+  const DATETIMES = new Set(['raised_at','resolved_at','root_cause_closed_at','spec_frozen_at','validated_at','event_at']);
+  const DATES = new Set(['date','car_release_date','dil_baseline_date']);
+  const BOOLEANS = new Set(['session_day_intervention','rollback','in_session','debrief_due','debrief_on_time']);
+  const TRUE = new Set(['1','true','yes','y','t']);
+  const ANONYMITY_FLOOR = 3;
+
+  /* ---- parsing (UTC only, so a viewer's timezone can never shift a period) */
+  function parseDate(value) {
+    if (value instanceof Date) return value;
+    if (typeof value !== 'string' || !value.trim()) return null;
+    const m = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?/);
+    if (!m) return null;
+    return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)));
+  }
+
+  function coerceRow(row) {
+    const out = {};
+    for (const [col, raw] of Object.entries(row)) {
+      if (!col) continue;
+      const value = typeof raw === 'string' ? raw.trim() : raw;
+      if (NUMERIC.has(col)) {
+        out[col] = (value === '' || value === null || value === undefined) ? null : Number(value);
+      } else if (BOOLEANS.has(col)) {
+        out[col] = typeof value === 'boolean' ? value : TRUE.has(String(value).toLowerCase());
+      } else {
+        out[col] = value;
+      }
+    }
+    return out;
+  }
+
+  function rowDate(row) {
+    for (const col of ['date', 'event_at', 'raised_at']) {
+      const parsed = parseDate(row[col]);
+      if (parsed) return parsed;
+    }
+    return null;
+  }
+
+  function periodKey(date, period) {
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth() + 1;
+    if (period === 'quarter') return `${year}-Q${Math.floor((month - 1) / 3) + 1}`;
+    return `${year}-${String(month).padStart(2, '0')}`;
+  }
+
+  function groupByPeriod(rows, period) {
+    const buckets = new Map();
+    for (const row of rows) {
+      const when = rowDate(row);
+      if (!when) continue;
+      const key = periodKey(when, period);
+      if (!buckets.has(key)) buckets.set(key, []);
+      buckets.get(key).push(row);
+    }
+    return new Map([...buckets.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)));
+  }
+
+  /* ---- numeric helpers (null means "no data", never zero) ---------------- */
+  const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+  const values = (rows, col) => rows.map((r) => r[col]).filter(isNum);
+  const sumOf = (rows, col) => { const v = values(rows, col); return v.length ? v.reduce((a, b) => a + b, 0) : null; };
+  const mean = (v) => (v.length ? v.reduce((a, b) => a + b, 0) / v.length : null);
+  function median(v) {
+    if (!v.length) return null;
+    const s = [...v].sort((a, b) => a - b);
+    const mid = Math.floor(s.length / 2);
+    return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+  }
+  function percentile(v, pct) {
+    if (!v.length) return null;
+    const s = [...v].sort((a, b) => a - b);
+    if (s.length === 1) return s[0];
+    const pos = (s.length - 1) * pct;
+    const low = Math.floor(pos);
+    const high = Math.min(low + 1, s.length - 1);
+    return s[low] + (s[high] - s[low]) * (pos - low);
+  }
+  const ratio = (num, den, scale = 100) => (num === null || num === undefined || !den ? null : (num / den) * scale);
+  const countWhere = (rows, fn) => rows.filter(fn).length;
+  function latest(rows) {
+    const dated = rows.map((r) => [rowDate(r), r]).filter(([d]) => d);
+    if (!dated.length) return null;
+    dated.sort((a, b) => a[0] - b[0]);           // stable: last of a tie wins
+    return dated[dated.length - 1][1];
+  }
+  function hoursBetween(a, b) {
+    const start = parseDate(a); const end = parseDate(b);
+    if (!start || !end) return null;
+    return (end - start) / 3600000;
+  }
+  function daysBetween(a, b) {
+    const start = parseDate(a); const end = parseDate(b);
+    if (!start || !end) return null;
+    const d0 = Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate());
+    const d1 = Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate());
+    return (d1 - d0) / 86400000;
+  }
+  const spans = (rows, a, b, fn) => rows.map((r) => fn(r[a], r[b])).filter((v) => v !== null);
+
+  function lostMinutes(row) {
+    if (!isNum(row.scheduled_minutes) || !isNum(row.productive_minutes)) return 0;
+    return row.scheduled_minutes - row.productive_minutes;
+  }
+
+  /* ---- dataset formulas -------------------------------------------------- */
+  function sessionsMetrics(rows) {
+    const scheduled = sumOf(rows, 'scheduled_minutes');
+    const productive = sumOf(rows, 'productive_minutes');
+    const faults = sumOf(rows, 'control_faults');
+    const restore = sumOf(rows, 'fault_restore_minutes');
+    const sessionCount = rows.length;
+    const controlLoss = countWhere(rows, (r) => r.disruption_cause === 'control_system' && lostMinutes(r) > 0);
+    const debriefDue = countWhere(rows, (r) => r.debrief_due === true);
+    const debriefOnTime = countWhere(rows, (r) => r.debrief_due === true && r.debrief_on_time === true);
+    return {
+      session_count: sessionCount || null,
+      scheduled_minutes: scheduled,
+      productive_minutes: productive,
+      lost_minutes: scheduled === null || productive === null ? null : scheduled - productive,
+      availability_pct: ratio(productive, scheduled),
+      control_loss_count: controlLoss,
+      control_loss_pct: ratio(controlLoss, sessionCount || null),
+      mtbf_hours: productive === null || !faults ? null : (productive / 60) / faults,
+      mttr_minutes: restore === null || !faults ? null : restore / faults,
+      debrief_on_time_pct: ratio(debriefOnTime, debriefDue || null),
+      debrief_usefulness_mean: mean(values(rows, 'debrief_usefulness')),
+    };
+  }
+
+  function releasesMetrics(rows) {
+    const count = rows.length;
+    const clean = countWhere(rows, (r) => !r.session_day_intervention && !r.rollback);
+    const pre = sumOf(rows, 'defects_pre_release') || 0;
+    const sev1 = sumOf(rows, 'escaped_sev1') || 0;
+    const sev2 = sumOf(rows, 'escaped_sev2') || 0;
+    const sev3 = sumOf(rows, 'escaped_sev3') || 0;
+    const escaped = sev1 + sev2 + sev3;
+    const leadTimes = spans(rows, 'spec_frozen_at', 'validated_at', hoursBetween);
+    const buffers = spans(rows, 'validated_at', 'event_at', hoursBetween);
+    const last = latest(rows) || {};
+    return {
+      release_count: count || null,
+      release_ftpr_pct: ratio(clean, count || null),
+      defect_detection_efficiency_pct: count ? ratio(pre, (pre + escaped) || null) : null,
+      sev1_escapes: count ? sev1 : null,
+      escaped_defects: count ? escaped : null,
+      escaped_per_release: count ? escaped / count : null,
+      release_lead_time_hours_median: median(leadTimes),
+      release_buffer_hours_median: median(buffers),
+      release_buffer_compliance_pct: ratio(buffers.filter((b) => b >= 24).length, buffers.length || null),
+      hil_pass_rate_pct: ratio(sumOf(rows, 'hil_cases_passed'), sumOf(rows, 'hil_cases_run')),
+      hil_automation_coverage_pct: ratio(isNum(last.functions_automated) ? last.functions_automated : null,
+                                         isNum(last.functions_total) ? last.functions_total : null),
+    };
+  }
+
+  function faultsMetrics(rows) {
+    const inSession = rows.filter((r) => r.in_session === true);
+    const resolution = spans(inSession, 'raised_at', 'resolved_at',
+      (a, b) => { const h = hoursBetween(a, b); return h === null ? null : h * 60; });
+    const resolved = rows.filter((r) => parseDate(r.resolved_at));
+    const rootCauseDays = spans(rows, 'raised_at', 'root_cause_closed_at', daysBetween);
+    const withinSla = countWhere(rows, (r) => {
+      const days = daysBetween(r.raised_at, r.root_cause_closed_at);
+      return days !== null && days <= (isNum(r.sla_days) ? r.sla_days : 5);
+    });
+    const recurrences = countWhere(rows, (r) => String(r.recurrence_of || '').trim() !== '');
+    return {
+      fault_count: rows.length || null,
+      fault_resolution_minutes_median: median(resolution),
+      fault_resolution_minutes_p90: percentile(resolution, 0.9),
+      root_cause_days_median: median(rootCauseDays),
+      root_cause_closure_pct: ratio(withinSla, resolved.length || null),
+      fault_recurrence_pct: ratio(recurrences, resolved.length || null),
+    };
+  }
+
+  function configMetrics(rows) {
+    const last = latest(rows);
+    const currency = spans(rows, 'car_release_date', 'dil_baseline_date', daysBetween);
+    const out = { config_alignment_pct: null, undocumented_diff_count: null,
+                  baseline_currency_days_median: median(currency) };
+    if (last) {
+      const tracked = last.tracked_items;
+      const matched = last.matched_items || 0;
+      const documented = last.documented_diffs || 0;
+      if (isNum(tracked) && tracked) out.config_alignment_pct = ((matched + documented) / tracked) * 100;
+      out.undocumented_diff_count = isNum(last.undocumented_diffs) ? last.undocumented_diffs : null;
+    }
+    return out;
+  }
+
+  function coverageMetrics(rows) {
+    const latestByModel = new Map();
+    for (const row of rows) {
+      const when = rowDate(row);
+      if (!when) continue;
+      const model = String(row.model || '');
+      const prev = latestByModel.get(model);
+      if (!prev || (rowDate(prev) || when) <= when) latestByModel.set(model, row);
+    }
+    const reports = [...latestByModel.values()];
+    const perModel = [];
+    for (const r of reports) {
+      const parts = ['decision_pct', 'condition_pct', 'mcdc_pct', 'signal_range_pct']
+        .map((c) => r[c]).filter(isNum);
+      if (parts.length) perModel.push(parts.reduce((a, b) => a + b, 0) / parts.length);
+    }
+    return {
+      model_coverage_pct: mean(perModel),
+      mcdc_pct: mean(values(reports, 'mcdc_pct')),
+      models_reported: reports.length || null,
+    };
+  }
+
+  function documentationMetrics(rows) {
+    const last = latest(rows);
+    if (!last) return { catalogue_completeness_pct: null, catalogue_gap: null,
+                        doc_freshness_pct: null, sop_coverage_pct: null };
+    const identified = last.differences_identified;
+    const documented = last.differences_documented;
+    const gap = isNum(identified) && isNum(documented) ? Math.max(0, identified - documented) : null;
+    return {
+      catalogue_completeness_pct: ratio(isNum(documented) ? documented : null, isNum(identified) ? identified : null),
+      catalogue_gap: gap,
+      doc_freshness_pct: ratio(last.pages_fresh, last.pages_total),
+      sop_coverage_pct: ratio(last.sops_signed_off, last.procedures_identified),
+    };
+  }
+
+  function surveyMetrics(rows) {
+    const groups = new Map();
+    for (const row of rows) {
+      const key = String(row.rater_group || 'unspecified');
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(row);
+    }
+    const eligibleOverall = []; const eligibleFidelity = [];
+    let belowFloor = 0; let respondentsTotal = 0;
+    for (const groupRows of groups.values()) {
+      const respondents = groupRows.reduce((a, r) => a + (r.respondents || 0), 0);
+      respondentsTotal += respondents;
+      if (respondents < ANONYMITY_FLOOR) { belowFloor += 1; continue; }
+      const overall = mean(values(groupRows, 'overall'));
+      const fidelity = mean(values(groupRows, 'fidelity_confidence'));
+      if (overall !== null) eligibleOverall.push(overall);
+      if (fidelity !== null) eligibleFidelity.push(fidelity);
+    }
+    return {
+      stakeholder_satisfaction_mean: mean(eligibleOverall),
+      fidelity_confidence_mean: mean(eligibleFidelity),
+      survey_respondents: respondentsTotal || null,
+      survey_groups_below_floor: groups.size ? belowFloor : null,
+      survey_clarity_mean: mean(values(rows, 'clarity')),
+      survey_responsiveness_mean: mean(values(rows, 'responsiveness')),
+    };
+  }
+
+  const correlationMetrics = (rows) => ({ correlation_delta_mean: mean(values(rows, 'sim_vs_track_delta_pct')) });
+
+  function developmentMetrics(rows) {
+    const committed = sumOf(rows, 'items_committed');
+    const delivered = sumOf(rows, 'items_delivered');
+    const before = sumOf(rows, 'setup_minutes_before');
+    const after = sumOf(rows, 'setup_minutes_after');
+    const errorsBefore = sumOf(rows, 'config_errors_before');
+    const errorsAfter = sumOf(rows, 'config_errors_after');
+    const saved = before === null || after === null ? null : before - after;
+    return {
+      development_delivery_pct: ratio(delivered, committed),
+      items_delivered: delivered,
+      items_committed: committed,
+      setup_time_reduction_pct: ratio(saved, before),
+      minutes_saved_per_session: saved,
+      config_error_reduction_pct: ratio(
+        errorsBefore === null || errorsAfter === null ? null : errorsBefore - errorsAfter, errorsBefore),
+      cross_task_count: sumOf(rows, 'cross_tasks'),
+    };
+  }
+
+  const DATASET_FORMULAS = {
+    sessions: sessionsMetrics, releases: releasesMetrics, faults: faultsMetrics,
+    config: configMetrics, coverage: coverageMetrics, documentation: documentationMetrics,
+    survey: surveyMetrics, correlation: correlationMetrics, development: developmentMetrics,
+  };
+  const DATASETS = Object.keys(DATASET_FORMULAS);
+
+  function computePeriodMetrics(datasets, period) {
+    const table = {};
+    for (const [name, formula] of Object.entries(DATASET_FORMULAS)) {
+      for (const [key, rows] of groupByPeriod(datasets[name] || [], period)) {
+        table[key] = Object.assign(table[key] || {}, formula(rows));
+      }
+    }
+    return Object.fromEntries(Object.entries(table).sort((a, b) => (a[0] < b[0] ? -1 : 1)));
+  }
+
+  const computeAll = (datasets) => ({
+    month: computePeriodMetrics(datasets, 'month'),
+    quarter: computePeriodMetrics(datasets, 'quarter'),
+  });
+
+  /* ---- scoring ----------------------------------------------------------- */
+  const ON_TARGET = 'on-target'; const WATCH = 'watch'; const OFF_TARGET = 'off-target';
+  const BASELINE = 'baseline'; const PENDING = 'pending'; const NO_DATA = 'no-data';
+  const TARGET_JUDGEMENT_DAY = 60;
+  const FLAT_BAND = 0.02;
+
+  function programmeDay(programme) {
+    const start = parseDate(programme.start_date);
+    if (!start) return null;
+    const asOf = parseDate(programme.as_of) || new Date();
+    return Math.round(daysBetween(start, asOf));
+  }
+
+  function phaseId(phases, day) {
+    if (day === null) return null;
+    for (const phase of phases) {
+      if (day >= phase.start_day && (phase.end_day === null || day < phase.end_day)) return phase.id;
+    }
+    return phases[phases.length - 1].id;
+  }
+
+  const resolve = (kpi, programme) => Object.assign({}, kpi, (programme.overrides || {})[kpi.id] || {});
+
+  function statusFor(value, direction, target, amber) {
+    if (value === null || value === undefined) return NO_DATA;
+    if (direction === 'up') return value >= target ? ON_TARGET : (value >= amber ? WATCH : OFF_TARGET);
+    return value <= target ? ON_TARGET : (value <= amber ? WATCH : OFF_TARGET);
+  }
+
+  function kpiStatus(kpi, value, phases, programme) {
+    const day = programmeDay(programme);
+    const phase = phases.find((p) => p.id === kpi.phase);
+    if (day !== null && phase && day < phase.start_day) return PENDING;
+    if (value === null || value === undefined) return NO_DATA;
+    const r = resolve(kpi, programme);
+    const agreed = r.target_agreed === undefined ? !!programme.targets_agreed : !!r.target_agreed;
+    if (!agreed && day !== null && day < TARGET_JUDGEMENT_DAY) return BASELINE;
+    return statusFor(value, r.direction, Number(r.target), Number(r.amber));
+  }
+
+  function trendFor(current, previous, direction) {
+    if (current === null || previous === null || current === undefined || previous === undefined) {
+      return { delta: null, pct: null, verdict: 'new' };
+    }
+    const delta = current - previous;
+    const pct = previous ? (delta / Math.abs(previous)) * 100 : null;
+    let verdict;
+    if (pct !== null && Math.abs(pct) < FLAT_BAND * 100) verdict = 'flat';
+    else if (delta === 0) verdict = 'flat';
+    else verdict = ((direction === 'up') ? delta > 0 : delta < 0) ? 'improving' : 'worsening';
+    return { delta, pct, verdict };
+  }
+
+  function buildSeries(kpi, tables, phases, programme) {
+    const r = resolve(kpi, programme);
+    const period = r.period || 'month';
+    const table = tables[period] || {};
+    const points = Object.entries(table).map(([key, metrics]) => {
+      const value = metrics[r.metric] === undefined ? null : metrics[r.metric];
+      return { period: key, value, status: kpiStatus(kpi, value, phases, programme) };
+    });
+    const observed = points.filter((p) => p.value !== null);
+    const last = observed[observed.length - 1] || null;
+    const prev = observed.length > 1 ? observed[observed.length - 2] : null;
+
+    const companions = (r.companions || []).map((companion) => {
+      const cPoints = Object.entries(table).map(([key, metrics]) => ({
+        period: key, value: metrics[companion.metric] === undefined ? null : metrics[companion.metric],
+      }));
+      const cObserved = cPoints.filter((p) => p.value !== null);
+      const cLatest = cObserved.length ? cObserved[cObserved.length - 1].value : null;
+      let cStatus = null;
+      if (companion.direction && companion.target !== undefined && cLatest !== null) {
+        const gate = kpiStatus(kpi, cLatest, phases, programme);
+        cStatus = (gate === PENDING || gate === BASELINE) ? gate
+          : statusFor(cLatest, companion.direction, Number(companion.target), Number(companion.amber));
+      }
+      return Object.assign({}, companion, { latest: cLatest, status: cStatus, points: cPoints });
+    });
+
+    return {
+      id: kpi.id, period, points, companions,
+      latest: last ? last.value : null,
+      latest_period: last ? last.period : null,
+      previous: prev ? prev.value : null,
+      status: kpiStatus(kpi, last ? last.value : null, phases, programme),
+      trend: trendFor(last ? last.value : null, prev ? prev.value : null, r.direction),
+      target: r.target, amber: r.amber,
+      target_agreed: r.target_agreed === undefined ? !!programme.targets_agreed : !!r.target_agreed,
+      headline: r.headline === undefined ? !!kpi.headline : !!r.headline,
+    };
+  }
+
+  function scorecard(kpis, tables, phases, programme) {
+    const series = {};
+    for (const kpi of kpis) series[kpi.id] = buildSeries(kpi, tables, phases, programme);
+    const counts = {};
+    for (const s of Object.values(series)) counts[s.status] = (counts[s.status] || 0) + 1;
+    const measurable = Object.values(series).filter((s) => s.latest !== null);
+    const day = programmeDay(programme);
+    return {
+      series, counts,
+      headline_ids: kpis.filter((k) => series[k.id].headline).map((k) => k.id),
+      coverage_pct: kpis.length ? (measurable.length / kpis.length) * 100 : 0,
+      programme_day: day,
+      phase: phaseId(phases, day),
+    };
+  }
+
+  return { DATASETS, NUMERIC, DATETIMES, DATES, BOOLEANS, coerceRow, parseDate, rowDate, periodKey,
+           groupByPeriod, computeAll, computePeriodMetrics, statusFor, kpiStatus, trendFor,
+           buildSeries, scorecard, programmeDay, phaseId, resolve, median, percentile, mean,
+           STATUS: { ON_TARGET, WATCH, OFF_TARGET, BASELINE, PENDING, NO_DATA } };
+})();
+
+if (typeof module !== 'undefined' && module.exports) module.exports = KPI;
+</script>
+<script>/* Interactive KPI tracker. State lives in localStorage; every number on screen is
+   recomputed from the raw records by engine.js, so editing a record updates the
+   scorecard immediately. */
+(() => {
+  'use strict';
+
+  const STORE_KEY = 'sim-kpi-tracker-v1';
+  const P = window.PAYLOAD;
+
+  /* ---- state ------------------------------------------------------------ */
+  const seedDatasets = () => {
+    const out = {};
+    for (const name of KPI.DATASETS) out[name] = (P.datasets[name] || []).map(KPI.coerceRow);
+    return out;
+  };
+
+  const state = {
+    view: 'overview',
+    datasets: seedDatasets(),
+    programme: Object.assign({ start_date: null, as_of: null, targets_agreed: false, overrides: {} }, P.programme),
+    checklist: {},
+    theme: null,
+    selected: null,
+    logDataset: 'sessions',
+    filter: { category: 'all', headlineOnly: false, q: '' },
+    tables: null,
+    card: null,
+  };
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (saved.datasets) {
+        for (const name of KPI.DATASETS) {
+          if (saved.datasets[name]) state.datasets[name] = saved.datasets[name].map(KPI.coerceRow);
+        }
+      }
+      if (saved.programme) Object.assign(state.programme, saved.programme);
+      if (saved.checklist) state.checklist = saved.checklist;
+      if (saved.theme) state.theme = saved.theme;
+      if (saved.filter) Object.assign(state.filter, saved.filter);
+    } catch (err) { /* private window, blocked storage — run from the seed */ }
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        datasets: state.datasets, programme: state.programme,
+        checklist: state.checklist, theme: state.theme, filter: state.filter,
+      }));
+    } catch (err) { /* over quota or blocked — the session still works */ }
+  }
+
+  /* ---- helpers ---------------------------------------------------------- */
+  const esc = (s) => String(s === null || s === undefined ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  const kpiById = (id) => P.kpis.find((k) => k.id === id);
+  const categoryById = (id) => P.categories.find((c) => c.id === id);
+  const accById = (id) => P.accountabilities.find((a) => a.id === id);
+
+  const STATUS_LABEL = {
+    'on-target': 'On target', watch: 'Watch', 'off-target': 'Off target',
+    baseline: 'Baselining', pending: 'Not yet active', 'no-data': 'No data',
+  };
+  const STATUS_GLYPH = {
+    'on-target': '●', watch: '▲', 'off-target': '■', baseline: '◇', pending: '○', 'no-data': '·',
+  };
+  const TREND_GLYPH = { improving: '▲', worsening: '▼', flat: '–', new: '·' };
+  const TREND_LABEL = { improving: 'improving', worsening: 'worsening', flat: 'flat', new: 'first reading' };
+  const STATUS_ORDER = ['off-target', 'watch', 'on-target', 'baseline', 'pending', 'no-data'];
+
+  function fmt(value, decimals) {
+    if (value === null || value === undefined || Number.isNaN(value)) return '—';
+    return Number(value).toLocaleString(undefined, {
+      minimumFractionDigits: decimals || 0, maximumFractionDigits: decimals || 0,
+    });
+  }
+  const unitSuffix = (unit) => (unit === '%' || unit === '' ? unit : ` ${unit}`);
+
+  function statusChip(status, extra = '') {
+    return `<span class="chip s-${status} ${extra}"><span class="glyph" aria-hidden="true">${STATUS_GLYPH[status]}</span>${esc(STATUS_LABEL[status])}</span>`;
+  }
+  function trendTag(trend, decimals, unit, compact) {
+    const showDelta = trend.delta !== null && trend.verdict !== 'flat' && trend.verdict !== 'new';
+    const delta = showDelta
+      ? `${trend.delta > 0 ? '+' : ''}${fmt(trend.delta, Math.max(1, decimals || 0))}${unitSuffix(unit)}` : '';
+    const label = compact ? delta || TREND_LABEL[trend.verdict] : `${TREND_LABEL[trend.verdict]}${delta ? ` ${delta}` : ''}`;
+    return `<span class="trend ${trend.verdict}" title="${esc(TREND_LABEL[trend.verdict])} vs previous period"><span aria-hidden="true">${TREND_GLYPH[trend.verdict]}</span>${esc(label)}</span>`;
+  }
+
+  function recompute() {
+    state.tables = KPI.computeAll(state.datasets);
+    state.card = KPI.scorecard(P.kpis, state.tables, P.phases, state.programme);
+  }
+
+  function toast(message) {
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = message;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2400);
+  }
+
+  /* ---- charts ----------------------------------------------------------- */
+  /* One series, drawn as a 2px line against a dashed target reference. Target
+     is a reference line, not a second series — never a second y-axis. */
+  function sparkline(points, kpi, series) {
+    const observed = points.filter((p) => p.value !== null);
+    if (observed.length < 2) return '<div class="muted" style="font-size:11px">not enough periods yet</div>';
+    const W = 200; const H = 34; const pad = 3;
+    const values = observed.map((p) => p.value).concat([Number(series.target)]);
+    const min = Math.min(...values); const max = Math.max(...values);
+    const span = (max - min) || 1;
+    const x = (i) => pad + (i * (W - pad * 2)) / (observed.length - 1);
+    const y = (v) => H - pad - ((v - min) / span) * (H - pad * 2);
+    const path = observed.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.value).toFixed(1)}`).join('');
+    const last = observed[observed.length - 1];
+    const tips = observed.map((p, i) => `<rect x="${(x(i) - 5).toFixed(1)}" y="0" width="10" height="${H}" fill="transparent"><title>${esc(p.period)}: ${fmt(p.value, kpi.decimals)}${unitSuffix(kpi.unit)}</title></rect>`).join('');
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(kpi.name)} trend across ${observed.length} periods">
+      <line x1="0" y1="${y(series.target).toFixed(1)}" x2="${W}" y2="${y(series.target).toFixed(1)}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>
+      <path d="${path}" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      <circle cx="${x(observed.length - 1).toFixed(1)}" cy="${y(last.value).toFixed(1)}" r="3" fill="var(--series-1)" stroke="var(--surface)" stroke-width="2"/>
+      ${tips}</svg>`;
+  }
+
+  /* Round tick values, clamped to the drawn range — never 90.1 / 94.5 / 99.0. */
+  function niceTicks(min, max, count) {
+    const raw = (max - min) / Math.max(1, count - 1);
+    const mag = 10 ** Math.floor(Math.log10(Math.abs(raw) || 1));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) || mag * 10;
+    const ticks = [];
+    for (let v = Math.ceil(min / step) * step; v <= max + step * 1e-9; v += step) ticks.push(Number(v.toFixed(6)));
+    return ticks.length >= 2 ? ticks : [min, max];
+  }
+
+  function trendChart(points, kpi, series) {
+    const observed = points.filter((p) => p.value !== null);
+    if (!observed.length) return '<p class="muted">No readings yet for this KPI.</p>';
+    const W = 680; const H = 240;
+    const m = { top: 14, right: 54, bottom: 26, left: 46 };
+    const values = observed.map((p) => p.value).concat([Number(series.target), Number(series.amber)]);
+    let min = Math.min(...values); let max = Math.max(...values);
+    const pad = (max - min) * 0.14 || Math.abs(max * 0.1) || 1;
+    min -= pad; max += pad;
+    if (kpi.unit === '%' ) { max = Math.min(max, 101); }
+    if (min > 0 && min < (max - min) * 0.35) min = 0;
+    const span = (max - min) || 1;
+    const x = (i) => m.left + (observed.length === 1 ? (W - m.left - m.right) / 2
+      : (i * (W - m.left - m.right)) / (observed.length - 1));
+    const y = (v) => m.top + (H - m.top - m.bottom) * (1 - (v - min) / span);
+
+    const ticks = niceTicks(min, max, 3).map((v) =>
+      `<g><line x1="${m.left}" y1="${y(v).toFixed(1)}" x2="${W - m.right}" y2="${y(v).toFixed(1)}" stroke="var(--grid)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+       <text x="${m.left - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">${fmt(v, kpi.decimals)}</text></g>`).join('');
+
+    const band = `<rect x="${m.left}" y="${Math.min(y(Number(series.target)), y(Number(series.amber))).toFixed(1)}" width="${W - m.left - m.right}" height="${Math.abs(y(Number(series.amber)) - y(Number(series.target))).toFixed(1)}" fill="var(--warn)" opacity="0.07"/>`;
+    const targetLine = `<line x1="${m.left}" y1="${y(Number(series.target)).toFixed(1)}" x2="${W - m.right}" y2="${y(Number(series.target)).toFixed(1)}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/>
+      <text x="${W - m.right + 6}" y="${(y(Number(series.target)) + 4).toFixed(1)}" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">target</text>`;
+
+    const line = observed.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.value).toFixed(1)}`).join('');
+    const dots = observed.map((p, i) => `<circle cx="${x(i).toFixed(1)}" cy="${y(p.value).toFixed(1)}" r="4" fill="var(--series-1)" stroke="var(--surface)" stroke-width="2"/>`).join('');
+    const step = Math.ceil(observed.length / 8);
+    const labels = observed.map((p, i) => (i % step === 0 || i === observed.length - 1)
+      ? `<text x="${x(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">${esc(p.period)}</text>` : '').join('');
+    const last = observed[observed.length - 1];
+    const lastLabel = `<text x="${(x(observed.length - 1) + 9).toFixed(1)}" y="${(y(last.value) - 8).toFixed(1)}" font-size="12" font-weight="600" font-family="var(--font-mono)" fill="var(--ink)">${fmt(last.value, kpi.decimals)}</text>`;
+    const hover = observed.map((p, i) => `<rect class="hit" data-i="${i}" x="${(x(i) - (W - m.left - m.right) / (observed.length * 2) - 2).toFixed(1)}" y="${m.top}" width="${Math.max(12, (W - m.left - m.right) / observed.length).toFixed(1)}" height="${H - m.top - m.bottom}" fill="transparent"/>`).join('');
+
+    const meta = esc(JSON.stringify({
+      points: observed.map((p) => ({ period: p.period, value: p.value, status: p.status })),
+      decimals: kpi.decimals, unit: kpi.unit, W, H, m,
+    }));
+    return `<div class="chart" data-chart="trend" data-meta="${meta}">
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(kpi.name)} by ${esc(series.period)}">
+        ${ticks}${band}${targetLine}
+        <line class="cross" x1="0" y1="${m.top}" x2="0" y2="${H - m.bottom}" stroke="var(--axis)" stroke-width="1" opacity="0" vector-effect="non-scaling-stroke"/>
+        <path d="${line}" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+        ${dots}${lastLabel}${labels}${hover}
+      </svg>
+      <div class="tip"></div>
+      <div class="legend" style="margin-top:8px">
+        <span class="key"><i style="background:var(--series-1)"></i>Measured (${esc(series.period === 'quarter' ? 'quarterly' : 'monthly')})</span>
+        <span class="key"><i class="dash"></i>Target ${fmt(series.target, kpi.decimals)}${unitSuffix(kpi.unit)}</span>
+        <span class="key"><i style="background:var(--warn);opacity:.35"></i>Watch band to ${fmt(series.amber, kpi.decimals)}${unitSuffix(kpi.unit)}</span>
+      </div>
+    </div>`;
+  }
+
+  function wireCharts(root) {
+    $$('.chart[data-chart="trend"]', root).forEach((chart) => {
+      const meta = JSON.parse(chart.dataset.meta);
+      const svg = $('svg', chart);
+      const tip = $('.tip', chart);
+      const cross = $('.cross', chart);
+      const show = (i, clientX) => {
+        const p = meta.points[i];
+        if (!p) return;
+        const rect = chart.getBoundingClientRect();
+        tip.innerHTML = `<div class="k">${esc(p.period)}</div><div class="v">${fmt(p.value, meta.decimals)}${unitSuffix(meta.unit)}</div><div style="margin-top:4px">${statusChip(p.status)}</div>`;
+        tip.style.left = `${Math.min(Math.max(clientX - rect.left, 70), rect.width - 70)}px`;
+        tip.style.top = `${rect.height * 0.55}px`;
+        tip.classList.add('on');
+        const xFrac = meta.m.left + (meta.points.length === 1 ? 0 : (i * (meta.W - meta.m.left - meta.m.right)) / (meta.points.length - 1));
+        cross.setAttribute('x1', xFrac); cross.setAttribute('x2', xFrac);
+        cross.setAttribute('opacity', '1');
+      };
+      svg.addEventListener('mousemove', (e) => {
+        const hit = e.target.closest('.hit');
+        if (hit) show(Number(hit.dataset.i), e.clientX);
+      });
+      svg.addEventListener('mouseleave', () => { tip.classList.remove('on'); cross.setAttribute('opacity', '0'); });
+    });
+  }
+
+  /* ---- views ------------------------------------------------------------ */
+  function programmeStrip() {
+    const day = state.card.programme_day;
+    const current = state.card.phase;
+    return `<div class="programme">${P.phases.map((phase) => {
+      const done = day !== null && phase.end_day !== null && day >= phase.end_day;
+      const isCurrent = phase.id === current;
+      let progress = 0;
+      if (isCurrent && day !== null && phase.end_day !== null) {
+        progress = Math.min(100, ((day - phase.start_day) / (phase.end_day - phase.start_day)) * 100);
+      } else if (isCurrent) progress = 100;
+      return `<div class="phase ${done ? 'done' : ''} ${isCurrent ? 'current' : ''}">
+        <div class="id">${esc(phase.id)}${done ? ' ✓' : ''}</div>
+        <div class="name">${esc(phase.name)}</div>
+        <div class="window">${esc(phase.window)}</div>
+        ${isCurrent ? `<div class="bar" style="width:${progress.toFixed(0)}%"></div>` : ''}
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  function tile(kpi) {
+    const s = state.card.series[kpi.id];
+    const value = s.latest === null ? '—' : fmt(s.latest, kpi.decimals);
+    return `<button class="tile s-${s.status}" data-open="${esc(kpi.id)}">
+      <div class="eyebrow">${esc(kpi.id)} · ${esc(categoryById(kpi.category).name)}</div>
+      <div class="name">${esc(kpi.name)}</div>
+      <div class="value"><span class="v">${value}</span><span class="u">${esc(kpi.unit)}</span></div>
+      <div class="meta">${statusChip(s.status)}${trendTag(s.trend, kpi.decimals, kpi.unit, true)}</div>
+      ${sparkline(s.points, kpi, s)}
+      <div class="meta"><span class="num">${esc(s.latest_period || '—')}</span><span>target ${fmt(s.target, kpi.decimals)}${unitSuffix(kpi.unit)}${s.target_agreed ? '' : ' (illustrative)'}</span></div>
+    </button>`;
+  }
+
+  function viewOverview() {
+    const headline = P.kpis.filter((k) => state.card.series[k.id].headline);
+    const attention = P.kpis
+      .map((k) => ({ kpi: k, s: state.card.series[k.id] }))
+      .filter((r) => r.s.status === 'off-target' || r.s.status === 'watch')
+      .sort((a, b) => STATUS_ORDER.indexOf(a.s.status) - STATUS_ORDER.indexOf(b.s.status));
+    const counts = state.card.counts;
+    const total = P.kpis.length;
+
+    const rollup = STATUS_ORDER.filter((s) => counts[s]).map((s) =>
+      `<span class="key" style="display:inline-flex;align-items:center;gap:6px">${statusChip(s)}<span class="num">${counts[s]}</span></span>`).join('');
+
+    const matrix = P.categories.map((c) => {
+      const dots = P.kpis.filter((k) => k.category === c.id).map((k) => {
+        const s = state.card.series[k.id];
+        return `<button class="dot s-${s.status}" data-open="${esc(k.id)}" title="${esc(k.name)} — ${esc(STATUS_LABEL[s.status])}">${esc(k.id.split('.')[1])}</button>`;
+      }).join('');
+      return `<div class="cat">${esc(c.id)} · ${esc(c.name)}</div><div class="dots">${dots}</div>`;
+    }).join('');
+
+    return `
+      <div class="section">
+        <span class="eyebrow">Rollout position</span>
+        ${programmeStrip()}
+        <p class="muted" style="margin:9px 0 0;font-size:12.5px">
+          ${state.card.programme_day === null
+            ? 'Set a programme start date in the header to activate the 30/60/90 staging.'
+            : `Day ${state.card.programme_day} · ${esc(P.phases.find((p) => p.id === state.card.phase).intent)}`}
+        </p>
+      </div>
+
+      <div class="section">
+        <span class="eyebrow">Headline scorecard — ${headline.length} of ${total} KPIs</span>
+        <div class="tiles">${headline.map(tile).join('') || '<p class="muted">No headline KPIs selected. Star some in the Scorecard tab.</p>'}</div>
+      </div>
+
+      <div class="split">
+        <div class="panel">
+          <div class="panel-head"><h2>Needs attention</h2><span class="hint">${attention.length} of ${total} KPIs off target or on watch</span></div>
+          <div class="panel-body" style="padding:0">
+            ${attention.length ? `<div class="table-scroll"><table><thead><tr><th>KPI</th><th class="n">Latest</th><th class="n">Target</th><th>Status</th><th>Trend</th></tr></thead><tbody>
+              ${attention.map(({ kpi, s }) => `<tr class="clickable" data-open="${esc(kpi.id)}">
+                <td><strong>${esc(kpi.name)}</strong><br><span class="muted" style="font-size:11.5px">${esc(kpi.id)} · ${esc(categoryById(kpi.category).name)}</span></td>
+                <td class="n">${fmt(s.latest, kpi.decimals)}${unitSuffix(kpi.unit)}</td>
+                <td class="n">${fmt(s.target, kpi.decimals)}${unitSuffix(kpi.unit)}</td>
+                <td>${statusChip(s.status)}</td>
+                <td>${trendTag(s.trend, kpi.decimals, kpi.unit)}</td></tr>`).join('')}
+            </tbody></table></div>` : '<div class="panel-body"><p class="muted">Nothing off target. Either the rig is behaving, or the targets need to be harder.</p></div>'}
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>All 22 by category</h2></div>
+          <div class="panel-body">
+            <div class="legend" style="margin-bottom:12px">${rollup}</div>
+            <div class="matrix">${matrix}</div>
+            <p class="muted" style="font-size:12px;margin:14px 0 0">${fmt(state.card.coverage_pct, 0)}% of KPIs currently have data. A KPI you cannot measure cleanly by day 60 should be redesigned or dropped.</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function viewScorecard() {
+    const q = state.filter.q.toLowerCase();
+    const shown = P.kpis.filter((k) => {
+      if (state.filter.category !== 'all' && k.category !== state.filter.category) return false;
+      if (state.filter.headlineOnly && !state.card.series[k.id].headline) return false;
+      if (q && !(`${k.id} ${k.name} ${k.what} ${k.method}`.toLowerCase().includes(q))) return false;
+      return true;
+    });
+
+    const groups = P.categories.map((c) => {
+      const rows = shown.filter((k) => k.category === c.id);
+      if (!rows.length) return '';
+      return `<tr><th colspan="7" style="background:var(--surface-2);position:static;color:var(--ink);font-family:var(--font-display);font-size:11px">
+          ${esc(c.id)} · ${esc(c.name)} <span class="muted" style="text-transform:none;letter-spacing:0;font-family:var(--font-body)">— ${esc(c.intent)}</span></th></tr>
+        ${rows.map((k) => {
+          const s = state.card.series[k.id];
+          return `<tr class="clickable" data-open="${esc(k.id)}">
+            <td><button class="btn btn-ghost" data-star="${esc(k.id)}" title="${s.headline ? 'Remove from headline set' : 'Add to headline set'}" style="padding:2px 4px;color:${s.headline ? 'var(--accent)' : 'var(--muted)'}">${s.headline ? '★' : '☆'}</button></td>
+            <td><strong>${esc(k.name)}</strong><br><span class="muted" style="font-size:11.5px">${esc(k.id)} · ${k.accountabilities.map(esc).join(' ')} · ${esc(k.cadence)}</span></td>
+            <td class="n">${fmt(s.latest, k.decimals)}${unitSuffix(k.unit)}<br><span class="muted" style="font-size:11px">${esc(s.latest_period || '')}</span></td>
+            <td class="n">${fmt(s.target, k.decimals)}${s.target_agreed ? '' : '<br><span class="muted" style="font-size:10px">illustrative</span>'}</td>
+            <td>${statusChip(s.status)}</td>
+            <td>${trendTag(s.trend, k.decimals, k.unit)}</td>
+            <td class="muted" style="font-size:11.5px;max-width:220px">${esc(k.method)}</td></tr>`;
+        }).join('')}`;
+    }).join('');
+
+    return `<div class="panel">
+      <div class="panel-head">
+        <h2>Full scorecard</h2>
+        <div class="toolbar" style="margin-left:auto">
+          <input type="text" id="f-q" placeholder="search KPIs…" value="${esc(state.filter.q)}" style="width:170px">
+          <select id="f-cat"><option value="all">All categories</option>${P.categories.map((c) => `<option value="${esc(c.id)}" ${state.filter.category === c.id ? 'selected' : ''}>${esc(c.id)} · ${esc(c.name)}</option>`).join('')}</select>
+          <label class="control" style="gap:5px"><input type="checkbox" id="f-head" ${state.filter.headlineOnly ? 'checked' : ''}> <span>Headline only</span></label>
+        </div>
+      </div>
+      <div class="table-scroll"><table>
+        <thead><tr><th style="width:34px"></th><th>KPI</th><th class="n">Latest</th><th class="n">Target</th><th>Status</th><th>Trend</th><th>How it is measured</th></tr></thead>
+        <tbody>${groups || '<tr><td colspan="7" class="muted" style="padding:20px">Nothing matches that filter.</td></tr>'}</tbody>
+      </table></div>
+      <div class="panel-body" style="border-top:1px solid var(--line)">
+        <p class="muted" style="margin:0;font-size:12px">★ marks the headline set — start with 6–8, not 22. ${esc(P.meta.disclaimer)}</p>
+      </div>
+    </div>`;
+  }
+
+  function viewLog() {
+    const name = state.logDataset;
+    const spec = DATASET_FIELDS[name];
+    const rows = state.datasets[name] || [];
+    const feeds = P.kpis.filter((k) => k.dataset === name);
+    const recent = [...rows].slice(-10).reverse();
+    const columns = spec.fields.map((f) => f.name);
+
+    return `<div class="split-even">
+      <div class="panel">
+        <div class="panel-head"><h2>Log a record</h2><span class="hint">${rows.length} rows held</span></div>
+        <div class="panel-body">
+          <div class="field" style="margin-bottom:14px">
+            <label for="ds">Dataset</label>
+            <select id="ds">${KPI.DATASETS.map((d) => `<option value="${esc(d)}" ${d === name ? 'selected' : ''}>${esc(DATASET_FIELDS[d].label)}</option>`).join('')}</select>
+            <span class="help">${esc(spec.help)}</span>
+          </div>
+          <div class="legend" style="margin-bottom:14px">${feeds.map((k) => `<span class="chip plain">${esc(k.id)} ${esc(k.name)}</span>`).join('') || '<span class="muted" style="font-size:12px">Feeds companion metrics only.</span>'}</div>
+          <form id="entry" class="form-grid">
+            ${spec.fields.map((f) => {
+              const label = `<label for="in-${esc(f.name)}">${esc(f.name.replace(/_/g, ' '))}</label>`;
+              if (f.type === 'select') {
+                return `<div class="field">${label}<select id="in-${esc(f.name)}" name="${esc(f.name)}">${f.options.map((o) => `<option value="${esc(o)}">${esc(o)}</option>`).join('')}</select>${f.help ? `<span class="help">${esc(f.help)}</span>` : ''}</div>`;
+              }
+              if (f.type === 'bool') {
+                return `<div class="field">${label}<select id="in-${esc(f.name)}" name="${esc(f.name)}"><option value="true" ${f.default ? 'selected' : ''}>true</option><option value="false" ${f.default ? '' : 'selected'}>false</option></select></div>`;
+              }
+              const type = f.type === 'number' ? 'number' : (f.type === 'date' ? 'date' : (f.type === 'datetime' ? 'datetime-local' : 'text'));
+              const extra = f.step ? ` step="${f.step}"` : (f.type === 'number' ? ' step="any"' : '');
+              return `<div class="field">${label}<input id="in-${esc(f.name)}" name="${esc(f.name)}" type="${type}"${extra} value="${esc(f.default === undefined ? '' : f.default)}" placeholder="${esc(f.placeholder || '')}">${f.help ? `<span class="help">${esc(f.help)}</span>` : ''}</div>`;
+            }).join('')}
+          </form>
+          <div class="toolbar" style="margin-top:14px">
+            <button class="btn btn-primary" id="add-row">Add record</button>
+            <button class="btn" id="import-btn">Import CSV…</button>
+            <input type="file" id="import-file" accept=".csv,text/csv" class="sr">
+            <button class="btn" id="export-btn">Show as CSV</button>
+            <button class="btn btn-ghost" id="reset-seed" style="margin-left:auto">Reset all data to seed</button>
+          </div>
+          <div id="csv-out"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Recent records</h2><span class="hint">newest first</span></div>
+        <div class="table-scroll"><table>
+          <thead><tr><th style="width:32px"></th>${columns.map((c) => `<th${['date'].includes(c) ? '' : ' class="n"'}>${esc(c.replace(/_/g, ' '))}</th>`).join('')}</tr></thead>
+          <tbody>${recent.length ? recent.map((row) => {
+            const index = rows.indexOf(row);
+            return `<tr><td><button class="btn btn-ghost" data-del="${index}" title="Delete this record">✕</button></td>${columns.map((c) => {
+              const v = row[c];
+              const isNum = typeof v === 'number';
+              return `<td${isNum ? ' class="n"' : ''}>${esc(v === null || v === undefined ? '' : (isNum ? fmt(v, Number.isInteger(v) ? 0 : 2) : v))}</td>`;
+            }).join('')}</tr>`;
+          }).join('') : `<tr><td colspan="${columns.length + 1}" class="muted" style="padding:18px">No records yet.</td></tr>`}</tbody>
+        </table></div>
+      </div>
+    </div>`;
+  }
+
+  function viewRollout() {
+    return `<div class="cards">
+      ${P.phases.map((phase) => {
+        const done = state.checklist[phase.id] || [];
+        const complete = phase.checklist.filter((_, i) => done[i]).length;
+        const activating = P.kpis.filter((k) => k.phase === phase.id);
+        const isCurrent = phase.id === state.card.phase;
+        return `<div class="panel" ${isCurrent ? 'style="border-color:var(--accent)"' : ''}>
+          <div class="panel-head">
+            <h2>${esc(phase.id)} · ${esc(phase.name)}</h2>
+            <span class="hint">${esc(phase.window)} · ${complete}/${phase.checklist.length}</span>
+          </div>
+          <div class="panel-body">
+            <p style="margin-top:0">${esc(phase.intent)}</p>
+            <div class="note" style="margin-bottom:12px"><strong>Deliverable:</strong> ${esc(phase.deliverable)}</div>
+            ${phase.checklist.map((item, i) => `<label class="check ${done[i] ? 'done' : ''}">
+              <input type="checkbox" data-check="${esc(phase.id)}" data-i="${i}" ${done[i] ? 'checked' : ''}>
+              <span>${esc(item)}</span></label>`).join('')}
+            ${activating.length ? `<div style="margin-top:14px"><span class="eyebrow">KPIs that go live here</span>
+              <div class="legend" style="margin-top:6px">${activating.map((k) => `<button class="chip plain" data-open="${esc(k.id)}" style="cursor:pointer">${esc(k.id)} ${esc(k.name)}</button>`).join('')}</div></div>` : ''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  function viewProposal() {
+    const headline = P.kpis.filter((k) => state.card.series[k.id].headline);
+    const rows = headline.map((k) => {
+      const s = state.card.series[k.id];
+      return `<tr><td>${esc(categoryById(k.category).name)}</td><td><strong>${esc(k.name)}</strong></td>
+        <td>${esc(k.method)}</td><td class="n">${fmt(s.target, k.decimals)}${unitSuffix(k.unit)}</td><td>${esc(k.cadence)}</td></tr>`;
+    }).join('');
+    const accCoverage = P.accountabilities.map((a) => {
+      const ks = P.kpis.filter((k) => k.accountabilities.includes(a.id));
+      return `<li><strong>${esc(a.id)}</strong> ${esc(a.short)} — ${ks.map((k) => esc(k.id)).join(', ')}</li>`;
+    }).join('');
+
+    return `<div class="toolbar no-print" style="margin-bottom:14px">
+        <button class="btn" id="print-proposal">Print / save as PDF</button>
+        <span class="muted" style="font-size:12px">Edits to targets and the headline set flow straight into this page.</span>
+      </div>
+      <div class="paper">
+        <span class="eyebrow">Proposal · draft for alignment</span>
+        <h2>How we could track my contribution in this role</h2>
+        <p class="muted" style="font-size:13px">${esc(P.meta.role)} · ${esc(P.meta.group)}</p>
+        <div class="rule"></div>
+
+        <h3>Purpose</h3>
+        <p>To align early on how we track my contribution and how it evolves in this role. This is a first draft for you to shape — not a fixed set of targets, and not something I would want tied to pay or used to apportion blame.</p>
+
+        <h3>Alignment</h3>
+        <p>Seven measurement categories cover all eight key accountabilities of the role, and chain to the group's goal: a reliable, high-correlation simulator that wins development time.</p>
+        <ul style="columns:2;font-size:12.5px">${accCoverage}</ul>
+
+        <h3>The headline scorecard (${headline.length} of ${P.kpis.length})</h3>
+        <div class="table-scroll"><table>
+          <thead><tr><th>Category</th><th>KPI</th><th>How measured</th><th class="n">Proposed target</th><th>Cadence</th></tr></thead>
+          <tbody>${rows || '<tr><td colspan="5">No headline KPIs selected yet.</td></tr>'}</tbody>
+        </table></div>
+        <p style="font-size:12.5px;margin-top:8px" class="muted">Every target above is illustrative — adapted from reliability engineering, DORA release metrics and software-quality practice — until baselined against our systems. The remaining ${P.kpis.length - headline.length} KPIs sit in an appendix and stay dormant until collection is painless.</p>
+
+        <h3>Rollout</h3>
+        <ol>${P.phases.map((p) => `<li><strong>${esc(p.window)} — ${esc(p.name)}.</strong> ${esc(p.intent)} <em>${esc(p.deliverable)}</em></li>`).join('')}</ol>
+
+        <h3>What I would need from you</h3>
+        <ul>
+          <li>Which existing CSG KPI structures and systems I should plug into rather than duplicate.</li>
+          <li>Which of these targets to set, soften or drop — and which KPIs are not worth the collection cost.</li>
+          <li>Who should sit in the stakeholder-survey groups, and whether quarterly is the right cadence.</li>
+        </ul>
+
+        <div class="rule"></div>
+        <p class="muted" style="font-size:12px">Thresholds that would change this plan: any KPI that cannot be measured cleanly within 60 days gets redesigned or dropped; a survey group returning fewer than three raters is merged to preserve anonymity; if availability baselines below ~90% the reliability KPIs take priority over the development ones until the rig is stable.</p>
+      </div>`;
+  }
+
+  /* ---- KPI drawer -------------------------------------------------------- */
+  function openKpi(id) {
+    state.selected = id;
+    renderDrawer();
+  }
+  function closeKpi() {
+    state.selected = null;
+    $('#drawer-root').innerHTML = '';
+  }
+
+  function renderDrawer() {
+    const root = $('#drawer-root');
+    if (!state.selected) { root.innerHTML = ''; return; }
+    const kpi = kpiById(state.selected);
+    const s = state.card.series[kpi.id];
+    const category = categoryById(kpi.category);
+    const table = state.tables[s.period];
+
+    const periodRows = s.points.filter((p) => p.value !== null).slice().reverse().map((p) =>
+      `<tr><td class="num">${esc(p.period)}</td><td class="n">${fmt(p.value, kpi.decimals)}${unitSuffix(kpi.unit)}</td><td>${statusChip(p.status)}</td></tr>`).join('');
+
+    const companions = s.companions.length ? `<table style="margin-top:6px"><thead><tr><th>Companion metric</th><th class="n">Latest</th><th class="n">Target</th><th>Status</th></tr></thead><tbody>
+      ${s.companions.map((c) => `<tr><td>${esc(c.name)}</td><td class="n">${fmt(c.latest, c.decimals === undefined ? 1 : c.decimals)}${unitSuffix(c.unit || '')}</td>
+        <td class="n">${c.target === undefined ? '—' : fmt(c.target, c.decimals === undefined ? 1 : c.decimals)}</td>
+        <td>${c.status ? statusChip(c.status) : '<span class="muted">context only</span>'}</td></tr>`).join('')}</tbody></table>` : '';
+
+    root.innerHTML = `<div class="scrim" data-close="1"></div>
+      <aside class="drawer" role="dialog" aria-label="${esc(kpi.name)}">
+        <div class="drawer-head">
+          <div style="flex:1">
+            <div class="eyebrow">${esc(kpi.id)} · ${esc(category.id)} ${esc(category.name)}</div>
+            <h3>${esc(kpi.name)}</h3>
+            <div class="legend" style="margin-top:7px">
+              ${statusChip(s.status)}${trendTag(s.trend, kpi.decimals, kpi.unit)}
+              ${kpi.accountabilities.map((a) => `<span class="chip plain" title="${esc(accById(a).text)}">${esc(a)} ${esc(accById(a).short)}</span>`).join('')}
+            </div>
+          </div>
+          <button class="btn" data-close="1" aria-label="Close">✕</button>
+        </div>
+        <div class="drawer-body">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+            <span class="num" style="font-size:38px;font-weight:600;letter-spacing:-.02em">${fmt(s.latest, kpi.decimals)}</span>
+            <span class="muted">${esc(kpi.unit)}</span>
+            <span class="muted" style="margin-left:auto;font-size:12px">${esc(s.latest_period || 'no reading')} · ${s.period === 'quarter' ? 'quarterly' : 'monthly'}</span>
+          </div>
+          ${trendChart(s.points, kpi, s)}
+
+          <div class="panel" style="margin:18px 0;box-shadow:none">
+            <div class="panel-head"><h2>Target</h2><span class="hint">${s.target_agreed ? 'agreed with manager' : 'illustrative — not yet agreed'}</span></div>
+            <div class="panel-body">
+              <div class="form-grid">
+                <div class="field"><label for="t-target">Target (${esc(kpi.direction === 'up' ? 'at least' : 'at most')})</label>
+                  <input id="t-target" type="number" step="any" value="${esc(s.target)}"></div>
+                <div class="field"><label for="t-amber">Watch threshold</label>
+                  <input id="t-amber" type="number" step="any" value="${esc(s.amber)}"></div>
+                <div class="field"><label for="t-agreed">Status</label>
+                  <select id="t-agreed"><option value="0" ${s.target_agreed ? '' : 'selected'}>Illustrative</option><option value="1" ${s.target_agreed ? 'selected' : ''}>Agreed</option></select></div>
+                <div class="field"><label for="t-head">Headline set</label>
+                  <select id="t-head"><option value="1" ${s.headline ? 'selected' : ''}>Headline KPI</option><option value="0" ${s.headline ? '' : 'selected'}>Appendix</option></select></div>
+              </div>
+              <div class="toolbar" style="margin-top:12px">
+                <button class="btn btn-primary" id="t-save">Save</button>
+                <button class="btn btn-ghost" id="t-reset">Reset to framework default</button>
+              </div>
+            </div>
+          </div>
+
+          <dl class="defn">
+            <dt>What</dt><dd>${esc(kpi.what)}</dd>
+            <dt>Why</dt><dd>${esc(kpi.why)}</dd>
+            <dt>Method</dt><dd>${esc(kpi.method)}</dd>
+            <dt>Formula</dt><dd><div class="formula">${esc(kpi.formula)}</div></dd>
+            <dt>Cadence</dt><dd>${esc(kpi.cadence)}</dd>
+            <dt>Tooling</dt><dd>${kpi.tools.map((t) => `<span class="chip plain">${esc(t)}</span>`).join(' ')}</dd>
+            <dt>Source data</dt><dd><button class="btn" data-goto-log="${esc(kpi.dataset)}">${esc(kpi.dataset)}.csv — log a record</button></dd>
+            <dt>Live from</dt><dd>${esc(P.phases.find((p) => p.id === kpi.phase).window)} (${esc(kpi.phase)})</dd>
+          </dl>
+          ${kpi.note ? `<div class="note" style="margin-top:14px">${esc(kpi.note)}</div>` : ''}
+          ${companions ? `<h4 style="margin:20px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Read alongside</h4>${companions}` : ''}
+          <h4 style="margin:20px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Every reading</h4>
+          <table style="margin-top:6px"><thead><tr><th>Period</th><th class="n">Value</th><th>Status</th></tr></thead>
+            <tbody>${periodRows || '<tr><td colspan="3" class="muted">No readings yet.</td></tr>'}</tbody></table>
+        </div>
+      </aside>`;
+    wireCharts(root);
+  }
+
+  /* ---- dataset field specs ---------------------------------------------- */
+  const today = () => new Date().toISOString().slice(0, 10);
+  const DATASET_FIELDS = {
+    sessions: { label: 'DIL sessions', help: 'One row per booked simulator session — the backbone of the reliability KPIs.',
+      fields: [
+        { name: 'date', type: 'date', default: today() }, { name: 'session_id', type: 'text', placeholder: 'DIL-20260824-1' },
+        { name: 'scheduled_minutes', type: 'number', default: 480 }, { name: 'productive_minutes', type: 'number' },
+        { name: 'disruption_cause', type: 'select', options: ['none', 'control_system', 'motion_platform', 'vehicle_model', 'it', 'other'], help: 'Only control_system counts against this role.' },
+        { name: 'control_faults', type: 'number', default: 0 }, { name: 'fault_restore_minutes', type: 'number', default: 0 },
+        { name: 'debrief_due', type: 'bool', default: true }, { name: 'debrief_on_time', type: 'bool', default: true },
+        { name: 'debrief_usefulness', type: 'number', step: '0.1', help: 'rating out of 5' }] },
+    releases: { label: 'SECU releases', help: 'One row per release package prepared for an event.',
+      fields: [
+        { name: 'release_id', type: 'text', placeholder: 'SECU-2026.024' }, { name: 'event_at', type: 'datetime' },
+        { name: 'spec_frozen_at', type: 'datetime' }, { name: 'validated_at', type: 'datetime' },
+        { name: 'session_day_intervention', type: 'bool', default: false }, { name: 'rollback', type: 'bool', default: false },
+        { name: 'defects_pre_release', type: 'number', default: 0 }, { name: 'escaped_sev1', type: 'number', default: 0 },
+        { name: 'escaped_sev2', type: 'number', default: 0 }, { name: 'escaped_sev3', type: 'number', default: 0 },
+        { name: 'hil_cases_run', type: 'number' }, { name: 'hil_cases_passed', type: 'number' },
+        { name: 'functions_total', type: 'number' }, { name: 'functions_automated', type: 'number' }] },
+    faults: { label: 'Control faults', help: 'One row per fault raised, in session or on the bench.',
+      fields: [
+        { name: 'fault_id', type: 'text', placeholder: 'F-0101' }, { name: 'session_id', type: 'text' },
+        { name: 'raised_at', type: 'datetime' }, { name: 'resolved_at', type: 'datetime' },
+        { name: 'in_session', type: 'bool', default: true }, { name: 'fault_class', type: 'text', placeholder: 'CAN timeout' },
+        { name: 'root_cause_closed_at', type: 'datetime' }, { name: 'sla_days', type: 'number', default: 5 },
+        { name: 'recurrence_of', type: 'text', help: 'fault id this repeats, if any' }] },
+    config: { label: 'DIL-vs-car config audit', help: 'A snapshot of the configuration diff — the newest row in a period wins.',
+      fields: [
+        { name: 'date', type: 'date', default: today() }, { name: 'tracked_items', type: 'number' }, { name: 'matched_items', type: 'number' },
+        { name: 'documented_diffs', type: 'number' }, { name: 'undocumented_diffs', type: 'number' },
+        { name: 'car_release_date', type: 'date' }, { name: 'dil_baseline_date', type: 'date' }] },
+    coverage: { label: 'Model coverage', help: 'One row per model per Simulink Coverage report.',
+      fields: [
+        { name: 'date', type: 'date', default: today() }, { name: 'model', type: 'text', placeholder: 'brake-by-wire' },
+        { name: 'decision_pct', type: 'number' }, { name: 'condition_pct', type: 'number' },
+        { name: 'mcdc_pct', type: 'number' }, { name: 'signal_range_pct', type: 'number' }] },
+    documentation: { label: 'Documentation audit', help: 'A snapshot of the difference catalogue and SOP register.',
+      fields: [
+        { name: 'date', type: 'date', default: today() }, { name: 'differences_identified', type: 'number' },
+        { name: 'differences_documented', type: 'number' }, { name: 'pages_total', type: 'number' },
+        { name: 'pages_fresh', type: 'number' }, { name: 'procedures_identified', type: 'number' },
+        { name: 'sops_signed_off', type: 'number' }] },
+    survey: { label: 'Stakeholder survey', help: 'One row per rater group per round. Groups under three raters are excluded from the published figure.',
+      fields: [
+        { name: 'date', type: 'date', default: today() }, { name: 'rater_group', type: 'text', placeholder: 'Race engineers' },
+        { name: 'respondents', type: 'number' }, { name: 'clarity', type: 'number', step: '0.01' },
+        { name: 'responsiveness', type: 'number', step: '0.01' }, { name: 'fidelity_confidence', type: 'number', step: '0.01' },
+        { name: 'overall', type: 'number', step: '0.01' }] },
+    correlation: { label: 'Sim-vs-track correlation', help: 'Objective channel deltas from ATLAS, to sit beside the subjective survey.',
+      fields: [
+        { name: 'date', type: 'date', default: today() }, { name: 'channel', type: 'text', placeholder: 'brake pressure' },
+        { name: 'sim_vs_track_delta_pct', type: 'number', step: '0.01' }] },
+    development: { label: 'Development & CSG tasks', help: 'One row per quarter per tool or workstream.',
+      fields: [
+        { name: 'date', type: 'date', default: today() }, { name: 'tool', type: 'text', placeholder: 'HIL regression harness' },
+        { name: 'items_committed', type: 'number' }, { name: 'items_delivered', type: 'number' },
+        { name: 'setup_minutes_before', type: 'number' }, { name: 'setup_minutes_after', type: 'number' },
+        { name: 'config_errors_before', type: 'number' }, { name: 'config_errors_after', type: 'number' },
+        { name: 'cross_tasks', type: 'number' }] },
+  };
+
+  /* ---- CSV --------------------------------------------------------------- */
+  function toCsv(rows) {
+    if (!rows.length) return '';
+    const columns = [...rows.reduce((set, r) => { Object.keys(r).forEach((k) => set.add(k)); return set; }, new Set())];
+    const cell = (v) => {
+      const s = v === null || v === undefined ? '' : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    return [columns.join(','), ...rows.map((r) => columns.map((c) => cell(r[c])).join(','))].join('\n');
+  }
+
+  function parseCsv(text) {
+    const rows = []; let row = []; let field = ''; let quoted = false;
+    for (let i = 0; i < text.length; i += 1) {
+      const ch = text[i];
+      if (quoted) {
+        if (ch === '"' && text[i + 1] === '"') { field += '"'; i += 1; }
+        else if (ch === '"') quoted = false;
+        else field += ch;
+      } else if (ch === '"') quoted = true;
+      else if (ch === ',') { row.push(field); field = ''; }
+      else if (ch === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else if (ch !== '\r') field += ch;
+    }
+    if (field !== '' || row.length) { row.push(field); rows.push(row); }
+    if (!rows.length) return [];
+    const header = rows[0].map((h) => h.trim());
+    return rows.slice(1).filter((r) => r.some((c) => c.trim() !== ''))
+      .map((r) => KPI.coerceRow(Object.fromEntries(header.map((h, i) => [h, r[i] === undefined ? '' : r[i]]))));
+  }
+
+  /* ---- render ------------------------------------------------------------ */
+  const VIEWS = {
+    overview: { label: 'Overview', render: viewOverview },
+    scorecard: { label: 'Scorecard', render: viewScorecard },
+    log: { label: 'Log data', render: viewLog },
+    rollout: { label: 'Rollout', render: viewRollout },
+    proposal: { label: 'Proposal', render: viewProposal },
+  };
+
+  function render() {
+    recompute();
+    const day = state.card.programme_day;
+    $('#head-meta').innerHTML = `${day === null ? 'No start date set' : `Day ${day}`} · ${state.card.phase || '—'} · <span class="num">${fmt(state.card.coverage_pct, 0)}%</span> measurable`;
+    $$('nav.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === state.view)));
+    const main = $('#main');
+    main.innerHTML = VIEWS[state.view].render();
+    wireCharts(main);
+    if (state.selected) renderDrawer();
+    save();
+  }
+
+  /* ---- events ------------------------------------------------------------ */
+  function applyTheme() {
+    if (state.theme) document.documentElement.setAttribute('data-theme', state.theme);
+    else document.documentElement.removeAttribute('data-theme');
+    $('#theme-btn').textContent = state.theme === 'dark' ? 'Light' : (state.theme === 'light' ? 'Dark' : 'Theme');
+  }
+
+  function readForm() {
+    const spec = DATASET_FIELDS[state.logDataset];
+    const row = {};
+    for (const f of spec.fields) {
+      const el = $(`#in-${CSS.escape(f.name)}`);
+      if (!el) continue;
+      row[f.name] = el.value;
+    }
+    return KPI.coerceRow(row);
+  }
+
+  document.addEventListener('click', (e) => {
+    // The star sits inside a row that also opens the drawer, so it is matched first.
+    const star = e.target.closest('[data-star]');
+    if (star) {
+      const id = star.dataset.star;
+      const current = state.card.series[id].headline;
+      state.programme.overrides[id] = Object.assign({}, state.programme.overrides[id], { headline: !current });
+      render();
+      return;
+    }
+
+    if (e.target.closest('[data-close]')) { closeKpi(); return; }
+    const open = e.target.closest('[data-open]');
+    if (open) { openKpi(open.dataset.open); return; }
+
+    const goto = e.target.closest('[data-goto-log]');
+    if (goto) { state.logDataset = goto.dataset.gotoLog; state.view = 'log'; closeKpi(); render(); return; }
+
+    const del = e.target.closest('[data-del]');
+    if (del) {
+      state.datasets[state.logDataset].splice(Number(del.dataset.del), 1);
+      render(); toast('Record deleted');
+      return;
+    }
+
+    const tab = e.target.closest('nav.tabs button');
+    if (tab) { state.view = tab.dataset.view; render(); return; }
+
+    switch (e.target.id) {
+      case 'theme-btn': {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+          || (!state.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        state.theme = isDark ? 'light' : 'dark';
+        applyTheme(); save();
+        break;
+      }
+      case 'add-row': {
+        const row = readForm();
+        if (!KPI.rowDate(row)) { toast('That record needs a date before it can be counted'); break; }
+        state.datasets[state.logDataset].push(row);
+        render(); toast(`Added to ${state.logDataset}`);
+        break;
+      }
+      case 'import-btn': $('#import-file').click(); break;
+      case 'export-btn': {
+        const csv = toCsv(state.datasets[state.logDataset]);
+        $('#csv-out').innerHTML = `<div class="field" style="margin-top:14px">
+          <label>${esc(state.logDataset)}.csv — select all and copy</label>
+          <textarea rows="8" readonly style="width:100%;font-family:var(--font-mono);font-size:11px">${esc(csv)}</textarea>
+          <span class="help">Downloads are blocked inside the viewer, so copy from here — or run <span class="num">python -m kpi_framework export</span> for the full scorecard.</span></div>`;
+        const ta = $('#csv-out textarea'); ta.focus(); ta.select();
+        break;
+      }
+      case 'reset-seed':
+        if (window.confirm('Discard every logged record and restore the seeded sample data?')) {
+          state.datasets = seedDatasets(); render(); toast('Reset to seeded data');
+        }
+        break;
+      case 't-save': {
+        const id = state.selected;
+        state.programme.overrides[id] = Object.assign({}, state.programme.overrides[id], {
+          target: Number($('#t-target').value),
+          amber: Number($('#t-amber').value),
+          target_agreed: $('#t-agreed').value === '1',
+          headline: $('#t-head').value === '1',
+        });
+        render(); toast('Target updated');
+        break;
+      }
+      case 't-reset':
+        delete state.programme.overrides[state.selected];
+        render(); toast('Reset to framework default');
+        break;
+      case 'print-proposal': window.print(); break;
+      default: break;
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    const check = e.target.closest('[data-check]');
+    if (check) {
+      const phase = check.dataset.check;
+      const list = state.checklist[phase] || (state.checklist[phase] = []);
+      list[Number(check.dataset.i)] = check.checked;
+      render();
+      return;
+    }
+    switch (e.target.id) {
+      case 'start-date':
+        state.programme.start_date = e.target.value || null; render(); break;
+      case 'as-of':
+        state.programme.as_of = e.target.value || null; render(); break;
+      case 'ds':
+        state.logDataset = e.target.value; render(); break;
+      case 'f-cat':
+        state.filter.category = e.target.value; render(); break;
+      case 'f-head':
+        state.filter.headlineOnly = e.target.checked; render(); break;
+      case 'import-file': {
+        const file = e.target.files[0];
+        if (!file) break;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const rows = parseCsv(String(reader.result));
+            state.datasets[state.logDataset] = state.datasets[state.logDataset].concat(rows);
+            render(); toast(`Imported ${rows.length} rows into ${state.logDataset}`);
+          } catch (err) { toast('Could not read that CSV'); }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+        break;
+      }
+      default: break;
+    }
+  });
+
+  document.addEventListener('input', (e) => {
+    if (e.target.id === 'f-q') {
+      state.filter.q = e.target.value;
+      const main = $('#main');
+      main.innerHTML = viewScorecard();
+      $('#f-q').focus();
+      $('#f-q').setSelectionRange(e.target.value.length, e.target.value.length);
+      save();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.selected) closeKpi();
+  });
+
+  /* ---- boot -------------------------------------------------------------- */
+  load();
+  applyTheme();
+  $('#tabs').innerHTML = Object.entries(VIEWS).map(([key, v]) =>
+    `<button data-view="${key}" role="tab" aria-selected="${key === state.view}">${esc(v.label)}</button>`).join('');
+  $('#start-date').value = state.programme.start_date || '';
+  $('#as-of').value = state.programme.as_of || '';
+  render();
+})();
+</script>

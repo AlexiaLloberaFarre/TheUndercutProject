@@ -1,0 +1,13 @@
+date,rater_group,respondents,clarity,responsiveness,fidelity_confidence,overall
+2026-03-26,Drivers,4,3.7,3.8,3.45,3.55
+2026-03-26,Race engineers,6,3.49,3.59,3.24,3.34
+2026-03-26,Vehicle performance,5,3.55,3.65,3.3,3.4
+2026-03-26,Simulator section lead,2,3.67,3.77,3.42,3.52
+2026-06-26,Drivers,4,4.0,4.1,3.75,3.85
+2026-06-26,Race engineers,6,4.2,4.3,3.95,4.05
+2026-06-26,Vehicle performance,5,3.87,3.97,3.62,3.72
+2026-06-26,Simulator section lead,2,3.86,3.96,3.61,3.71
+2026-08-26,Drivers,4,4.33,4.43,4.08,4.18
+2026-08-26,Race engineers,6,4.55,4.65,4.3,4.4
+2026-08-26,Vehicle performance,5,4.32,4.42,4.07,4.17
+2026-08-26,Simulator section lead,2,4.39,4.49,4.14,4.24

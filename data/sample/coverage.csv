@@ -1,0 +1,10 @@
+date,model,decision_pct,condition_pct,mcdc_pct,signal_range_pct
+2026-03-25,brake-by-wire,70.3,68.3,59.3,72.3
+2026-03-25,differential,68.0,66.0,57.0,70.0
+2026-03-25,power-steering,70.2,68.2,59.2,72.2
+2026-06-25,brake-by-wire,80.7,78.7,69.7,82.7
+2026-06-25,differential,85.5,83.5,74.5,87.5
+2026-06-25,power-steering,85.9,83.9,74.9,87.9
+2026-08-25,brake-by-wire,96.6,94.6,85.6,98.6
+2026-08-25,differential,96.7,94.7,85.7,98.7
+2026-08-25,power-steering,96.4,94.4,85.4,98.4
