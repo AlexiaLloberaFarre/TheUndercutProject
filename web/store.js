@@ -15,7 +15,10 @@ const Store = (() => {
 
   const DATA_KEY = 'sim-kpi-tracker-v1';
   const UI_KEY = 'sim-kpi-tracker-ui-v1';
-  const CONFIG_PATH = { programme: 'config/programme', checklist: 'config/checklist', meta: 'config/meta' };
+  /* Settings live under `settings/`, not `config/` — `config` is already the name
+     of a dataset (the DIL-vs-car configuration audit), and both would land in one
+     collection. */
+  const CONFIG_PATH = { programme: 'settings/programme', checklist: 'settings/checklist', meta: 'settings/meta' };
   const DOC_BUDGET = 5000;          // the store's hard cap on documents
   const DELETE_BATCH = 8;           // paced so a bulk clear doesn't trip the rate limit
 
@@ -137,7 +140,9 @@ const Store = (() => {
   }
 
   function subscribeAll(datasets) {
+    const reserved = new Set(Object.values(CONFIG_PATH).map((p) => p.split('/')[0]));
     for (const name of datasets) {
+      if (reserved.has(name)) throw new Error(`dataset "${name}" collides with the settings collection`);
       unsubscribes.push(db.collection(name).onSnapshot(
         (snap) => {
           api.datasets[name] = rowsFromSnapshot(snap);

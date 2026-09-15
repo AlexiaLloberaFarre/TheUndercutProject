@@ -116,7 +116,7 @@ def cmd_build(args: argparse.Namespace) -> int:
     data = read_dataset_dir(args.data) if args.data else {}
     programme = _programme(args)
     payload = build_payload(cat, data, programme, seeded_from=str(args.data or "empty"), mode=args.mode)
-    html = build_html(dumps(payload))
+    html = build_html(dumps(payload), title=args.title)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html)
@@ -158,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     p_build.add_argument("--out", default="dist/dashboard.html")
     p_build.add_argument("--mode", choices=("local", "live"), default="local",
                          help="'live' builds for the shared Artifact store: no records baked in")
+    p_build.add_argument("--title", help="override the page title (it names the published artifact)")
     p_build.set_defaults(func=cmd_build)
 
     args = parser.parse_args(argv)

@@ -18,9 +18,15 @@ PLACEHOLDERS = {
 }
 
 
-def build_html(payload_json: str, web_dir: Path | str = WEB_DIR) -> str:
+def build_html(payload_json: str, web_dir: Path | str = WEB_DIR, *, title: str | None = None) -> str:
+    """`title` renames the page. The <title> tag is what names a published
+    artifact, so the live board needs its own or it collides with the local one
+    in the gallery."""
     web_dir = Path(web_dir)
     html = (web_dir / "index.html").read_text()
+    if title:
+        html = html.replace("<title>Simulator KPI Tracker</title>", f"<title>{title}</title>", 1)
+        html = html.replace("<h1>Simulator KPI Tracker</h1>", f"<h1>{title}</h1>", 1)
     for placeholder, filename in PLACEHOLDERS.items():
         if placeholder not in html:
             raise ValueError(f"web/index.html is missing the {placeholder} placeholder")

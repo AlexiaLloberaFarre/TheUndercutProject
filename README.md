@@ -86,14 +86,15 @@ KPI is scored immediately.
 
 ```python
 capabilities = {"db": {"rules": [
-    {"path": "",       "read": "interact", "write": "interact"},   # anyone admitted logs records
-    {"path": "config", "read": "interact", "write": "admin"},      # only editors move targets
+    {"path": "",         "read": "interact", "write": "interact"},  # anyone admitted logs records
+    {"path": "settings", "read": "interact", "write": "admin"},     # only editors move targets
 ]}}
 ```
 
 Records become documents — one per row, in a collection per dataset (`sessions`,
-`releases`, …) — and the page subscribes to each collection plus `config/programme`,
-`config/checklist` and `config/meta`. A session logged by anyone appears on every open
+`releases`, …) — and the page subscribes to each collection plus `settings/programme`,
+`settings/checklist` and `settings/meta`. Settings deliberately do not live under
+`config/`: that name is already a dataset. A session logged by anyone appears on every open
 copy within moments, no reload. Targets, the headline set, the programme dates and the
 rollout checklist are shared config; theme and filters stay per-viewer in
 `localStorage`, because they are nobody else's business.
@@ -104,6 +105,11 @@ Writes are serialized per document and a transient failure is retried once.
 
 `web/store.js` is the whole of it: two backends behind one API, chosen at load by whether
 `claude.use("db")` answers.
+
+To fill a fresh board with the sample records (or any dataset directory),
+`python scripts/make_seed_docs.py data/sample .seed` writes one JSON file per record and
+prints the batch entries to hand to the ArtifactData tool, 50 at a time. The board then
+shows a banner until the sample records are cleared.
 
 ## The dashboard
 

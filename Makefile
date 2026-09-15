@@ -18,7 +18,7 @@ build:           ## build the self-contained dashboard into dist/
 	$(PYTHON) -m kpi_framework build --data $(DATA) --start $(START) --as-of $(AS_OF) --out dist/dashboard.html
 
 build-live:      ## build the shared-board version (records come from the artifact store)
-	$(PYTHON) -m kpi_framework build --start $(START) --mode live --out dist/live-dashboard.html
+	$(PYTHON) -m kpi_framework build --start $(START) --mode live --title "Simulator KPI Board" --out dist/live-dashboard.html
 
 export:          ## write dist/scorecard.csv for a review pack
 	$(PYTHON) -m kpi_framework export --data $(DATA) --start $(START) --as-of $(AS_OF) --targets-agreed --format csv --out dist/scorecard.csv
