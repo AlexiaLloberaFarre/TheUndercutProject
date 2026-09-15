@@ -115,13 +115,14 @@ def cmd_build(args: argparse.Namespace) -> int:
         return 1
     data = read_dataset_dir(args.data) if args.data else {}
     programme = _programme(args)
-    payload = build_payload(cat, data, programme, seeded_from=str(args.data or "empty"))
+    payload = build_payload(cat, data, programme, seeded_from=str(args.data or "empty"), mode=args.mode)
     html = build_html(dumps(payload))
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html)
-    records = sum(len(rows) for rows in data.values())
-    print(f"wrote {out}  ({len(html) / 1024:.0f} KB, {records} seeded records)")
+    seeded = 0 if args.mode == "live" else sum(len(rows) for rows in data.values())
+    detail = "reads its records from the shared store" if args.mode == "live" else f"{seeded} seeded records"
+    print(f"wrote {out}  ({len(html) / 1024:.0f} KB, {detail})")
     return 0
 
 
@@ -155,6 +156,8 @@ def main(argv: list[str] | None = None) -> int:
     p_build = sub.add_parser("build", help="build the self-contained dashboard")
     add_common(p_build)
     p_build.add_argument("--out", default="dist/dashboard.html")
+    p_build.add_argument("--mode", choices=("local", "live"), default="local",
+                         help="'live' builds for the shared Artifact store: no records baked in")
     p_build.set_defaults(func=cmd_build)
 
     args = parser.parse_args(argv)

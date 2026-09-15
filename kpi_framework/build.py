@@ -13,6 +13,7 @@ WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 PLACEHOLDERS = {
     "<!--STYLES-->": "styles.css",
     "<!--ENGINE-->": "engine.js",
+    "<!--STORE-->": "store.js",
     "<!--APP-->": "app.js",
 }
 

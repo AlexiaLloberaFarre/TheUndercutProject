@@ -164,6 +164,31 @@ nav.tabs button {
 nav.tabs button:hover { color: var(--ink); }
 nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
 
+/* ---- live pill & banners ------------------------------------------------ */
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line-2);
+  background: var(--surface); color: var(--ink-2); white-space: nowrap;
+}
+.pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex: none; }
+.pill.live { border-color: color-mix(in srgb, var(--good) 45%, transparent); background: var(--good-soft); color: #0a7d0a; }
+.pill.live .dot { background: var(--good); animation: pulse 2.4s ease-in-out infinite; }
+:root[data-theme="dark"] .pill.live { color: #6ede6e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pill.live { color: #6ede6e; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .pill.live .dot { animation: none; } }
+
+.banner {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  border: 1px solid var(--line-2); border-radius: var(--radius);
+  padding: 10px 14px; margin-bottom: 14px; font-size: 13px;
+}
+.banner .btn { margin-left: auto; }
+.banner.bad { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 35%, transparent); }
+.banner.note { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+
 /* ---- panels ------------------------------------------------------------- */
 .panel {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);

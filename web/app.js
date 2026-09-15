@@ -1,57 +1,25 @@
-/* Interactive KPI tracker. State lives in localStorage; every number on screen is
-   recomputed from the raw records by engine.js, so editing a record updates the
-   scorecard immediately. */
+/* Interactive KPI tracker. Records, targets and the rollout checklist live in
+   store.js — the shared live board when the page runs as an Artifact, this
+   browser's localStorage otherwise. Every number on screen is recomputed from
+   the raw records by engine.js, so a change anywhere updates the scorecard
+   immediately, including one made by somebody else. */
 (() => {
   'use strict';
 
-  const STORE_KEY = 'sim-kpi-tracker-v1';
   const P = window.PAYLOAD;
 
   /* ---- state ------------------------------------------------------------ */
-  const seedDatasets = () => {
-    const out = {};
-    for (const name of KPI.DATASETS) out[name] = (P.datasets[name] || []).map(KPI.coerceRow);
-    return out;
-  };
-
-  const state = {
-    view: 'overview',
-    datasets: seedDatasets(),
-    programme: Object.assign({ start_date: null, as_of: null, targets_agreed: false, overrides: {} }, P.programme),
-    checklist: {},
-    theme: null,
-    selected: null,
-    logDataset: 'sessions',
-    filter: { category: 'all', headlineOnly: false, q: '' },
-    tables: null,
-    card: null,
-  };
-
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return;
-      const saved = JSON.parse(raw);
-      if (saved.datasets) {
-        for (const name of KPI.DATASETS) {
-          if (saved.datasets[name]) state.datasets[name] = saved.datasets[name].map(KPI.coerceRow);
-        }
-      }
-      if (saved.programme) Object.assign(state.programme, saved.programme);
-      if (saved.checklist) state.checklist = saved.checklist;
-      if (saved.theme) state.theme = saved.theme;
-      if (saved.filter) Object.assign(state.filter, saved.filter);
-    } catch (err) { /* private window, blocked storage — run from the seed */ }
-  }
-
-  function save() {
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify({
-        datasets: state.datasets, programme: state.programme,
-        checklist: state.checklist, theme: state.theme, filter: state.filter,
-      }));
-    } catch (err) { /* over quota or blocked — the session still works */ }
-  }
+  /* Ephemeral view state lives here; everything persisted is read through
+     Store, so a snapshot from another viewer needs no plumbing of its own. */
+  const state = { view: 'overview', selected: null, tables: null, card: null };
+  Object.defineProperties(state, {
+    datasets: { get: () => Store.datasets },
+    programme: { get: () => Store.programme },
+    checklist: { get: () => Store.checklist },
+    filter: { get: () => Store.ui.filter },
+    logDataset: { get: () => Store.ui.logDataset },
+    theme: { get: () => Store.ui.theme },
+  });
 
   /* ---- helpers ---------------------------------------------------------- */
   const esc = (s) => String(s === null || s === undefined ? '' : s)
@@ -269,7 +237,22 @@
       return `<div class="cat">${esc(c.id)} · ${esc(c.name)}</div><div class="dots">${dots}</div>`;
     }).join('');
 
+    const empty = Store.recordCount === 0 ? `
+      <div class="panel" style="margin-bottom:22px">
+        <div class="panel-body" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px">
+            <h2 style="font-size:15px;margin-bottom:4px">Nothing logged yet</h2>
+            <p class="muted" style="margin:0;font-size:13px">
+              The framework is here; the readings are not. Log a session, import a CSV of existing
+              records, or start with the measurement plan and add data as the phases open up.</p>
+          </div>
+          <button class="btn btn-primary" data-view-jump="log">Log the first record</button>
+          <button class="btn" data-view-jump="rollout">See the rollout plan</button>
+        </div>
+      </div>` : '';
+
     return `
+      ${empty}
       <div class="section">
         <span class="eyebrow">Rollout position</span>
         ${programmeStrip()}
@@ -365,9 +348,14 @@
     const recent = [...rows].slice(-10).reverse();
     const columns = spec.fields.map((f) => f.name);
 
+    const live = Store.mode === 'live';
+    const budget = live
+      ? `${Store.recordCount.toLocaleString()} of ${Store.docBudget.toLocaleString()} records on the board`
+      : `${Store.recordCount.toLocaleString()} records in this browser`;
+
     return `<div class="split-even">
       <div class="panel">
-        <div class="panel-head"><h2>Log a record</h2><span class="hint">${rows.length} rows held</span></div>
+        <div class="panel-head"><h2>Log a record</h2><span class="hint">${rows.length} rows in ${esc(name)} · ${esc(budget)}</span></div>
         <div class="panel-body">
           <div class="field" style="margin-bottom:14px">
             <label for="ds">Dataset</label>
@@ -394,7 +382,8 @@
             <button class="btn" id="import-btn">Import CSV…</button>
             <input type="file" id="import-file" accept=".csv,text/csv" class="sr">
             <button class="btn" id="export-btn">Show as CSV</button>
-            <button class="btn btn-ghost" id="reset-seed" style="margin-left:auto">Reset all data to seed</button>
+            ${live ? `<button class="btn btn-ghost" id="clear-dataset" style="margin-left:auto">Clear ${esc(name)}</button>`
+                   : '<button class="btn btn-ghost" id="reset-seed" style="margin-left:auto">Reset all data to seed</button>'}
           </div>
           <div id="csv-out"></div>
         </div>
@@ -646,7 +635,10 @@
   /* ---- CSV --------------------------------------------------------------- */
   function toCsv(rows) {
     if (!rows.length) return '';
-    const columns = [...rows.reduce((set, r) => { Object.keys(r).forEach((k) => set.add(k)); return set; }, new Set())];
+    const columns = [...rows.reduce((set, r) => {
+      Object.keys(r).forEach((k) => { if (!k.startsWith('__')) set.add(k); });
+      return set;
+    }, new Set())];
     const cell = (v) => {
       const s = v === null || v === undefined ? '' : String(v);
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
@@ -688,11 +680,49 @@
     const day = state.card.programme_day;
     $('#head-meta').innerHTML = `${day === null ? 'No start date set' : `Day ${day}`} · ${state.card.phase || '—'} · <span class="num">${fmt(state.card.coverage_pct, 0)}%</span> measurable`;
     $$('nav.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === state.view)));
+    renderStatus();
+    renderBanners();
     const main = $('#main');
     main.innerHTML = VIEWS[state.view].render();
     wireCharts(main);
     if (state.selected) renderDrawer();
-    save();
+  }
+
+  /* The live pill is the page's honesty about where these numbers came from. */
+  function renderStatus() {
+    const live = Store.mode === 'live';
+    const synced = Store.syncedAt
+      ? Store.syncedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null;
+    $('#data-note').textContent = live
+      ? 'Records are whatever this board has been given; any sample rows are fictional.'
+      : 'All records shipped with this page are fictional sample data.';
+    $('#live-pill').innerHTML = `<span class="pill ${live ? 'live' : 'local'}" title="${
+      esc(live
+        ? 'Records are shared with everyone who can open this board, and update as they change.'
+        : 'This copy stores records in this browser only — nobody else sees them.')}">
+        <span class="dot" aria-hidden="true"></span>${live ? 'Live board' : 'Local copy'}${
+      live && synced ? ` <span class="num">${esc(synced)}</span>` : ''}${
+      live && !Store.writable ? ' · read-only' : ''}</span>`;
+  }
+
+  function renderBanners() {
+    const parts = [];
+    if (Store.error) {
+      parts.push(`<div class="banner bad"><span>${esc(Store.error)}</span>
+        <button class="btn btn-ghost" id="dismiss-error">Dismiss</button></div>`);
+    }
+    if (P.mode === 'live' && Store.mode !== 'live') {
+      parts.push(`<div class="banner note"><span><strong>Not connected to the board.</strong>
+        This is the live build — its records live in the shared store, which is only reachable
+        when the page is opened from its claude.ai link. Nothing you log here will be kept.</span></div>`);
+    }
+    if (Store.mode === 'live' && Store.seeded) {
+      parts.push(`<div class="banner note"><span><strong>Sample records loaded.</strong>
+        This board is pre-filled with ${Store.recordCount.toLocaleString()} fictional records so the
+        scorecard has something to show. Clear them before logging real sessions.</span>
+        <button class="btn" id="clear-seed">Clear sample records</button></div>`);
+    }
+    $('#banner-root').innerHTML = parts.join('');
   }
 
   /* ---- events ------------------------------------------------------------ */
@@ -718,9 +748,7 @@
     const star = e.target.closest('[data-star]');
     if (star) {
       const id = star.dataset.star;
-      const current = state.card.series[id].headline;
-      state.programme.overrides[id] = Object.assign({}, state.programme.overrides[id], { headline: !current });
-      render();
+      Store.setOverride(id, { headline: !state.card.series[id].headline });
       return;
     }
 
@@ -729,14 +757,21 @@
     if (open) { openKpi(open.dataset.open); return; }
 
     const goto = e.target.closest('[data-goto-log]');
-    if (goto) { state.logDataset = goto.dataset.gotoLog; state.view = 'log'; closeKpi(); render(); return; }
+    if (goto) {
+      Store.setUi({ logDataset: goto.dataset.gotoLog });
+      state.view = 'log'; closeKpi(); render();
+      return;
+    }
 
     const del = e.target.closest('[data-del]');
     if (del) {
-      state.datasets[state.logDataset].splice(Number(del.dataset.del), 1);
-      render(); toast('Record deleted');
+      Store.deleteRecord(state.logDataset, Number(del.dataset.del));
+      toast('Record deleted');
       return;
     }
+
+    const jump = e.target.closest('[data-view-jump]');
+    if (jump) { state.view = jump.dataset.viewJump; render(); return; }
 
     const tab = e.target.closest('nav.tabs button');
     if (tab) { state.view = tab.dataset.view; render(); return; }
@@ -745,15 +780,27 @@
       case 'theme-btn': {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
           || (!state.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        state.theme = isDark ? 'light' : 'dark';
-        applyTheme(); save();
+        Store.setUi({ theme: isDark ? 'light' : 'dark' });
+        applyTheme();
         break;
       }
+      case 'dismiss-error': Store.dismissError(); break;
+      case 'clear-seed':
+        if (window.confirm('Delete every sample record from the shared board? This cannot be undone.')) {
+          toast('Clearing sample records…');
+          Store.clearAllRecords().then(() => toast('Board cleared — log your first real session'));
+        }
+        break;
+      case 'clear-dataset':
+        if (window.confirm(`Delete every record in ${state.logDataset}? This cannot be undone.`)) {
+          Store.clearDataset(state.logDataset).then(() => toast(`Cleared ${state.logDataset}`));
+        }
+        break;
       case 'add-row': {
         const row = readForm();
         if (!KPI.rowDate(row)) { toast('That record needs a date before it can be counted'); break; }
-        state.datasets[state.logDataset].push(row);
-        render(); toast(`Added to ${state.logDataset}`);
+        Store.addRecord(state.logDataset, row);
+        toast(`Added to ${state.logDataset}`);
         break;
       }
       case 'import-btn': $('#import-file').click(); break;
@@ -762,29 +809,29 @@
         $('#csv-out').innerHTML = `<div class="field" style="margin-top:14px">
           <label>${esc(state.logDataset)}.csv — select all and copy</label>
           <textarea rows="8" readonly style="width:100%;font-family:var(--font-mono);font-size:11px">${esc(csv)}</textarea>
-          <span class="help">Downloads are blocked inside the viewer, so copy from here — or run <span class="num">python -m kpi_framework export</span> for the full scorecard.</span></div>`;
+          <span class="help">Copy from here — or run <span class="num">python -m kpi_framework export</span> for the full scorecard.</span></div>`;
         const ta = $('#csv-out textarea'); ta.focus(); ta.select();
         break;
       }
       case 'reset-seed':
-        if (window.confirm('Discard every logged record and restore the seeded sample data?')) {
-          state.datasets = seedDatasets(); render(); toast('Reset to seeded data');
+        if (window.confirm(Store.mode === 'live'
+          ? 'Delete every record on the shared board? This cannot be undone.'
+          : 'Discard every logged record and restore the seeded sample data?')) {
+          Store.resetToSeed(P).then(() => toast(Store.mode === 'live' ? 'Board cleared' : 'Reset to seeded data'));
         }
         break;
-      case 't-save': {
-        const id = state.selected;
-        state.programme.overrides[id] = Object.assign({}, state.programme.overrides[id], {
+      case 't-save':
+        Store.setOverride(state.selected, {
           target: Number($('#t-target').value),
           amber: Number($('#t-amber').value),
           target_agreed: $('#t-agreed').value === '1',
           headline: $('#t-head').value === '1',
         });
-        render(); toast('Target updated');
+        toast('Target updated');
         break;
-      }
       case 't-reset':
-        delete state.programme.overrides[state.selected];
-        render(); toast('Reset to framework default');
+        Store.clearOverride(state.selected);
+        toast('Reset to framework default');
         break;
       case 'print-proposal': window.print(); break;
       default: break;
@@ -794,23 +841,20 @@
   document.addEventListener('change', (e) => {
     const check = e.target.closest('[data-check]');
     if (check) {
-      const phase = check.dataset.check;
-      const list = state.checklist[phase] || (state.checklist[phase] = []);
-      list[Number(check.dataset.i)] = check.checked;
-      render();
+      Store.setCheck(check.dataset.check, Number(check.dataset.i), check.checked);
       return;
     }
     switch (e.target.id) {
       case 'start-date':
-        state.programme.start_date = e.target.value || null; render(); break;
+        Store.setProgramme({ start_date: e.target.value || null }); break;
       case 'as-of':
-        state.programme.as_of = e.target.value || null; render(); break;
+        Store.setProgramme({ as_of: e.target.value || null }); break;
       case 'ds':
-        state.logDataset = e.target.value; render(); break;
+        Store.setUi({ logDataset: e.target.value }); render(); break;
       case 'f-cat':
-        state.filter.category = e.target.value; render(); break;
+        Store.setFilter({ category: e.target.value }); render(); break;
       case 'f-head':
-        state.filter.headlineOnly = e.target.checked; render(); break;
+        Store.setFilter({ headlineOnly: e.target.checked }); render(); break;
       case 'import-file': {
         const file = e.target.files[0];
         if (!file) break;
@@ -818,8 +862,8 @@
         reader.onload = () => {
           try {
             const rows = parseCsv(String(reader.result));
-            state.datasets[state.logDataset] = state.datasets[state.logDataset].concat(rows);
-            render(); toast(`Imported ${rows.length} rows into ${state.logDataset}`);
+            Store.addRecords(state.logDataset, rows);
+            toast(`Imported ${rows.length} rows into ${state.logDataset}`);
           } catch (err) { toast('Could not read that CSV'); }
         };
         reader.readAsText(file);
@@ -832,12 +876,11 @@
 
   document.addEventListener('input', (e) => {
     if (e.target.id === 'f-q') {
-      state.filter.q = e.target.value;
+      Store.setFilter({ q: e.target.value });
       const main = $('#main');
       main.innerHTML = viewScorecard();
       $('#f-q').focus();
       $('#f-q').setSelectionRange(e.target.value.length, e.target.value.length);
-      save();
     }
   });
 
@@ -846,11 +889,25 @@
   });
 
   /* ---- boot -------------------------------------------------------------- */
-  load();
+  let booted = false;
+  function onStoreChange() {
+    // Dates are the one control the page does not own while it is focused:
+    // re-stamping them mid-edit would fight the viewer's typing.
+    const active = document.activeElement;
+    for (const id of ['start-date', 'as-of']) {
+      const el = $(`#${id}`);
+      const value = (id === 'start-date' ? Store.programme.start_date : Store.programme.as_of) || '';
+      if (el && el !== active && el.value !== value) el.value = value;
+    }
+    render();
+    booted = true;
+  }
+
   applyTheme();
   $('#tabs').innerHTML = Object.entries(VIEWS).map(([key, v]) =>
     `<button data-view="${key}" role="tab" aria-selected="${key === state.view}">${esc(v.label)}</button>`).join('');
-  $('#start-date').value = state.programme.start_date || '';
-  $('#as-of').value = state.programme.as_of || '';
-  render();
+  Store.boot(P, onStoreChange);
+  $('#start-date').value = Store.programme.start_date || '';
+  $('#as-of').value = Store.programme.as_of || '';
+  if (!booted) render();
 })();

@@ -13,6 +13,19 @@ It is two things in one repository:
   lets you log records, edit targets, work the 30/60/90 checklist and print the
   one-page proposal — with no server, no build step and no dependencies.
 
+The dashboard builds in two modes from the same sources:
+
+| | `make build` — local | `make build-live` — live board |
+|---|---|---|
+| Records live in | this browser's `localStorage` | the artifact's shared store |
+| Seeded with | eight months of sample records | nothing; it opens on whatever the board holds |
+| Other people see your edits | no | yes, as they happen |
+| Works as a plain file | yes | read-only shell; it needs its claude.ai link to reach the board |
+| Can be shared publicly | yes | no — a store-backed artifact is organization-internal |
+
+Same page either way: it asks for the shared store at load, and falls back to the local
+copy when the answer is no.
+
 Both compute every number with the same formulas. `tests/test_parity.py` runs the two
 engines over the same records and fails if any value disagrees.
 
@@ -27,9 +40,10 @@ engines over the same records and fails if any value disagrees.
 ## Quick start
 
 ```bash
-make build          # → dist/dashboard.html   (open it in any browser)
+make build          # → dist/dashboard.html        (open it in any browser)
+make build-live     # → dist/live-dashboard.html   (publish as an Artifact with db)
 make compute        # → the scorecard as a terminal table
-make test           # → 69 tests, including Python↔JavaScript engine parity
+make test           # → 74 tests, including Python↔JavaScript engine parity
 ```
 
 No pip install: Python 3.10+ standard library only. Node is needed only for the parity test.
@@ -65,6 +79,31 @@ The tool refuses to score a KPI before it makes sense to:
 
 Set the programme start date in the header to switch this on; leave it blank and every
 KPI is scored immediately.
+
+## The live board
+
+`make build-live` produces the page to publish as an Artifact with the `db` capability:
+
+```python
+capabilities = {"db": {"rules": [
+    {"path": "",       "read": "interact", "write": "interact"},   # anyone admitted logs records
+    {"path": "config", "read": "interact", "write": "admin"},      # only editors move targets
+]}}
+```
+
+Records become documents — one per row, in a collection per dataset (`sessions`,
+`releases`, …) — and the page subscribes to each collection plus `config/programme`,
+`config/checklist` and `config/meta`. A session logged by anyone appears on every open
+copy within moments, no reload. Targets, the headline set, the programme dates and the
+rollout checklist are shared config; theme and filters stay per-viewer in
+`localStorage`, because they are nobody else's business.
+
+The store holds 5,000 documents. The Log tab shows the count against that budget, and a
+`quota_exceeded` write surfaces as a plain sentence telling you to clear or archive.
+Writes are serialized per document and a transient failure is retried once.
+
+`web/store.js` is the whole of it: two backends behind one API, chosen at load by whether
+`claude.use("db")` answers.
 
 ## The dashboard
 
@@ -125,10 +164,10 @@ the dashboard writes).
 ```
 framework/     KPI catalogue + accountabilities and rollout phases (the source of truth)
 kpi_framework/ ingest → metrics → scoring → payload → build, plus the CLI
-web/           index.html + styles.css + engine.js + app.js, inlined at build time
+web/           index.html + styles.css + engine.js + store.js + app.js, inlined at build
 data/sample/   deterministic fictional records
 scripts/       sample-data generator
-tests/         69 tests, including cross-engine parity
+tests/         74 tests, including cross-engine parity
 ```
 
 ### Changing a formula

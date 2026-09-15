@@ -27,10 +27,16 @@ def serialise_datasets(data: dict[str, list[dict[str, Any]]]) -> dict[str, list[
 
 
 def build_payload(cat: Catalogue, data: dict[str, list[dict[str, Any]]],
-                  programme: Programme, *, seeded_from: str = "") -> dict[str, Any]:
+                  programme: Programme, *, seeded_from: str = "",
+                  mode: str = "local") -> dict[str, Any]:
+    """`mode="live"` builds the page for the shared board: no records are baked
+    in, because they come from the artifact's store at open time."""
+    if mode == "live":
+        data = {name: [] for name in data} or {}
     return {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "seeded_from": seeded_from,
+        "seeded_from": "" if mode == "live" else seeded_from,
+        "mode": mode,
         "meta": cat.meta,
         "categories": cat.categories,
         "accountabilities": cat.accountabilities,

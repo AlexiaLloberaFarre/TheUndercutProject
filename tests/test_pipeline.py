@@ -67,10 +67,11 @@ class PayloadTest(unittest.TestCase):
 class BuildTest(unittest.TestCase):
     def test_build_inlines_everything_and_leaves_no_placeholder(self) -> None:
         html = build_html(dumps(build_payload(CAT, read_dataset_dir(SAMPLE), PROGRAMME)))
-        for placeholder in ("<!--STYLES-->", "<!--ENGINE-->", "<!--APP-->", "/*__PAYLOAD__*/"):
+        for placeholder in ("<!--STYLES-->", "<!--ENGINE-->", "<!--STORE-->", "<!--APP-->", "/*__PAYLOAD__*/"):
             self.assertNotIn(placeholder, html)
         self.assertIn("window.PAYLOAD", html)
         self.assertIn("const KPI", html)
+        self.assertIn("const Store", html)
 
     def test_no_external_requests_beyond_the_font_stylesheet(self) -> None:
         html = build_html(dumps(build_payload(CAT, {}, PROGRAMME)))
@@ -90,6 +91,37 @@ class BuildTest(unittest.TestCase):
                 (Path(tmp) / name).write_text("")
             with self.assertRaises(ValueError):
                 build_html("{}", tmp)
+
+
+class LiveModeTest(unittest.TestCase):
+    """The live build reads its records from the artifact's shared store, so it
+    must not carry a copy of them."""
+
+    def test_live_payload_bakes_in_no_records(self) -> None:
+        payload = build_payload(CAT, read_dataset_dir(SAMPLE), PROGRAMME, mode="live")
+        self.assertEqual(payload["mode"], "live")
+        self.assertTrue(all(rows == [] for rows in payload["datasets"].values()))
+        self.assertEqual(set(payload["datasets"]), set(read_dataset_dir(SAMPLE)))
+        self.assertEqual(payload["seeded_from"], "")
+
+    def test_live_payload_keeps_the_framework_and_the_programme(self) -> None:
+        payload = build_payload(CAT, read_dataset_dir(SAMPLE), PROGRAMME, mode="live")
+        self.assertEqual(len(payload["kpis"]), 22)
+        self.assertEqual(payload["programme"]["start_date"], "2026-01-06")
+
+    def test_local_payload_still_carries_its_seed(self) -> None:
+        payload = build_payload(CAT, read_dataset_dir(SAMPLE), PROGRAMME)
+        self.assertEqual(payload["mode"], "local")
+        self.assertGreater(len(payload["datasets"]["sessions"]), 0)
+
+    def test_the_two_builds_share_one_page(self) -> None:
+        """Same code, different seed — so a fix never lands in only one of them."""
+        live = build_html(dumps(build_payload(CAT, read_dataset_dir(SAMPLE), PROGRAMME, mode="live")))
+        local = build_html(dumps(build_payload(CAT, read_dataset_dir(SAMPLE), PROGRAMME)))
+        marker = "const Store = (() => {"
+        self.assertIn(marker, live)
+        self.assertIn(marker, local)
+        self.assertLess(len(live), len(local))
 
 
 class CliTest(unittest.TestCase):
@@ -122,6 +154,15 @@ class CliTest(unittest.TestCase):
             html = out.read_text()
             self.assertGreater(len(html), 100_000)
             self.assertIn("Simulator KPI Tracker", html)
+
+    def test_build_live_writes_a_page_with_no_seeded_records(self) -> None:
+        with TemporaryDirectory() as tmp:
+            out = Path(tmp) / "live.html"
+            self.assertEqual(self.run_cli(["build", "--data", str(SAMPLE), "--mode", "live",
+                                           "--out", str(out)]), 0)
+            html = out.read_text()
+            self.assertIn('"mode":"live"', html)
+            self.assertNotIn("DIL-20260107", html)
 
     def test_build_with_no_data_still_produces_a_usable_page(self) -> None:
         """Day one: the framework exists, the records do not."""

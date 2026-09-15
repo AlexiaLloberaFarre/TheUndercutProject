@@ -16,22 +16,24 @@
       <input type="date" id="as-of">
     </div>
     <div class="control"><span class="eyebrow" id="head-meta"></span></div>
+    <div class="control" id="live-pill"></div>
     <button class="btn" id="theme-btn">Theme</button>
   </div>
 </header>
 
 <div class="shell">
   <nav class="tabs" id="tabs" role="tablist"></nav>
+  <div id="banner-root"></div>
   <main id="main"></main>
 
   <footer style="margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)">
     <p style="margin:0 0 6px">
       A personal, self-proposed measurement framework for a Simulator Control Systems Engineer role — a draft to align on with a manager, not an employer document, and not affiliated with or endorsed by any team.
-      All records shipped with this page are fictional sample data.
+      <span id="data-note"></span>
     </p>
     <p style="margin:0">
       Every target is illustrative and adapted from adjacent domains (reliability engineering MTBF/MTTR, DORA release metrics, software-quality defect KPIs, HIL test automation, model-coverage practice); none is a confirmed benchmark for any team.
-      Edits are stored only in this browser. Nothing here should be tied to compensation or used to apportion blame.
+      Nothing here should be tied to compensation or used to apportion blame.
     </p>
   </footer>
 </div>
@@ -40,4 +42,5 @@
 
 <script>window.PAYLOAD = /*__PAYLOAD__*/;</script>
 <script><!--ENGINE--></script>
+<script><!--STORE--></script>
 <script><!--APP--></script>
