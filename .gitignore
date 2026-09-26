@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Never commit tokens. The MSAL cache defaults to ~/.cache/undercut/ but keep a
+# guard here in case it is ever redirected into the repo.
+*msal_token_cache.json
+.env

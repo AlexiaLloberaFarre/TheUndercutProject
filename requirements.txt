@@ -1,0 +1,5 @@
+msal>=1.28
+requests>=2.31
+markdownify>=0.12
+beautifulsoup4>=4.12
+PyYAML>=6.0
