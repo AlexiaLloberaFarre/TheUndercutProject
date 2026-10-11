@@ -1,21 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500" role="img" aria-label="Portrait placeholder">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1a1a1f"/>
-      <stop offset="1" stop-color="#0b0b0d"/>
+      <stop offset="0" stop-color="#ece2d4"/>
+      <stop offset="1" stop-color="#d9cbb8"/>
     </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#e3cb8f"/>
-      <stop offset="1" stop-color="#b8924a"/>
-    </linearGradient>
+    <radialGradient id="glow" cx="0.8" cy="0.15" r="0.7">
+      <stop offset="0" stop-color="#e8cf9a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#e8cf9a" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   <rect width="1200" height="1500" fill="url(#bg)"/>
-  <g opacity="0.18" stroke="#c9a96a" stroke-width="2" fill="none">
-    <path d="M-100 1300 C 300 1100, 500 1250, 800 950 S 1200 700, 1400 800"/>
-    <path d="M-100 1360 C 300 1160, 500 1310, 800 1010 S 1200 760, 1400 860"/>
+  <rect width="1200" height="1500" fill="url(#glow)"/>
+  <g opacity="0.35" stroke="#562a37" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M-100 1250 C 250 1050, 480 1200, 760 900 S 1150 650, 1350 760"/>
+    <path d="M-60 1330 C 300 1150, 520 1290, 800 1000 S 1180 760, 1380 860" stroke-width="1.5"/>
   </g>
-  <rect x="60" y="60" width="1080" height="1380" fill="none" stroke="url(#gold)" stroke-width="2" opacity="0.6"/>
-  <text x="600" y="700" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="260" fill="url(#gold)" letter-spacing="-8">AL</text>
-  <text x="600" y="790" text-anchor="middle" font-family="Courier New, monospace" font-size="30" fill="#c9a96a" letter-spacing="8">THE UNDERCUT PROJECT</text>
-  <text x="600" y="1340" text-anchor="middle" font-family="Courier New, monospace" font-size="26" fill="#8d8878" letter-spacing="2">Add your photo at assets/img/</text>
+  <text x="600" y="700" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="260" fill="#562a37" letter-spacing="-8">AL</text>
+  <text x="600" y="790" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="600" font-size="26" fill="#9a7038" letter-spacing="9">THE UNDERCUT PROJECT</text>
+  <text x="600" y="1340" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#8c7a6a" letter-spacing="2">Add your photo at assets/img/</text>
 </svg>

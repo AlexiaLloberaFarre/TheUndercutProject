@@ -8,7 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Manrope:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root { --black:#0b0b0d; --graphite:#141418; --ivory:#f4f1ea; --bone:#d9d3c4; --muted:#8d8878; --gold:#c9a96a; --line:rgba(244,241,234,.12); --error:#d05a52; --ok:#5fb37f; }
+    :root { --black:#efe7dc; --graphite:#f7f2ea; --ivory:#2b1e19; --bone:#5c4a40; --muted:#978676; --gold:#9a7038; --line:rgba(74,51,40,.16); --error:#a63d3d; --ok:#4c7d5a; --plum:#562a37; }
     * { box-sizing: border-box; }
     body { margin:0; background:var(--black); color:var(--ivory); font-family:'Manrope', sans-serif; font-size:15px; line-height:1.55; }
     a { color: var(--gold); }
@@ -21,13 +21,13 @@
     .card { background:var(--graphite); border:1px solid var(--line); border-radius:4px; padding:24px; margin-bottom:24px; }
     .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
     label { font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:4px; }
-    input, select, textarea { font:inherit; color:var(--ivory); background:transparent; border:1px solid var(--line); border-radius:4px; padding:9px 11px; }
+    input, select, textarea { font:inherit; color:var(--ivory); background:#fcfaf6; border:1px solid var(--line); border-radius:4px; padding:9px 11px; }
     input[type=time] { width:110px; } input[type=date] { width:160px; } input[type=number] { width:90px; }
     input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); }
     textarea { width:100%; min-height:260px; font-family:'JetBrains Mono', monospace; font-size:12px; line-height:1.5; }
     button { font:inherit; cursor:pointer; border-radius:4px; border:1px solid var(--line); background:transparent; color:var(--ivory); padding:9px 14px; font-size:12px; letter-spacing:.1em; text-transform:uppercase; }
     button:hover { border-color:var(--gold); }
-    button.gold { background:var(--gold); color:var(--black); border-color:var(--gold); font-weight:600; }
+    button.gold { background:var(--plum); color:#f7f2ea; border-color:var(--plum); font-weight:600; }
     button.x { padding:5px 9px; color:var(--muted); border-color:transparent; }
     button.x:hover { color:var(--error); border-color:var(--error); }
     .day { display:grid; grid-template-columns:70px 1fr; gap:12px; align-items:start; padding:12px 0; border-top:1px solid var(--line); }

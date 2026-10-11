@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="veins" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0035 0.006" numOctaves="4" seed="19" result="n1"/>
+      <feColorMatrix in="n1" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.6 0.3 0.1 0 0" result="a1"/>
+      <feComponentTransfer in="a1" result="v1"><feFuncA type="table" tableValues="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 1 0.35 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/></feComponentTransfer>
+      <feGaussianBlur in="v1" stdDeviation="1.1" result="v1b"/>
+      <feFlood flood-color="#4a2230" flood-opacity="0.9" result="c1"/>
+      <feComposite in="c1" in2="v1b" operator="in" result="veins1"/>
+
+      <feTurbulence type="fractalNoise" baseFrequency="0.0035 0.006" numOctaves="4" seed="19" result="n1b"/>
+      <feColorMatrix in="n1b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.6 0.3 0.1 0 0" result="a1b"/>
+      <feComponentTransfer in="a1b" result="v3"><feFuncA type="table" tableValues="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/></feComponentTransfer>
+      <feGaussianBlur in="v3" stdDeviation="2.5" result="v3b"/>
+      <feFlood flood-color="#7a4656" flood-opacity="0.35" result="c3"/>
+      <feComposite in="c3" in2="v3b" operator="in" result="veins3"/>
+
+      <feTurbulence type="fractalNoise" baseFrequency="0.009 0.014" numOctaves="3" seed="7" result="n2"/>
+      <feColorMatrix in="n2" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.2 0.5 0.3 0 0" result="a2"/>
+      <feComponentTransfer in="a2" result="v2"><feFuncA type="table" tableValues="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/></feComponentTransfer>
+      <feGaussianBlur in="v2" stdDeviation="0.5" result="v2b"/>
+      <feFlood flood-color="#5a2a3a" flood-opacity="0.5" result="c2"/>
+      <feComposite in="c2" in2="v2b" operator="in" result="veins2"/>
+
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="3" result="n4"/>
+      <feColorMatrix in="n4" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.33 0.33 0.33 0 -0.25" result="a4"/>
+      <feFlood flood-color="#d8c6b2" flood-opacity="0.5" result="c4"/>
+      <feComposite in="c4" in2="a4" operator="in" result="cloud"/>
+
+      <feMerge><feMergeNode in="cloud"/><feMergeNode in="veins3"/><feMergeNode in="veins2"/><feMergeNode in="veins1"/></feMerge>
+    </filter>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f5ede3"/>
+      <stop offset="1" stop-color="#eadfd0"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1200" fill="url(#base)"/>
+  <rect width="900" height="1200" filter="url(#veins)"/>
+</svg>

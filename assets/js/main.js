@@ -175,12 +175,14 @@
 
   navToggle.addEventListener('click', () => {
     const open = navLinks.classList.toggle('is-open');
+    nav.classList.toggle('is-open', open);
     navToggle.setAttribute('aria-expanded', String(open));
     navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     document.body.style.overflow = open ? 'hidden' : '';
   });
   $$('a', navLinks).forEach((a) => a.addEventListener('click', () => {
     navLinks.classList.remove('is-open');
+    nav.classList.remove('is-open');
     navToggle.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   }));

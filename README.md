@@ -15,6 +15,21 @@ A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be
 | `data/availability.json` | Your mentoring availability (days, windows, blocked dates, bookings) |
 | `admin/index.html` | Private visual editor that generates `availability.json` |
 
+## Brand
+
+The look follows the brand references: warm plaster walls, walnut, plum lacquer, Calacatta Viola marble and brushed brass, with soft arches and pill-shaped buttons.
+
+| Token | Hex | Use |
+| --- | --- | --- |
+| Plaster | `#efe7dc` | Page background |
+| Cream | `#f7f2ea` | Cards, light sections |
+| Walnut | `#4a3328` | Dark section (Mentoring), footer tones |
+| Plum | `#562a37` | Dark section (Career), primary buttons, accents |
+| Brass | `#b48a4f` / `#d4b47c` | Labels, highlights on dark |
+| Ink | `#2b1e19` | Text |
+
+All colours are CSS variables at the top of `assets/css/style.css`. The marble texture is a procedural SVG (`assets/img/marble.svg`), so it can be replaced by a photo of real stone if preferred.
+
 ## 1. Publish on GitHub Pages
 
 1. In the repository go to **Settings → Pages**.
