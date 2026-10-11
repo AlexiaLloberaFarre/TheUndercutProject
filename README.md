@@ -28,7 +28,7 @@ The look follows the brand references: warm plaster walls, walnut, plum lacquer,
 | Brass | `#b48a4f` / `#d4b47c` | Labels, highlights on dark |
 | Ink | `#2b1e19` | Text |
 
-All colours are CSS variables at the top of `assets/css/style.css`. The marble texture is a procedural SVG (`assets/img/marble.svg`), so it can be replaced by a photo of real stone if preferred.
+All colours are CSS variables at the top of `assets/css/style.css`. The four brand reference pictures live in `assets/img/brand/` and are used as the Home backdrop (`kitchen.jpg`), two full-width interludes (`island.jpg`, `bath.jpg`), the footer band (`zellige.jpg`) and the marble texture (`marble.jpg`, cropped from the bath picture). Swap any of them for your own photography by keeping the file names.
 
 ## 1. Publish on GitHub Pages
 

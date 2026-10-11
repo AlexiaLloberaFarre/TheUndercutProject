@@ -142,6 +142,13 @@ p { margin: 0 0 1em; }
 .nav__link:hover, .nav__link.is-active { color: var(--ink); }
 .nav__link.is-active::after, .nav__link:hover::after { transform: scaleX(1); }
 .nav__cta { margin-left: 8px; }
+.nav:not(.is-scrolled):not(.is-open) .nav__link { color: rgba(247,242,234,.8); }
+.nav:not(.is-scrolled):not(.is-open) .nav__link:hover, .nav:not(.is-scrolled):not(.is-open) .nav__link.is-active { color: var(--cream); }
+.nav:not(.is-scrolled):not(.is-open) .nav__link::after { background: var(--brass-2); }
+.nav:not(.is-scrolled):not(.is-open) .nav__wordmark { color: var(--cream); }
+.nav:not(.is-scrolled):not(.is-open) .nav__toggle { border-color: rgba(247,242,234,.45); }
+.nav:not(.is-scrolled):not(.is-open) .nav__toggle span { background: var(--cream); }
+.nav:not(.is-scrolled):not(.is-open) .nav__cta { background: var(--brass-2); color: var(--ink); border-color: var(--brass-2); }
 .nav__toggle { display: none; width: 44px; height: 44px; background: transparent; border: 1px solid rgba(43,30,25,.3); border-radius: 999px; position: relative; }
 .nav__toggle span { position: absolute; left: 13px; right: 13px; height: 1px; background: var(--ink); transition: transform .3s var(--ease), top .3s var(--ease); }
 .nav__toggle span:first-child { top: 17px; }
@@ -154,10 +161,28 @@ p { margin: 0 0 1em; }
 .hero__bg {
   position: absolute; inset: 0; z-index: 0;
   background:
-    radial-gradient(900px 560px at 88% 18%, rgba(212,180,124,.42), transparent 62%),
-    radial-gradient(700px 520px at 6% 92%, rgba(86,42,55,.12), transparent 60%),
-    linear-gradient(180deg, #f3ece2 0%, var(--plaster) 100%);
+    linear-gradient(90deg, rgba(38,24,20,.9) 0%, rgba(38,24,20,.76) 42%, rgba(38,24,20,.42) 72%, rgba(38,24,20,.3) 100%),
+    url('../img/brand/kitchen.jpg') center 40% / cover no-repeat;
 }
+.hero__bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(38,24,20,.35) 0%, transparent 30%, transparent 75%, rgba(38,24,20,.45) 100%);
+}
+.hero--photo { color: var(--cream); }
+.hero--photo .eyebrow { color: var(--brass-2); }
+.hero--photo .hero__title { color: var(--cream); }
+.hero--photo .hero__title em { color: var(--brass-2); }
+.hero--photo .hero__subtitle { color: rgba(247,242,234,.72); }
+.hero--photo .hero__lead { color: rgba(247,242,234,.84); }
+.hero--photo .btn--ghost { color: var(--cream); border-color: rgba(247,242,234,.45); }
+.hero--photo .btn--ghost:hover { border-color: var(--cream); background: rgba(247,242,234,.08); }
+.hero--photo .btn--gold { background: var(--brass-2); color: var(--ink); border-color: var(--brass-2); box-shadow: 0 12px 24px -14px rgba(212,180,124,.8); }
+.hero--photo .btn--gold:hover { background: #e2c58f; border-color: #e2c58f; }
+.hero--photo .stats { border-top-color: rgba(247,242,234,.2); }
+.hero--photo .stat__num { color: var(--cream); }
+.hero--photo .stat__plus { color: var(--brass-2); }
+.hero--photo .stat__label { color: rgba(247,242,234,.6); }
+.hero--photo .portrait__caption { color: rgba(247,242,234,.6); }
 .hero__grid > *, .about__grid > *, .speaker__grid > *, .contact__grid > *, .booking__grid > *, .career__extras > * { min-width: 0; }
 .hero__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 6vw, 96px); align-items: center; flex: 1; padding-bottom: 64px; }
 .hero__title { font-family: var(--font-display); font-size: clamp(64px, 9.5vw, 128px); line-height: 0.92; letter-spacing: -0.02em; font-weight: 500; color: var(--ink); }
@@ -174,8 +199,8 @@ p { margin: 0 0 1em; }
 
 .hero__figure { margin: 0; position: relative; }
 .hero__marble {
-  position: absolute; inset: -6% -10% 6% 14%; z-index: 0;
-  background: url('../img/marble.svg') center / cover;
+  position: absolute; inset: -5% -9% 7% 16%; z-index: 0;
+  background: url('../img/brand/marble.jpg') center / cover;
   border-radius: var(--arch) var(--arch) var(--r-lg) var(--r-lg);
   opacity: .9; box-shadow: var(--shadow);
 }
@@ -203,6 +228,22 @@ p { margin: 0 0 1em; }
 .marquee__track span { font-family: var(--font-display); font-size: 22px; font-style: italic; color: rgba(247,242,234,.8); white-space: nowrap; display: flex; align-items: center; gap: 64px; }
 .marquee__track span::after { content: ''; width: 6px; height: 6px; background: var(--brass-2); transform: rotate(45deg); }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ---------- Interludes (full-bleed brand pictures) ---------- */
+.interlude { position: relative; min-height: 560px; display: grid; align-items: center; padding: clamp(80px, 10vw, 140px) 0; color: var(--cream); background-size: cover; background-position: center; background-repeat: no-repeat; }
+.interlude::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(38,24,20,.86) 0%, rgba(38,24,20,.55) 55%, rgba(38,24,20,.25) 100%); }
+.interlude--island { background-image: url('../img/brand/island.jpg'); background-position: center 62%; }
+.interlude--bath { background-image: url('../img/brand/bath.jpg'); background-position: center 38%; }
+.interlude__inner { position: relative; max-width: 760px; }
+.eyebrow--light { color: var(--brass-2); }
+.interlude__quote { margin: 0; font-family: var(--font-display); font-size: clamp(26px, 3.2vw, 46px); line-height: 1.25; font-style: italic; font-weight: 400; }
+.interlude__cite { margin: 24px 0 0; font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: rgba(247,242,234,.7); display: flex; align-items: center; gap: 12px; }
+.interlude__cite::before { content: ''; width: 28px; height: 1px; background: var(--brass-2); }
+.interlude__title { font-family: var(--font-display); font-size: clamp(36px, 4.6vw, 62px); line-height: 1.04; letter-spacing: -0.01em; max-width: 16ch; }
+.interlude__title em { font-style: italic; font-weight: 400; color: var(--brass-2); }
+.interlude__text { font-size: clamp(16px, 1.5vw, 18px); color: rgba(247,242,234,.82); margin: 22px 0 32px; max-width: 50ch; }
+.btn--light { background: var(--cream); color: var(--plum); border-color: var(--cream); }
+.btn--light:hover { background: #fff; border-color: #fff; }
 
 /* ---------- Sections ---------- */
 .section { padding: clamp(80px, 10vw, 140px) 0; position: relative; }
@@ -289,7 +330,7 @@ p { margin: 0 0 1em; }
 /* ---------- Booking (marble counter on walnut) ---------- */
 .booking {
   position: relative; color: var(--ink); border-radius: var(--r-lg); padding: clamp(24px, 4vw, 48px); overflow: hidden;
-  background: linear-gradient(rgba(247,242,234,.9), rgba(247,242,234,.94)), url('../img/marble.svg') center / cover;
+  background: linear-gradient(rgba(247,242,234,.9), rgba(247,242,234,.94)), url('../img/brand/marble.jpg') center / cover;
   box-shadow: var(--shadow), inset 0 0 0 1px rgba(212,180,124,.5);
 }
 .booking__head { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
@@ -379,11 +420,11 @@ p { margin: 0 0 1em; }
 .contact__form { padding: clamp(24px, 3vw, 40px); background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow); }
 
 /* ---------- Footer ---------- */
-.footer { position: relative; background: var(--ink); color: rgba(247,242,234,.6); padding: 92px 0 40px; }
+.footer { position: relative; background: var(--ink); color: rgba(247,242,234,.6); padding: 236px 0 40px; }
 .footer::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 36px;
-  background: repeating-conic-gradient(#3b2a22 0 25%, #e5d8c6 0 50%) 0 0 / 36px 36px;
-  opacity: .95;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 180px;
+  background: url('../img/brand/zellige.jpg') center 30% / cover no-repeat;
+  box-shadow: inset 0 -1px 0 rgba(212,180,124,.5);
 }
 .footer__inner { display: grid; grid-template-columns: auto 1fr auto; gap: 24px 48px; align-items: center; }
 .footer__brand { display: flex; align-items: center; gap: 14px; }
@@ -423,6 +464,11 @@ p { margin: 0 0 1em; }
   .hero { padding-top: 110px; }
   .hero__grid { grid-template-columns: 1fr; gap: 40px; }
   .hero__figure { order: -1; max-width: 300px; --arch: 130px; }
+  .hero__bg { background: linear-gradient(180deg, rgba(38,24,20,.82) 0%, rgba(38,24,20,.86) 100%), url('../img/brand/kitchen.jpg') center 30% / cover no-repeat; }
+  .interlude { min-height: 440px; }
+  .interlude::before { background: linear-gradient(180deg, rgba(38,24,20,.7), rgba(38,24,20,.82)); }
+  .footer { padding-top: 180px; }
+  .footer::before { height: 130px; }
   .btn { white-space: normal; text-align: center; }
   .about__grid, .speaker__grid, .contact__grid, .career__extras, .booking__grid { grid-template-columns: 1fr; }
   .speaker__media { max-width: 420px; }
@@ -445,6 +491,5 @@ p { margin: 0 0 1em; }
   .hero__actions .btn { width: 100%; }
   .cal__weekdays, .cal__grid { gap: 4px; }
   .cal__day { font-size: 12px; }
-  .footer::before { height: 24px; background-size: 24px 24px; }
   .portrait__caption { font-size: 9px; letter-spacing: .16em; }
 }
