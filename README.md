@@ -17,16 +17,15 @@ A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be
 
 ## Brand
 
-Racing edition: Wine Red (#4c0f12) with beige. Serif display type with handwritten accents, blurred red auras, a racing line that draws itself on scroll, a torn-paper call to action and a "save the date" booking calendar with a hand-drawn circle around the chosen day.
+Racing edition: Wine Red with black and cream, after the "Pantone Tension" reference. Serif display type with black handwritten accents, blurred red auras, a racing line that draws itself on scroll, a chequered-flag band, Pantone-style chips for the championship titles, a torn-paper call to action and a "save the date" booking calendar with a hand-drawn circle around the chosen day.
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| Wine Red | `#4c0f12` | Home, statement banner, torn-paper band, footer, primary buttons |
-| Racing red | `#a4161a` | Handwriting, circles, underlines, racing line |
-| Cream | `#f3ece1` | Page background, text on red |
-| Beige | `#e9dfcf` | Career and Mentoring sections |
-| Paper | `#fbf7f1` | Cards |
-| Ink | `#1c0c0c` | Text |
+| Wine Red | `#4c0f12` | Home, statement banner, torn-paper band, footer, primary buttons, racing line |
+| Black | `#121212` | Text, handwriting, circles, chequerboard |
+| Cream | `#efe8db` | Page background, text on red, chequerboard |
+| Beige | `#e6ddcc` | Career and Mentoring sections |
+| Paper | `#f8f4ec` | Cards |
 
 All colours are CSS variables at the top of `assets/css/style.css`. Fonts: Cormorant Garamond (display), Manrope (text), Caveat (handwriting), Oswald (torn-paper statement).
 
