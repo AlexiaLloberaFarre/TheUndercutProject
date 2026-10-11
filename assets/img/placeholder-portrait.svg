@@ -7,7 +7,7 @@
   </defs>
   <rect width="1200" height="1500" fill="url(#bg)"/>
   <path d="M-80 1180 C 180 1180, 200 980, 420 980 S 660 1180, 880 1180 S 1120 980, 1340 980" fill="none" stroke="#a4161a" stroke-width="54" stroke-linecap="round" opacity="0.9"/>
-  <text x="600" y="700" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="280" fill="#4e0000" letter-spacing="-8">AL</text>
+  <text x="600" y="700" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="280" fill="#4c0f12" letter-spacing="-8">AL</text>
   <text x="600" y="790" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="600" font-size="26" fill="#a4161a" letter-spacing="9">THE UNDERCUT PROJECT</text>
   <text x="600" y="1360" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#8f7f77" letter-spacing="2">Add your photo at assets/img/</text>
 </svg>

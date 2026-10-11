@@ -17,11 +17,11 @@ A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be
 
 ## Brand
 
-Racing edition: Pantone 4975C "Red Inferno" with beige. Serif display type with handwritten accents, blurred red auras, a racing line that draws itself on scroll, a torn-paper call to action and a "save the date" booking calendar with a hand-drawn circle around the chosen day.
+Racing edition: Wine Red (#4c0f12) with beige. Serif display type with handwritten accents, blurred red auras, a racing line that draws itself on scroll, a torn-paper call to action and a "save the date" booking calendar with a hand-drawn circle around the chosen day.
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| Red Inferno | `#4e0000` | Home, statement banner, torn-paper band, footer, primary buttons |
+| Wine Red | `#4c0f12` | Home, statement banner, torn-paper band, footer, primary buttons |
 | Racing red | `#a4161a` | Handwriting, circles, underlines, racing line |
 | Cream | `#f3ece1` | Page background, text on red |
 | Beige | `#e9dfcf` | Career and Mentoring sections |

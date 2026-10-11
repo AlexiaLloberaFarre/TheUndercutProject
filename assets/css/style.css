@@ -1,14 +1,14 @@
 /* =============================================================
    THE UNDERCUT PROJECT — Alexia Llobera
-   Racing edition: Pantone 4975C "Red Inferno" + beige.
+   Racing edition: Wine Red (#4c0f12) + beige.
    Serif display, handwritten accents, blurred auras,
    a racing line that draws itself, torn paper, save-the-date calendar.
    ============================================================= */
 
 :root {
-  --red: #4e0000;          /* Red Inferno, Pantone 4975C */
-  --red-deep: #3a0000;
-  --red-soft: #6b0d0d;
+  --red: #4c0f12;          /* Wine Red */
+  --red-deep: #36090b;
+  --red-soft: #6a1a1e;
   --racing: #a4161a;       /* brighter accent: handwriting, circles, underlines */
   --cream: #f3ece1;
   --beige: #e9dfcf;
@@ -16,7 +16,7 @@
   --ink: #1c0c0c;
   --ink-soft: #4f3a3a;
   --muted: #8f7f77;
-  --line: rgba(78, 0, 0, 0.14);
+  --line: rgba(76, 15, 18, 0.14);
   --line-on-red: rgba(243, 236, 225, 0.18);
   --success: #3f7a4f;
   --error: #a4161a;
@@ -85,7 +85,7 @@ p { margin: 0 0 1em; }
   transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease);
 }
 .btn:hover { transform: translateY(-1px); }
-.btn--gold { background: var(--red); color: var(--cream); border-color: var(--red); box-shadow: 0 14px 28px -16px rgba(78,0,0,.8); }
+.btn--gold { background: var(--red); color: var(--cream); border-color: var(--red); box-shadow: 0 14px 28px -16px rgba(76,15,18,.8); }
 .btn--gold:hover { background: var(--red-deep); border-color: var(--red-deep); }
 .btn--ghost { background: transparent; color: var(--ink); border-color: rgba(28,12,12,.35); }
 .btn--ghost:hover { border-color: var(--red); color: var(--red); }
@@ -126,12 +126,12 @@ p { margin: 0 0 1em; }
 .nav.is-scrolled .nav__link, .nav.is-open .nav__link { color: var(--ink-soft); }
 .nav.is-scrolled .nav__link:hover, .nav.is-scrolled .nav__link.is-active, .nav.is-open .nav__link:hover, .nav.is-open .nav__link.is-active { color: var(--red); }
 .nav.is-scrolled .nav__cta, .nav.is-open .nav__cta { background: var(--red); color: var(--cream); border-color: var(--red); }
-.nav.is-scrolled .nav__toggle, .nav.is-open .nav__toggle { border-color: rgba(78,0,0,.4); }
+.nav.is-scrolled .nav__toggle, .nav.is-open .nav__toggle { border-color: rgba(76,15,18,.4); }
 .nav.is-scrolled .nav__toggle span, .nav.is-open .nav__toggle span { background: var(--red); }
 
 /* ---------- Hero (Red Inferno) ---------- */
 .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 140px 0 0; overflow: hidden; background: var(--red); color: var(--cream); }
-.hero__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: radial-gradient(1100px 700px at 80% 30%, #6a0a0a 0%, var(--red) 55%, var(--red-deep) 100%); }
+.hero__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: radial-gradient(1100px 700px at 80% 30%, #6e1a1f 0%, var(--red) 55%, var(--red-deep) 100%); }
 .hero__letter {
   position: absolute; left: -4vw; bottom: -22vh; font-family: var(--font-display); font-style: italic; font-size: clamp(420px, 80vh, 900px); line-height: 1;
   color: var(--red); text-shadow: 1px 1px 0 rgba(243,236,225,.12), -1px -1px 0 rgba(0,0,0,.35); opacity: .9; user-select: none;
@@ -163,7 +163,7 @@ p { margin: 0 0 1em; }
 .hero__glow { position: absolute; inset: -8% -12%; border-radius: 50%; background: radial-gradient(circle, rgba(164,22,26,.75) 0%, rgba(164,22,26,.25) 45%, transparent 70%); filter: blur(40px); z-index: 0; }
 .portrait { position: relative; z-index: 1; aspect-ratio: 4 / 5; overflow: hidden; background: var(--beige); border-radius: var(--arch) var(--arch) var(--r) var(--r); box-shadow: var(--shadow); }
 .portrait::before { content: ''; position: absolute; inset: 12px; z-index: 2; pointer-events: none; border: 1px solid rgba(243,236,225,.55); border-radius: calc(var(--arch) - 12px) calc(var(--arch) - 12px) calc(var(--r) - 8px) calc(var(--r) - 8px); }
-.section--cream .portrait::before, .section--beige .portrait::before { border-color: rgba(78,0,0,.4); }
+.section--cream .portrait::before, .section--beige .portrait::before { border-color: rgba(76,15,18,.4); }
 .portrait img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
 .portrait:hover img { transform: scale(1.03); }
 .portrait--square { aspect-ratio: 1 / 1; --arch: 140px; }
@@ -171,7 +171,9 @@ p { margin: 0 0 1em; }
 .portrait__caption { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 16px; margin-top: 16px; font-size: 10px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: rgba(243,236,225,.6); }
 
 /* ---------- Marquee ---------- */
-.marquee { position: relative; z-index: 1; overflow: hidden; padding: 16px 0; background: var(--cream); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.marquee { position: relative; z-index: 1; overflow: visible; padding: 16px 0; background: var(--cream); border-bottom: 1px solid var(--line); }
+.marquee::before { content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 2px; z-index: 2; background: linear-gradient(90deg, transparent 0%, #e3353c 12%, #ffd6d2 50%, #e3353c 88%, transparent 100%); box-shadow: 0 0 18px 3px rgba(227,53,60,.55), 0 -6px 40px 10px rgba(227,53,60,.28); }
+.marquee__clip { overflow: hidden; }
 .marquee__track { display: flex; gap: 64px; width: max-content; animation: marquee 36s linear infinite; }
 .marquee__track span { font-family: var(--font-display); font-size: 22px; font-style: italic; color: var(--red); white-space: nowrap; display: flex; align-items: center; gap: 64px; }
 .marquee__track span::after { content: ''; width: 7px; height: 7px; background: var(--racing); transform: rotate(45deg); }
