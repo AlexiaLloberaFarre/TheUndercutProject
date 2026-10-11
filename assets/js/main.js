@@ -210,8 +210,8 @@
   /* ---------- Reveal on scroll ---------- */
   const revealer = new IntersectionObserver((entries) => {
     entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); revealer.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  $$('.reveal').forEach((el) => revealer.observe(el));
+  }, { threshold: 0.08 });
+  $$('.reveal, .track').forEach((el) => revealer.observe(el));
 
   /* ---------- Career ---------- */
   function renderCareer() {
@@ -236,6 +236,7 @@
   /* ---------- Mentoring: pricing ---------- */
   const state = { session: null, availability: null, month: null, day: null, slot: null };
   const pricing = $('#pricing');
+  const clock = (min) => Math.floor(min / 60) + ':' + pad(min % 60);
   pricing.innerHTML = SESSIONS.map((s) => `
     <button type="button" class="price" role="listitem" data-id="${s.id}" aria-pressed="false">
       ${s.badge ? `<span class="price__badge">${esc(s.badge)}</span>` : ''}
@@ -243,6 +244,7 @@
       <span class="price__name">${esc(s.name)}</span>
       <span class="price__amount">${money(s.price)}${s.perSession ? `<small>${money(s.perSession)} per session</small>` : `<small>per session</small>`}</span>
       <p class="price__desc">${esc(s.desc)}</p>
+      <span class="duration" aria-label="Session length ${clock(s.minutes)}"><span>0:00</span><span class="duration__bar"><i style="left:${s.id === 'initial' ? 62 : 38}%"></i></span><span>${clock(s.minutes)}</span></span>
       <span class="price__select">Select</span>
     </button>`).join('');
 
@@ -348,8 +350,9 @@
       const ymd = dateKey(new Date(m.getFullYear(), m.getMonth(), d));
       const avail = state.session ? dayAvailable(ymd, minutes) : false;
       const cls = ['cal__day', avail ? 'is-available' : '', ymd === todayKey ? 'is-today' : '', ymd === state.day ? 'is-selected' : ''].join(' ');
+      const circle = ymd === state.day ? `<svg class="cal__circle" viewBox="0 0 100 100" aria-hidden="true"><path pathLength="1" d="M52 10 C 76 8, 94 26, 93 50 C 92 76, 72 93, 48 92 C 24 91, 7 72, 8 48 C 9 24, 28 9, 54 11 C 72 12, 88 24, 90 42"/></svg>` : '';
       html += avail
-        ? `<button type="button" class="${cls}" data-ymd="${ymd}" role="gridcell" aria-label="${ymd}">${d}</button>`
+        ? `<button type="button" class="${cls}" data-ymd="${ymd}" role="gridcell" aria-label="${ymd}">${d}${circle}</button>`
         : `<span class="${cls}" role="gridcell" aria-disabled="true">${d}</span>`;
     }
     grid.innerHTML = html;

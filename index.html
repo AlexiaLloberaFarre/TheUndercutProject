@@ -12,7 +12,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@600;700&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -42,12 +42,19 @@
   <main>
 
     <!-- ===== HOME / HERO ===== -->
-    <section class="hero hero--photo" id="home">
-      <div class="hero__bg" aria-hidden="true"></div>
+    <section class="hero" id="home">
+      <div class="hero__bg" aria-hidden="true">
+        <span class="hero__letter">A</span>
+        <span class="hero__aura hero__aura--1"></span>
+        <span class="hero__aura hero__aura--2"></span>
+      </div>
       <div class="container hero__grid">
         <div class="hero__content reveal">
           <p class="eyebrow">The Undercut Project &nbsp;·&nbsp; Andorra · Worldwide</p>
-          <h1 class="hero__title">Alexia<br><em>Llobera</em></h1>
+          <div class="hero__title-wrap">
+            <div class="hero__ghost" aria-hidden="true">Alexia<br><em>Llobera</em></div>
+            <h1 class="hero__title">Alexia<br><em>Llobera</em></h1>
+          </div>
           <p class="hero__subtitle">Trackside motorsport engineer. High-performance coach. Speaker.</p>
           <p class="hero__lead">Ten years at the sharp end of motorsport — Formula 1, Formula E, WRC, Rallycross, TCR and the Dakar Rally — turning individual excellence into collective performance.</p>
           <div class="hero__actions">
@@ -62,7 +69,7 @@
           </ul>
         </div>
         <figure class="hero__figure reveal reveal--delay">
-          <div class="hero__marble" aria-hidden="true"></div>
+          <div class="hero__glow" aria-hidden="true"></div>
           <div class="portrait">
             <img src="assets/img/alexia-hero.jpg" alt="Alexia Llobera, trackside motorsport engineer" onerror="this.onerror=null;this.src='assets/img/placeholder-portrait.svg';" loading="eager">
           </div>
@@ -96,6 +103,7 @@
             <p>My trackside career includes three FIA championship wins: the 2018 FIA World Cup for Cross-Country Rallies Team Championship with X-raid, and back-to-back FIA World Rally Championship Manufacturers’ titles in 2019 and 2020 with Hyundai Motorsport.</p>
             <p>I was also part of building the Cadillac Formula 1 Team from the ground up in 2025–26, before the team competed in its first race, and contributed to the development of two all-new race cars from concept to racing: the MINI John Cooper Works Buggy (2018) and Hyundai’s Rally1 hybrid WRC (2021).</p>
             <p>Beyond the car, I’ve worked as a high-performance teams and executive coach, and strategic consultant, partnering with motorsport-driven teams, CEOs, CTOs and team leaders to strengthen business strategy, leadership, team performance and company culture in high-stakes environments.</p>
+            <p class="about__note">individual excellence &rarr; collective performance.</p>
           </div>
         </div>
 
@@ -124,17 +132,26 @@
       </div>
     </section>
 
-    <!-- ===== INTERLUDE: quote ===== -->
-    <section class="interlude interlude--island" aria-label="Quote">
-      <div class="container interlude__inner reveal">
-        <p class="eyebrow eyebrow--light">The Undercut Project</p>
-        <blockquote class="interlude__quote">“My focus has always been the same: to create technical systems, teams and organizations that turn individual excellence into collective performance.”</blockquote>
-        <p class="interlude__cite">Alexia Llobera</p>
+    <!-- ===== RACING LINE ===== -->
+    <div class="track" aria-hidden="true"><svg viewBox="0 0 1440 240"><path pathLength="1" d="M-40 190 C 200 190, 220 50, 420 50 S 640 190, 840 190 S 1060 50, 1260 50 S 1480 190, 1500 190"/></svg></div>
+
+    <!-- ===== STATEMENT BANNER ===== -->
+    <section class="banner" aria-label="Statement">
+      <span class="banner__letter" aria-hidden="true">U</span>
+      <span class="banner__aura" aria-hidden="true"></span>
+      <div class="container banner__inner reveal">
+        <span class="banner__hand">what's next?</span>
+        <h2 class="banner__title">Strategy is the undercut. <em>Performance is the result.</em></h2>
+        <p class="banner__sub">“My focus has always been the same: to create technical systems, teams and organizations that turn individual excellence into collective performance.”</p>
+        <div class="banner__actions">
+          <a href="#contact" class="btn btn--light">Work with me</a>
+          <a href="#career" class="btn btn--ghost">See the track record</a>
+        </div>
       </div>
     </section>
 
     <!-- ===== CAREER ===== -->
-    <section class="section section--plum" id="career">
+    <section class="section section--beige" id="career">
       <div class="container">
         <div class="section__head reveal">
           <p class="eyebrow">02 &nbsp;/&nbsp; Career</p>
@@ -162,7 +179,7 @@
     </section>
 
     <!-- ===== SPEAKER ===== -->
-    <section class="section section--plaster" id="speaker">
+    <section class="section section--cream" id="speaker">
       <div class="container">
         <div class="speaker__grid">
           <div class="speaker__media reveal">
@@ -222,18 +239,19 @@
       </div>
     </section>
 
-    <!-- ===== INTERLUDE: mentoring call ===== -->
-    <section class="interlude interlude--bath" aria-label="Mentoring">
-      <div class="container interlude__inner reveal">
-        <p class="eyebrow eyebrow--light">Mentoring</p>
-        <h2 class="interlude__title">Reliability is engineered, <em>not hoped for.</em></h2>
-        <p class="interlude__text">One-to-one sessions for engineers and leaders who want to perform when it counts: strategy, systems thinking and the habits of championship-winning teams.</p>
-        <a href="#mentoring" class="btn btn--light">See sessions &amp; book</a>
-      </div>
+    <!-- ===== TORN PAPER ===== -->
+    <section class="torn" aria-label="Mentoring">
+      <a href="#mentoring" class="torn__link reveal">
+        <span class="torn__shadow" aria-hidden="true"></span>
+        <div class="torn__strip">
+          <p class="torn__text">Your next lap starts here</p>
+          <p class="torn__sign">&mdash; book a mentoring session</p>
+        </div>
+      </a>
     </section>
 
     <!-- ===== MENTORING ===== -->
-    <section class="section section--walnut" id="mentoring">
+    <section class="section section--beige" id="mentoring">
       <div class="container">
         <div class="section__head reveal">
           <p class="eyebrow">04 &nbsp;/&nbsp; Mentoring</p>
@@ -245,7 +263,10 @@
 
         <div class="booking reveal" id="booking">
           <div class="booking__head">
-            <h3 class="booking__title">Book a session</h3>
+            <div>
+              <span class="booking__hand">save the date</span>
+              <h3 class="booking__title">Book a session</h3>
+            </div>
             <ol class="steps" aria-label="Booking steps">
               <li class="step is-active" data-step="1"><span>1</span>Session</li>
               <li class="step" data-step="2"><span>2</span>Date &amp; time</li>
@@ -316,6 +337,7 @@
         <div class="contact__intro reveal">
           <p class="eyebrow">05 &nbsp;/&nbsp; Contact</p>
           <h2 class="section__title">Let’s talk <em>performance.</em></h2>
+          <p class="contact__ready">are you ready?</p>
           <p class="lead">Speaking engagements, mentoring, consulting or simply a conversation about what your team could do next.</p>
           <ul class="contact__list">
             <li><span class="meta__label">Email</span><a href="mailto:contact@alexiallobera.com">contact@alexiallobera.com</a></li>
@@ -364,6 +386,7 @@
   </main>
 
   <footer class="footer">
+    <div class="track track--cream" aria-hidden="true"><svg viewBox="0 0 1440 240"><path pathLength="1" d="M-40 190 C 200 190, 220 50, 420 50 S 640 190, 840 190 S 1060 50, 1260 50 S 1480 190, 1500 190"/></svg></div>
     <div class="container footer__inner">
       <div class="footer__brand">
         <span class="nav__mono">AL</span>

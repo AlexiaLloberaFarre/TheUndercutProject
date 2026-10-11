@@ -17,18 +17,18 @@ A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be
 
 ## Brand
 
-The look follows the brand references: warm plaster walls, walnut, plum lacquer, Calacatta Viola marble and brushed brass, with soft arches and pill-shaped buttons.
+Racing edition: Pantone 4975C "Red Inferno" with beige. Serif display type with handwritten accents, blurred red auras, a racing line that draws itself on scroll, a torn-paper call to action and a "save the date" booking calendar with a hand-drawn circle around the chosen day.
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| Plaster | `#efe7dc` | Page background |
-| Cream | `#f7f2ea` | Cards, light sections |
-| Walnut | `#4a3328` | Dark section (Mentoring), footer tones |
-| Plum | `#562a37` | Dark section (Career), primary buttons, accents |
-| Brass | `#b48a4f` / `#d4b47c` | Labels, highlights on dark |
-| Ink | `#2b1e19` | Text |
+| Red Inferno | `#4e0000` | Home, statement banner, torn-paper band, footer, primary buttons |
+| Racing red | `#a4161a` | Handwriting, circles, underlines, racing line |
+| Cream | `#f3ece1` | Page background, text on red |
+| Beige | `#e9dfcf` | Career and Mentoring sections |
+| Paper | `#fbf7f1` | Cards |
+| Ink | `#1c0c0c` | Text |
 
-All colours are CSS variables at the top of `assets/css/style.css`. The four brand reference pictures live in `assets/img/brand/` and are used as the Home backdrop (`kitchen.jpg`), two full-width interludes (`island.jpg`, `bath.jpg`), the footer band (`zellige.jpg`) and the marble texture (`marble.jpg`, cropped from the bath picture). Swap any of them for your own photography by keeping the file names.
+All colours are CSS variables at the top of `assets/css/style.css`. Fonts: Cormorant Garamond (display), Manrope (text), Caveat (handwriting), Oswald (torn-paper statement).
 
 ## 1. Publish on GitHub Pages
 
