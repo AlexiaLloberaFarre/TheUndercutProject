@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500" role="img" aria-label="Portrait placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a1a1f"/>
+      <stop offset="1" stop-color="#0b0b0d"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e3cb8f"/>
+      <stop offset="1" stop-color="#b8924a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1500" fill="url(#bg)"/>
+  <g opacity="0.18" stroke="#c9a96a" stroke-width="2" fill="none">
+    <path d="M-100 1300 C 300 1100, 500 1250, 800 950 S 1200 700, 1400 800"/>
+    <path d="M-100 1360 C 300 1160, 500 1310, 800 1010 S 1200 760, 1400 860"/>
+  </g>
+  <rect x="60" y="60" width="1080" height="1380" fill="none" stroke="url(#gold)" stroke-width="2" opacity="0.6"/>
+  <text x="600" y="700" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="260" fill="url(#gold)" letter-spacing="-8">AL</text>
+  <text x="600" y="790" text-anchor="middle" font-family="Courier New, monospace" font-size="30" fill="#c9a96a" letter-spacing="8">THE UNDERCUT PROJECT</text>
+  <text x="600" y="1340" text-anchor="middle" font-family="Courier New, monospace" font-size="26" fill="#8d8878" letter-spacing="2">Add your photo at assets/img/</text>
+</svg>

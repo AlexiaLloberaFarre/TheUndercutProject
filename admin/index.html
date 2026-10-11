@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Availability editor — The Undercut Project</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Manrope:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --black:#0b0b0d; --graphite:#141418; --ivory:#f4f1ea; --bone:#d9d3c4; --muted:#8d8878; --gold:#c9a96a; --line:rgba(244,241,234,.12); --error:#d05a52; --ok:#5fb37f; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--black); color:var(--ivory); font-family:'Manrope', sans-serif; font-size:15px; line-height:1.55; }
+    a { color: var(--gold); }
+    .wrap { width:min(100% - 40px, 1100px); margin:0 auto; padding:40px 0 80px; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-bottom:20px; margin-bottom:32px; }
+    h1 { font-family:'Cormorant Garamond', serif; font-weight:500; font-size:38px; margin:0; }
+    h2 { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin:0 0 14px; }
+    .mono { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+    .grid { display:grid; grid-template-columns: 1.2fr .8fr; gap:32px; align-items:start; }
+    .card { background:var(--graphite); border:1px solid var(--line); border-radius:4px; padding:24px; margin-bottom:24px; }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+    label { font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:4px; }
+    input, select, textarea { font:inherit; color:var(--ivory); background:transparent; border:1px solid var(--line); border-radius:4px; padding:9px 11px; }
+    input[type=time] { width:110px; } input[type=date] { width:160px; } input[type=number] { width:90px; }
+    input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); }
+    textarea { width:100%; min-height:260px; font-family:'JetBrains Mono', monospace; font-size:12px; line-height:1.5; }
+    button { font:inherit; cursor:pointer; border-radius:4px; border:1px solid var(--line); background:transparent; color:var(--ivory); padding:9px 14px; font-size:12px; letter-spacing:.1em; text-transform:uppercase; }
+    button:hover { border-color:var(--gold); }
+    button.gold { background:var(--gold); color:var(--black); border-color:var(--gold); font-weight:600; }
+    button.x { padding:5px 9px; color:var(--muted); border-color:transparent; }
+    button.x:hover { color:var(--error); border-color:var(--error); }
+    .day { display:grid; grid-template-columns:70px 1fr; gap:12px; align-items:start; padding:12px 0; border-top:1px solid var(--line); }
+    .day:last-child { border-bottom:1px solid var(--line); }
+    .day .name { font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--bone); padding-top:10px; }
+    .windows { display:flex; flex-direction:column; gap:6px; }
+    .win { display:flex; align-items:center; gap:8px; }
+    .win span { color:var(--muted); }
+    .list { display:flex; flex-direction:column; gap:6px; }
+    .list .item { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 10px; border:1px solid var(--line); border-radius:4px; font-family:'JetBrains Mono', monospace; font-size:12px; }
+    .status { font-size:13px; min-height:1.4em; }
+    .status.ok { color:var(--ok); } .status.err { color:var(--error); }
+    .help { color:var(--muted); font-size:13px; }
+    .help code { color:var(--bone); font-family:'JetBrains Mono', monospace; font-size:12px; }
+    ol.help { padding-left:18px; }
+    .preview { display:grid; gap:6px; font-family:'JetBrains Mono', monospace; font-size:12px; }
+    .preview div { display:flex; gap:12px; padding:6px 0; border-top:1px solid var(--line); }
+    .preview b { width:150px; color:var(--bone); font-weight:500; flex:0 0 auto; }
+    .preview span { color:var(--muted); }
+    @media (max-width: 860px) { .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <p class="mono" style="margin:0 0 6px">The Undercut Project · private tool</p>
+      <h1>Availability editor</h1>
+    </div>
+    <div class="row" style="margin:0">
+      <button id="btnReload">Reload from site</button>
+      <label for="fileIn" style="margin:0"><span style="display:inline-block;padding:9px 14px;border:1px solid var(--line);border-radius:4px;cursor:pointer;color:var(--ivory);letter-spacing:.1em;font-size:12px;text-transform:uppercase">Import JSON file</span></label>
+      <input type="file" id="fileIn" accept="application/json" hidden>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div>
+      <section class="card">
+        <h2>General settings</h2>
+        <div class="row">
+          <div><label for="tz">Timezone (IANA)</label><input id="tz" list="tzlist" style="width:220px"><datalist id="tzlist"><option value="Europe/Madrid"><option value="Europe/Andorra"><option value="Europe/London"><option value="Europe/Paris"><option value="Europe/Berlin"><option value="America/New_York"><option value="UTC"></datalist></div>
+          <div><label for="window">Booking window (days)</label><input id="window" type="number" min="1" max="365"></div>
+          <div><label for="notice">Minimum notice (hours)</label><input id="notice" type="number" min="0" max="720"></div>
+          <div><label for="step">Slot step (minutes)</label><select id="step"><option>15</option><option>30</option><option>60</option></select></div>
+        </div>
+        <p class="help">Windows are the periods you are free. The site computes start times inside each window using the slot step and the session length (90 min initial, 60 min follow-up).</p>
+      </section>
+
+      <section class="card">
+        <h2>Weekly pattern</h2>
+        <div id="weekly"></div>
+      </section>
+
+      <section class="card">
+        <h2>Specific dates (override the weekly pattern)</h2>
+        <div class="row">
+          <input type="date" id="dateIn">
+          <input type="time" id="dateStart" value="09:00"><span class="mono">to</span><input type="time" id="dateEnd" value="13:00">
+          <button id="addDate">Add window</button>
+          <button id="addDateOff" title="Mark this date as unavailable even if the weekly pattern has windows">Day off</button>
+        </div>
+        <div class="list" id="dates"></div>
+      </section>
+
+      <section class="card">
+        <h2>Blocked dates (holidays, travel, race weeks)</h2>
+        <div class="row">
+          <input type="date" id="blockFrom"><span class="mono">to</span><input type="date" id="blockTo">
+          <button id="addBlock">Block</button>
+        </div>
+        <div class="list" id="blocked"></div>
+      </section>
+
+      <section class="card">
+        <h2>Booked slots (hidden from visitors)</h2>
+        <div class="row">
+          <input type="date" id="bookDate"><input type="time" id="bookStart" value="09:00">
+          <select id="bookLen"><option value="90">90 min (initial)</option><option value="60">60 min (follow-up)</option><option value="30">30 min</option><option value="120">120 min</option></select>
+          <button id="addBooked">Add booking</button>
+        </div>
+        <div class="list" id="booked"></div>
+      </section>
+    </div>
+
+    <div>
+      <section class="card">
+        <h2>availability.json</h2>
+        <textarea id="out" spellcheck="false"></textarea>
+        <div class="row" style="margin-top:12px">
+          <button class="gold" id="btnDownload">Download file</button>
+          <button id="btnCopy">Copy</button>
+          <button id="btnApply" title="Apply edits made directly in the text area">Apply text</button>
+        </div>
+        <p class="status" id="status"></p>
+        <ol class="help">
+          <li>Download (or copy) the JSON.</li>
+          <li>In GitHub, open <code>data/availability.json</code>, click the pencil, replace the contents, and commit.</li>
+          <li>The live site updates within a minute or two.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Preview — next 14 days</h2>
+        <div class="row"><label for="prevLen" style="margin:0">Session</label><select id="prevLen"><option value="90">Initial · 90 min</option><option value="60">Follow-up · 60 min</option></select></div>
+        <div class="preview" id="preview"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const DOW = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  const JS_DOW = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const $ = (s, r) => (r || document).querySelector(s);
+  const pad = (n) => String(n).padStart(2, '0');
+  const toMin = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  const fromMin = (m) => pad(Math.floor(m / 60)) + ':' + pad(m % 60);
+  const key = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+
+  let data = { timezone: 'Europe/Madrid', bookingWindowDays: 60, minNoticeHours: 24, slotStepMinutes: 30, weekly: {}, dates: {}, blocked: [], booked: [] };
+  DOW.forEach((d) => { data.weekly[d] = data.weekly[d] || []; });
+
+  function setStatus(msg, cls) { const s = $('#status'); s.textContent = msg; s.className = 'status ' + (cls || ''); }
+
+  /* ----- render ----- */
+  function render() {
+    $('#tz').value = data.timezone;
+    $('#window').value = data.bookingWindowDays;
+    $('#notice').value = data.minNoticeHours;
+    $('#step').value = String(data.slotStepMinutes);
+
+    $('#weekly').innerHTML = DOW.map((d) => `
+      <div class="day" data-day="${d}">
+        <div class="name">${d}</div>
+        <div class="windows">
+          ${(data.weekly[d] || []).map((w, i) => winRow(w, `data-day="${d}" data-i="${i}"`)).join('')}
+          <div><button class="addWin" data-day="${d}">+ Add window</button></div>
+        </div>
+      </div>`).join('');
+
+    const dates = Object.keys(data.dates).sort();
+    $('#dates').innerHTML = dates.length ? dates.map((ymd) => `
+      <div class="item"><span>${ymd} &nbsp; ${data.dates[ymd].length ? data.dates[ymd].join(', ') : '<em style="color:var(--muted)">day off</em>'}</span><button class="x" data-del-date="${ymd}">✕</button></div>`).join('')
+      : '<p class="help">No date overrides.</p>';
+
+    const blocked = [...data.blocked].sort();
+    $('#blocked').innerHTML = blocked.length ? blocked.map((ymd) => `
+      <div class="item"><span>${ymd}</span><button class="x" data-del-block="${ymd}">✕</button></div>`).join('')
+      : '<p class="help">No blocked dates.</p>';
+
+    const booked = [...data.booked].sort();
+    $('#booked').innerHTML = booked.length ? booked.map((b) => `
+      <div class="item"><span>${b}</span><button class="x" data-del-booked="${b}">✕</button></div>`).join('')
+      : '<p class="help">No bookings recorded.</p>';
+
+    $('#out').value = JSON.stringify(data, null, 2);
+    renderPreview();
+  }
+  function winRow(w, attrs) {
+    const [a, b] = w.split('-');
+    return `<div class="win"><input type="time" value="${a}" class="winStart" ${attrs}><span>to</span><input type="time" value="${b}" class="winEnd" ${attrs}><button class="x delWin" ${attrs}>✕</button></div>`;
+  }
+
+  /* ----- preview (same algorithm as the site) ----- */
+  function slotsFor(ymd, minutes) {
+    if (data.blocked.includes(ymd)) return [];
+    const d = new Date(ymd + 'T00:00:00');
+    const windows = data.dates[ymd] !== undefined ? data.dates[ymd] : (data.weekly[JS_DOW[d.getDay()]] || []);
+    const booked = data.booked.map((e) => { const [dd, w] = e.split(/\s+/); if (dd !== ymd || !w) return null; const [s, en] = w.split('-'); return { s: toMin(s), e: toMin(en) }; }).filter(Boolean);
+    const out = [];
+    windows.forEach((w) => {
+      const [ws, we] = w.split('-').map(toMin);
+      for (let s = ws; s + minutes <= we; s += data.slotStepMinutes) {
+        if (booked.some((b) => s < b.e && s + minutes > b.s)) continue;
+        out.push(fromMin(s));
+      }
+    });
+    return out;
+  }
+  function renderPreview() {
+    const minutes = Number($('#prevLen').value);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    let html = '';
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(today); d.setDate(today.getDate() + i);
+      const ymd = key(d);
+      const s = slotsFor(ymd, minutes);
+      html += `<div><b>${ymd} ${JS_DOW[d.getDay()]}</b><span>${s.length ? s.join('  ') : '—'}</span></div>`;
+    }
+    $('#preview').innerHTML = html;
+  }
+
+  /* ----- events ----- */
+  document.addEventListener('input', (e) => {
+    const t = e.target;
+    if (t.id === 'tz') data.timezone = t.value.trim();
+    if (t.id === 'window') data.bookingWindowDays = Number(t.value) || 60;
+    if (t.id === 'notice') data.minNoticeHours = Number(t.value) || 0;
+    if (t.id === 'step') data.slotStepMinutes = Number(t.value) || 30;
+    if (t.id === 'prevLen') { renderPreview(); return; }
+    if (t.classList.contains('winStart') || t.classList.contains('winEnd')) {
+      const d = t.dataset.day, i = Number(t.dataset.i);
+      const row = t.closest('.win');
+      const a = $('.winStart', row).value, b = $('.winEnd', row).value;
+      if (a && b && toMin(b) > toMin(a)) data.weekly[d][i] = a + '-' + b;
+    }
+    if (['tz', 'window', 'notice', 'step'].includes(t.id) || t.classList.contains('winStart') || t.classList.contains('winEnd')) { $('#out').value = JSON.stringify(data, null, 2); renderPreview(); }
+  });
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    if (t.classList.contains('addWin')) { data.weekly[t.dataset.day].push('09:00-13:00'); render(); }
+    if (t.classList.contains('delWin')) { data.weekly[t.dataset.day].splice(Number(t.dataset.i), 1); render(); }
+    if (t.dataset.delDate) { delete data.dates[t.dataset.delDate]; render(); }
+    if (t.dataset.delBlock) { data.blocked = data.blocked.filter((x) => x !== t.dataset.delBlock); render(); }
+    if (t.dataset.delBooked) { data.booked = data.booked.filter((x) => x !== t.dataset.delBooked); render(); }
+  });
+
+  $('#addDate').addEventListener('click', () => {
+    const ymd = $('#dateIn').value, a = $('#dateStart').value, b = $('#dateEnd').value;
+    if (!ymd || !a || !b || toMin(b) <= toMin(a)) return setStatus('Pick a date and a valid start/end time.', 'err');
+    data.dates[ymd] = data.dates[ymd] || [];
+    data.dates[ymd].push(a + '-' + b);
+    render(); setStatus('Window added for ' + ymd + '.', 'ok');
+  });
+  $('#addDateOff').addEventListener('click', () => {
+    const ymd = $('#dateIn').value;
+    if (!ymd) return setStatus('Pick a date first.', 'err');
+    data.dates[ymd] = [];
+    render(); setStatus(ymd + ' marked as a day off.', 'ok');
+  });
+  $('#addBlock').addEventListener('click', () => {
+    const from = $('#blockFrom').value, to = $('#blockTo').value || from;
+    if (!from) return setStatus('Pick a date (or a range) to block.', 'err');
+    const a = new Date(from + 'T00:00:00'), b = new Date(to + 'T00:00:00');
+    for (let d = new Date(a); d <= b; d.setDate(d.getDate() + 1)) { const k = key(d); if (!data.blocked.includes(k)) data.blocked.push(k); }
+    render(); setStatus('Blocked ' + from + (to !== from ? ' to ' + to : '') + '.', 'ok');
+  });
+  $('#addBooked').addEventListener('click', () => {
+    const ymd = $('#bookDate').value, s = $('#bookStart').value, len = Number($('#bookLen').value);
+    if (!ymd || !s) return setStatus('Pick the booking date and start time.', 'err');
+    const entry = ymd + ' ' + s + '-' + fromMin(toMin(s) + len);
+    if (!data.booked.includes(entry)) data.booked.push(entry);
+    render(); setStatus('Booking recorded: ' + entry, 'ok');
+  });
+
+  $('#btnApply').addEventListener('click', () => {
+    try { load(JSON.parse($('#out').value)); setStatus('Text applied.', 'ok'); }
+    catch (err) { setStatus('Invalid JSON: ' + err.message, 'err'); }
+  });
+  $('#btnCopy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('#out').value); setStatus('Copied to clipboard.', 'ok'); }
+    catch (_) { $('#out').select(); document.execCommand('copy'); setStatus('Copied.', 'ok'); }
+  });
+  $('#btnDownload').addEventListener('click', () => {
+    const blob = new Blob([$('#out').value], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'availability.json'; a.click();
+    URL.revokeObjectURL(a.href);
+    setStatus('Downloaded availability.json — now replace data/availability.json in the repository.', 'ok');
+  });
+  $('#fileIn').addEventListener('change', (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { try { load(JSON.parse(r.result)); setStatus('Imported ' + f.name + '.', 'ok'); } catch (err) { setStatus('Invalid JSON: ' + err.message, 'err'); } };
+    r.readAsText(f);
+  });
+  $('#btnReload').addEventListener('click', fetchCurrent);
+
+  function load(obj) {
+    data = Object.assign({ timezone: 'Europe/Madrid', bookingWindowDays: 60, minNoticeHours: 24, slotStepMinutes: 30 }, obj);
+    data.weekly = data.weekly || {}; DOW.forEach((d) => { data.weekly[d] = data.weekly[d] || []; });
+    data.dates = data.dates || {}; data.blocked = data.blocked || []; data.booked = data.booked || [];
+    render();
+  }
+  async function fetchCurrent() {
+    try {
+      const res = await fetch('../data/availability.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      load(await res.json()); setStatus('Loaded the current availability from the site.', 'ok');
+    } catch (err) {
+      render(); setStatus('Could not load the live file (' + err.message + '). Import the JSON file manually or start from the defaults.', 'err');
+    }
+  }
+  fetchCurrent();
+})();
+</script>
+</body>
+</html>
