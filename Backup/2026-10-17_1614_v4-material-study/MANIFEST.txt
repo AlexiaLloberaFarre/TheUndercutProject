@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1614 (Europe/Madrid)
+Label:     v4-material-study
+Based on:  87c8edb (V3: Wind Tunnel website, a futuristic electric-era design from scratch)
+
+To restore: copy the contents of this folder over the repository root and commit.

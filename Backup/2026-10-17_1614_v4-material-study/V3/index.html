@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alexia Llobera — The Undercut Project</title>
+  <meta name="description" content="Alexia Llobera: trackside motorsport engineer, high-performance coach and speaker. Mentoring sessions, speaking engagements and consulting for teams that perform under pressure.">
+  <meta name="theme-color" content="#0a0e17">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Alexia Llobera — The Undercut Project">
+  <meta property="og:description" content="Trackside motorsport engineer · high-performance coach · speaker.">
+  <meta property="og:image" content="assets/img/alexia-hero.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ===== RAIL (side navigation on desktop · bottom dock on mobile) ===== -->
+  <aside class="rail" id="rail">
+    <a class="rail__brand" href="#home"><img src="assets/img/avatar.jpg" alt=""><span>The Undercut Project</span></a>
+    <nav class="rail__nav" aria-label="Sections">
+      <a href="#home" class="is-active"><b>01</b><i></i><span>Home</span></a>
+      <a href="#about"><b>02</b><i></i><span>About me</span></a>
+      <a href="#motorsport"><b>03</b><i></i><span>Motorsport</span></a>
+      <a href="#speaker"><b>04</b><i></i><span>Speaker</span></a>
+      <a href="#mentoring"><b>05</b><i></i><span>Mentoring</span></a>
+      <a href="#contact"><b>06</b><i></i><span>Contact</span></a>
+    </nav>
+    <a class="rail__book" href="#mentoring">Book a session</a>
+  </aside>
+
+  <div class="stage">
+    <main>
+
+      <!-- ===== HOME · pinned wind-tunnel hero ===== -->
+      <section class="hero" id="home">
+        <canvas id="tunnel" aria-hidden="true"></canvas>
+
+        <svg class="hero__car" id="car" viewBox="0 0 640 240" aria-hidden="true">
+          <path class="axis" d="M0 120H640"/>
+          <g class="draw">
+            <rect x="18" y="26" width="8" height="188" rx="2"/>
+            <rect x="26" y="34" width="30" height="172" rx="3"/>
+            <path d="M56 112L170 103L300 98L300 142L170 137L56 128Z"/>
+            <ellipse cx="330" cy="120" rx="26" ry="17"/>
+            <path d="M304 120C318 90 342 90 356 120"/>
+            <path d="M300 98L330 64L470 58L530 80L548 98Z"/>
+            <path d="M300 142L330 176L470 182L530 160L548 142Z"/>
+            <path d="M300 98L548 98L580 110L580 130L548 142L300 142Z"/>
+            <rect x="586" y="40" width="8" height="160" rx="2"/>
+            <rect x="594" y="48" width="26" height="144" rx="3"/>
+            <rect x="92" y="14" width="62" height="34" rx="8"/>
+            <rect x="92" y="192" width="62" height="34" rx="8"/>
+            <rect x="468" y="6" width="72" height="40" rx="10"/>
+            <rect x="468" y="194" width="72" height="40" rx="10"/>
+            <path d="M123 48L178 105"/><path d="M123 192L178 135"/>
+            <path d="M504 46L480 98"/><path d="M504 194L480 142"/>
+          </g>
+          <rect class="sweep" x="0" y="0" width="3" height="240"/>
+        </svg>
+
+        <div class="hero__brand mono"><img src="assets/img/avatar.jpg" alt="">The Undercut Project</div>
+
+        <div class="hero__inner">
+          <div class="hero__copy">
+            <p class="hero__kicker mono"><i></i>Trackside · Andorra · Worldwide</p>
+            <h1 class="hero__title">
+              <span><b>Alexia</b></span>
+              <span class="ghost"><b>Llobera</b></span>
+            </h1>
+            <p class="hero__roles mono">Trackside motorsport engineer <em>//</em> High-performance coach <em>//</em> Speaker</p>
+            <p class="hero__lead">Ten years at the sharp end of motorsport, turning individual excellence into collective performance.</p>
+            <div class="hero__actions">
+              <a class="btn btn--blue btn--mag" href="#mentoring">Book a mentoring session</a>
+              <a class="btn btn--line btn--mag" href="#contact" data-subject="Speaking enquiry">Speaking enquiries</a>
+            </div>
+            <p class="sign" aria-label="Signature: Alexia Llobera">Alexia Llobera</p>
+          </div>
+
+          <figure class="holo hero__photo">
+            <div class="holo__ghost"></div>
+            <div class="holo__img"><img src="assets/img/alexia-hero.jpg" alt="Alexia Llobera on the pit wall with the Cadillac Formula 1 Team"><i class="scan"></i></div>
+            <figcaption class="mono">// Pit wall · Cadillac F1</figcaption>
+          </figure>
+        </div>
+
+        <p class="hero__cue mono"><span>Scroll</span><i></i></p>
+      </section>
+
+      <div class="deck">
+
+        <!-- ===== DATA BAND ===== -->
+        <section class="data" aria-label="Key figures">
+          <div class="wrap">
+            <ul class="data__grid">
+              <li><b data-count="10">0</b><i>+</i><span>years in motorsport engineering</span></li>
+              <li><b data-count="180">0</b><i>+</i><span>international race &amp; test events</span></li>
+              <li><b data-count="7">0</b><span>disciplines</span></li>
+              <li><b data-count="3">0</b><span>FIA championship titles</span></li>
+            </ul>
+          </div>
+          <div class="strip" aria-hidden="true">
+            <div class="strip__track" id="strip"></div>
+          </div>
+        </section>
+
+        <!-- ===== ABOUT ===== -->
+        <section class="sec" id="about">
+          <div class="wrap">
+            <header class="sec__head rv">
+              <p class="eyebrow mono">02 / About me</p>
+              <h2 class="h2">Where engineering performance, reliability and <em>split-second decisions</em> meet.</h2>
+            </header>
+            <div class="about">
+              <figure class="holo rv">
+                <div class="holo__ghost"></div>
+                <div class="holo__img"><img src="assets/img/alexia-about.jpg" alt="Alexia Llobera, NEOM McLaren Formula E Team"><i class="scan"></i></div>
+                <figcaption class="mono">// Garage · Formula E</figcaption>
+              </figure>
+              <div class="about__text rv rv--d1">
+                <p class="lead">Trackside motorsport engineer with 10+ years in motorsport engineering and 180+ international race and test events across six disciplines: Formula 1, Formula E, WRC, Rallycross, TCR and the Dakar Rally.</p>
+                <p>I have built my career operating with a strategic mindset, where engineering performance, reliability and split-second decision-making meet.</p>
+                <p>My focus has always been the same: to create technical systems, teams and organizations that turn individual excellence into collective performance.</p>
+                <p>My trackside career includes three FIA championship wins: the 2018 FIA World Cup for Cross-Country Rallies Team Championship with X-raid, and back-to-back FIA World Rally Championship Manufacturers’ titles in 2019 and 2020 with Hyundai Motorsport.</p>
+                <p>I was also part of building the Cadillac Formula 1 Team from the ground up in 2025–26, before the team competed in its first race, and contributed to the development of two all-new race cars from concept to racing: the MINI John Cooper Works Buggy (2018) and Hyundai’s Rally1 hybrid WRC (2021).</p>
+                <p>Beyond the car, I’ve worked as a high-performance teams and executive coach, and strategic consultant, partnering with motorsport-driven teams, CEOs, CTOs and team leaders to strengthen business strategy, leadership, team performance and company culture in high-stakes environments.</p>
+                <p class="readout mono">individual excellence <span class="arrow">→</span> collective performance</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- honours wall -->
+          <div class="honours">
+            <div class="wrap">
+              <header class="sec__head sec__head--tight rv">
+                <p class="eyebrow eyebrow--volt mono">Palmarès</p>
+                <h3 class="h2 h2--sm">Three FIA titles. <em>Three cars from concept to competition.</em></h3>
+              </header>
+              <p class="group mono rv">Three FIA championship titles</p>
+              <div class="chips">
+                <article class="chip rv"><span class="chip__tag mono">P1</span><div class="chip__img"><img src="assets/img/honours/dakar-2018.jpg" alt="X-raid team at Rally Kazakhstan, 2018"><i class="scan"></i></div><div class="chip__body"><span class="chip__year">2018</span><h4>FIA World Cup for Cross-Country Rallies</h4><p>Team Championship · X-raid</p></div></article>
+                <article class="chip rv rv--d1"><span class="chip__tag mono">P1</span><div class="chip__img"><img src="assets/img/honours/wrc-2019.jpg" alt="FIA WRC Manufacturers’ champions 2019"><i class="scan"></i></div><div class="chip__body"><span class="chip__year">2019</span><h4>FIA World Rally Championship</h4><p>Manufacturers’ title · Hyundai Motorsport</p></div></article>
+                <article class="chip rv rv--d2"><span class="chip__tag mono">P1</span><div class="chip__img"><img src="assets/img/honours/wrc-2020.jpg" alt="FIA WRC Manufacturers’ champions 2020"><i class="scan"></i></div><div class="chip__body"><span class="chip__year">2020</span><h4>FIA World Rally Championship</h4><p>Manufacturers’ title · Hyundai Motorsport</p></div></article>
+              </div>
+              <p class="group mono rv">Three first times · from concept to competition</p>
+              <div class="chips">
+                <article class="chip rv"><span class="chip__tag mono">New</span><div class="chip__img"><img src="assets/img/honours/concept-to-grid.jpg" alt="MINI John Cooper Works Buggy"><i class="scan"></i></div><div class="chip__body"><span class="chip__year">2018</span><h4>MINI John Cooper Works Buggy</h4><p>All-new Dakar car · X-raid</p></div></article>
+                <article class="chip rv rv--d1"><span class="chip__tag mono">New</span><div class="chip__img"><img src="assets/img/honours/i20n-2021.jpg" alt="Hyundai i20 N Rally1 hybrid"><i class="scan"></i></div><div class="chip__body"><span class="chip__year">2021</span><h4>Hyundai i20 N Rally1 hybrid</h4><p>All-new hybrid WRC car · Hyundai Motorsport</p></div></article>
+                <article class="chip rv rv--d2" data-fit="contain"><span class="chip__tag mono">New</span><div class="chip__img"><img src="assets/img/honours/cadillac-2026.jpg" alt="Cadillac Formula 1 Team car"><i class="scan"></i></div><div class="chip__body"><span class="chip__year">2025–26</span><h4>Cadillac Formula 1 Team</h4><p>A new F1 team, built before its first race</p></div></article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="chev" aria-hidden="true"></div>
+
+        <!-- ===== MOTORSPORT · horizontal track ===== -->
+        <section class="sec" id="motorsport">
+          <div class="wrap">
+            <header class="sec__head sec__head--row rv">
+              <div>
+                <p class="eyebrow mono">03 / Motorsport</p>
+                <h2 class="h2">Seven disciplines. <em>One standard.</em></h2>
+                <p class="sub">A decade trackside, from the dunes of the Dakar to the Formula 1 pit lane, and beyond the car into the leadership of high-performance teams. Drag the track or use the arrows.</p>
+              </div>
+              <div class="track__ctl mono"><button type="button" id="trackPrev" aria-label="Previous chapter">←</button><button type="button" id="trackNext" aria-label="Next chapter">→</button></div>
+            </header>
+          </div>
+          <div class="track rv" id="track"><div class="track__rail" id="trackRail"></div></div>
+          <div class="wrap">
+            <ol class="map mono" id="trackMap"></ol>
+            <div class="twocol">
+              <div class="rv"><p class="eyebrow mono">Education</p><ul class="spec" id="education"></ul></div>
+              <div class="rv rv--d1"><p class="eyebrow mono">Beyond the paddock</p><ul class="spec" id="extras"></ul></div>
+            </div>
+            <a class="link mono rv" href="https://www.linkedin.com/in/alexia-llobera-a7177a42" target="_blank" rel="noopener">Full profile on LinkedIn →</a>
+          </div>
+        </section>
+
+        <div class="chev" aria-hidden="true"></div>
+
+        <!-- ===== SPEAKER ===== -->
+        <section class="sec sec--dark" id="speaker">
+          <div class="wrap speaker">
+            <figure class="holo holo--tall rv">
+              <div class="holo__ghost"></div>
+              <div class="holo__img"><img src="assets/img/alexia-speaker.jpg" alt="Alexia Llobera speaking on stage"><i class="scan"></i></div>
+              <figcaption class="mono">// On stage</figcaption>
+            </figure>
+            <div class="speaker__copy rv rv--d1">
+              <p class="eyebrow eyebrow--volt mono">04 / Speaker</p>
+              <h2 class="h2">From the pit wall <em>to the stage.</em></h2>
+              <p class="lead">Alexia speaks about what high-stakes environments teach us about performance: how elite teams make decisions in seconds, how reliability is engineered rather than hoped for, and how individual excellence becomes collective results.</p>
+              <p>Drawing on 180+ events across seven motorsport disciplines, three FIA championship titles and the build-up of a Formula 1 team from zero, her talks are candid, technical where it matters, and built for leaders who operate under pressure.</p>
+              <dl class="specs mono">
+                <div><dt>Formats</dt><dd>Keynote · Fireside chat · Panel · Leadership workshop · In-house team session</dd></div>
+                <div><dt>Languages</dt><dd>English · Spanish · Catalan</dd></div>
+                <div><dt>Delivery</dt><dd>In person worldwide · Virtual</dd></div>
+              </dl>
+              <a class="btn btn--line btn--mag" href="#contact" data-subject="Speaking enquiry">Enquire about a speaking engagement</a>
+            </div>
+          </div>
+          <div class="wrap topics rv">
+            <p class="eyebrow eyebrow--volt mono">Speaking topics · select one</p>
+            <div class="tabs">
+              <div class="tabs__list" role="tablist" id="topicTabs"></div>
+              <div class="tabs__panel" id="topicPanel" role="tabpanel"></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="chev" aria-hidden="true"></div>
+
+        <!-- ===== MENTORING ===== -->
+        <section class="sec" id="mentoring">
+          <div class="wrap">
+            <header class="sec__head rv">
+              <p class="eyebrow mono">05 / Mentoring</p>
+              <h2 class="h2">One-to-one mentoring for engineers and leaders who perform <em>under pressure.</em></h2>
+              <p class="sub">Online sessions by video call, in English, Spanish or Catalan. For motorsport engineers at any stage, engineers stepping into leadership, and founders or managers building high-performance teams.</p>
+            </header>
+
+            <div class="mods rv" id="offers"></div>
+
+            <div class="booking rv" id="booking">
+              <div class="booking__head">
+                <h3>Book a session</h3>
+                <ol class="steps mono"><li class="is-active" data-step="1">01 Session</li><li data-step="2">02 Date &amp; time</li><li data-step="3">03 Details</li></ol>
+              </div>
+              <div class="provider" id="providerBox" hidden></div>
+              <div class="booking__grid">
+                <div class="cal">
+                  <div class="cal__head"><button type="button" class="mono" id="calPrev" aria-label="Previous month">←</button><h4 id="calMonth">—</h4><button type="button" class="mono" id="calNext" aria-label="Next month">→</button></div>
+                  <div class="cal__dow mono"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+                  <div class="cal__grid" id="calGrid"></div>
+                  <p class="cal__note mono" id="calNote">Times in <b id="calTz">Europe/Madrid</b></p>
+                </div>
+                <div class="side">
+                  <figure class="side__photo"><img src="assets/img/mentoring.jpg" alt="Alexia Llobera at the NEOM McLaren garage"><figcaption class="mono">// One-to-one · Trackside mindset</figcaption></figure>
+                  <div class="slots" id="slots"><p class="hint">Pick an offer above, then a highlighted day.</p></div>
+                  <form class="form" id="bookingForm" hidden novalidate>
+                    <div class="summary" id="bookingSummary"></div>
+                    <label>Full name<input type="text" name="name" id="bName" required autocomplete="name"></label>
+                    <div class="form__row"><label>Email<input type="email" name="email" id="bEmail" required autocomplete="email"></label><label>Phone<input type="tel" name="phone" id="bPhone" autocomplete="tel" placeholder="+34 …"></label></div>
+                    <label>What would you like to work on? <small>(optional)</small><textarea name="notes" id="bNotes" rows="3"></textarea></label>
+                    <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off">
+                    <div class="form__actions"><button type="button" class="btn btn--line btn--sm" id="bookingBack">Change time</button><button type="submit" class="btn btn--blue">Request booking</button></div>
+                    <p class="status mono" id="bookingStatus" aria-live="polite"></p>
+                  </form>
+                </div>
+              </div>
+              <ol class="how mono">
+                <li><b>01</b>Choose your session and a time that suits you.</li>
+                <li><b>02</b>You’ll receive a confirmation and payment details by email within 24 hours.</li>
+                <li><b>03</b>Sessions take place by video call. In person on request.</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <div class="chev" aria-hidden="true"></div>
+
+        <!-- ===== CONTACT ===== -->
+        <section class="sec sec--dark" id="contact">
+          <div class="wrap contact">
+            <div class="contact__copy rv">
+              <p class="eyebrow eyebrow--volt mono">06 / Contact</p>
+              <h2 class="h2">Let’s talk <em>performance.</em></h2>
+              <p class="lead">Speaking engagements, mentoring, consulting or simply a conversation about what your team could do next.</p>
+              <dl class="specs mono">
+                <div><dt>Email</dt><dd><a href="mailto:contact@alexiallobera.com">contact@alexiallobera.com</a></dd></div>
+                <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/alexia-llobera-a7177a42" target="_blank" rel="noopener">alexia-llobera</a></dd></div>
+                <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/alexialloberamotorsport/" target="_blank" rel="noopener">@alexialloberamotorsport</a></dd></div>
+                <div><dt>Based in</dt><dd>Andorra · available worldwide</dd></div>
+              </dl>
+            </div>
+            <form class="form contact__form rv rv--d1" id="contactForm" novalidate>
+              <label>Name<input type="text" name="name" id="cName" required autocomplete="name"></label>
+              <div class="form__row"><label>Email<input type="email" name="email" id="cEmail" required autocomplete="email"></label><label>Phone<input type="tel" name="phone" id="cPhone" autocomplete="tel" placeholder="+34 …"></label></div>
+              <label>I’m interested in<select name="subject" id="cSubject"><option>General enquiry</option><option>Speaking enquiry</option><option>Mentoring</option><option>Consulting &amp; coaching for teams</option></select></label>
+              <label>Message <small>(optional)</small><textarea name="message" id="cMessage" rows="4"></textarea></label>
+              <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off">
+              <div class="form__actions"><button type="submit" class="btn btn--blue btn--mag">Send message</button></div>
+              <p class="status mono" id="contactStatus" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+
+      </div><!-- /deck -->
+    </main>
+  </div><!-- /stage -->
+
+  <!-- ===== FOOTER · revealed from beneath ===== -->
+  <footer class="footer">
+    <div class="wrap">
+      <p class="footer__giant" aria-hidden="true">The Undercut</p>
+      <div class="footer__row">
+        <p class="footer__tag">Strategy is the undercut. <em>Performance is the result.</em></p>
+        <ul class="footer__links mono">
+          <li><a href="https://www.linkedin.com/in/alexia-llobera-a7177a42" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://www.instagram.com/alexialloberamotorsport/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="mailto:contact@alexiallobera.com">Email</a></li>
+        </ul>
+      </div>
+      <p class="footer__copy mono">© <span id="year"></span> Alexia Llobera · The Undercut Project · <a href="../index.html">V1</a> · <a href="../V2/index.html">V2</a></p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

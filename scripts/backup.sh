@@ -10,7 +10,7 @@ stamp="$(TZ=Europe/Madrid date +%Y-%m-%d_%H%M)"
 dest="Backup/${stamp}_${label}"
 
 # Everything the site needs to run: page, styles, scripts, images, data, editor, docs.
-items=(index.html index-autumn.html index-motion.html README.md assets data admin V2 V3)
+items=(index.html index-autumn.html index-motion.html README.md assets data admin V2 V3 V4)
 
 tmp="$(mktemp -d)"
 for i in "${items[@]}"; do [ -e "$i" ] && cp -R "$i" "$tmp/"; done
