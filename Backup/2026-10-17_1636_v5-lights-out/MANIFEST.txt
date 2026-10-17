@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1636 (Europe/Madrid)
+Label:     v5-lights-out
+Based on:  4407ec5 (V4: make the lit red shelves the leitmotif)
+
+To restore: copy the contents of this folder over the repository root and commit.
