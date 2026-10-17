@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2207 (Europe/Madrid)
+Label:     v1-nav-social-caption
+Based on:  13afa98 (V1: remove the hero eyebrow line and the hero signature)
+
+To restore: copy the contents of this folder over the repository root and commit.
