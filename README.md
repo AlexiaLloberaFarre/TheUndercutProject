@@ -178,7 +178,7 @@ Then open `http://localhost:8080`.
 
 ## Calendar, emails and Outlook
 
-- **Availability**: every day, 15:30–19:30 (Europe/Madrid). Everything
+- **Availability**: Monday to Friday, 15:30–19:30 (Europe/Madrid). Everything
   else is blocked. Edit `data/availability.json` (or use `/admin/`) to change
   days, hours, holidays or already-booked slots. A 90-minute session can start
   from 15:30 to 18:00; a 60-minute one from 15:30 to 18:30.

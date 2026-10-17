@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2330 (Europe/Madrid)
+Label:     v1-contact-rows-weekdays
+Based on:  3b57a77 (Availability: every day of the week 15:30–19:30, all other hours blocked)
+
+To restore: copy the contents of this folder over the repository root and commit.
