@@ -440,6 +440,7 @@ p { margin: 0 0 1em; }
 .footer__links { display: flex; gap: 24px; }
 .footer__links a { font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(243,236,225,.85); }
 .footer__links a:hover { color: #fff; }
+.footer__theme a { text-decoration: underline; text-underline-offset: 3px; }
 .footer__copy { grid-column: 1 / -1; margin: 24px 0 0; padding-top: 24px; border-top: 1px solid var(--line-on-red); font-size: 12px; letter-spacing: .06em; }
 
 /* ---------- Reveal ---------- */

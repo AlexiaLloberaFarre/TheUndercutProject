@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1157 (Europe/Madrid)
+Label:     warm-autumn-theme
+Based on:  979a7ff (Add automatic site backups)
+
+To restore: copy the contents of this folder over the repository root and commit.

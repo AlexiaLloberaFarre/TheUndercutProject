@@ -174,6 +174,12 @@
   }
   const visitorTz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'local';
 
+  /* ---------- Theme (?theme=autumn switches to the warm-autumn palette) ---------- */
+  try {
+    const t = new URLSearchParams(location.search).get('theme');
+    if (t) document.documentElement.dataset.theme = t;
+  } catch (_) {}
+
   /* ---------- Navigation ---------- */
   const nav = $('#nav');
   const navLinks = $('#navLinks');

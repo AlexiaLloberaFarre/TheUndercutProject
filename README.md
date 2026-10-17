@@ -18,6 +18,17 @@ A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be
 | `Backup/` | Timestamped copies of the site, one per change |
 | `scripts/backup.sh` | Creates those copies (runs automatically before each commit) |
 
+## Two colour editions
+
+The site ships with two palettes on the same content:
+
+| Edition | How to open it | Palette |
+| --- | --- | --- |
+| Wine (default) | `index.html` | Wine red, black, cream |
+| Warm Autumn (experiment) | `index-autumn.html`, or `index.html?theme=autumn` | Brick red, terracotta, paprika, gold, camel, chocolate, olive, petrol, from the colorimetry mood board |
+
+Both pages link to each other in the footer. To make Warm Autumn the default, add `data-theme="autumn"` to the `<html>` tag of `index.html`. The autumn palette lives in `assets/css/theme-autumn.css`; `scripts/build-autumn.sh` regenerates `index-autumn.html` from `index.html` after content changes.
+
 ## Brand
 
 Racing edition: Wine Red with black and cream, after the "Pantone Tension" reference. Serif display type with black handwritten accents, blurred red auras, a racing line that draws itself on scroll, a chequered-flag band, Pantone-style chips for the championship titles, a torn-paper call to action and a "save the date" booking calendar with a hand-drawn circle around the chosen day.
