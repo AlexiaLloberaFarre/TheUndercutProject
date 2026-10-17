@@ -6,10 +6,18 @@ cream linen, pit-lane red, golden-hour pit wall). Open `V4/index.html`.
 
 ## Design
 
+The red lit shelves from the board are the leitmotif: they fill the Home
+backdrop, every section divider, a full-bleed statement ("Strategy is the
+undercut."), the palmarès board, the Motorsport backdrop and the footer, with
+animated glowing shelf edges and a slow motion-blur pan. Captions use the
+board's white geometric type stacked with an indent ("Pit wall / in
+contrast // 001").
+
 - **Palette**: cream and linen pages, umber and walnut dark sections, ambient
   red for emphasis, amber and gold for light.
 - **Type**, taken from the board: Cormorant Garamond (light serif display and
-  italics), Jost (wide-tracked uppercase labels), Courier Prime (typewriter
+  italics), Outfit (the white geometric stacked captions), Jost (wide-tracked
+  uppercase labels), Courier Prime (typewriter
   captions and data), Allerta Stencil (the pit-lane stripes) and Mrs Saint
   Delafield (the signature).
 - **Details**: a vertical "material study" label on the left edge, viewfinder

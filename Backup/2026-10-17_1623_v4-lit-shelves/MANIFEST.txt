@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1623 (Europe/Madrid)
+Label:     v4-lit-shelves
+Based on:  cd4554f (V4: Material Study website, warm editorial design with the board typography)
+
+To restore: copy the contents of this folder over the repository root and commit.

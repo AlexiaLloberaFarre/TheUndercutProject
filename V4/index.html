@@ -12,7 +12,7 @@
   <meta property="og:image" content="assets/img/alexia-hero.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&family=Courier+Prime:wght@400;700&family=Allerta+Stencil&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&family=Courier+Prime:wght@400;700&family=Allerta+Stencil&family=Mrs+Saint+Delafield&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -49,24 +49,27 @@
 
     <!-- ===== HOME ===== -->
     <section class="hero" id="home">
-      <div class="hero__shelves" style="background-image:url('assets/img/bg/shelves-soft.jpg')"></div>
-      <figure class="hero__media">
-        <img class="settle drift" src="assets/img/alexia-hero.jpg" alt="Alexia Llobera on the pit wall with the Cadillac Formula 1 Team">
-        <span class="sweep"></span>
-        <figcaption class="tw">Walnut in contrast <b>// 001</b></figcaption>
-      </figure>
+      <div class="hero__shelves" style="background-image:url('assets/img/bg/shelves-tall.jpg')"></div>
+      <div class="lit lit--hero" aria-hidden="true"><i style="--y:16%"></i><i style="--y:41%"></i><i style="--y:66%"></i><i style="--y:88%"></i></div>
       <div class="streaks" aria-hidden="true"><i></i><i></i><i></i></div>
 
       <div class="hero__inner">
-        <p class="tw hero__kicker">// 001 · Trackside · Andorra · Worldwide</p>
-        <h1 class="hero__title"><span class="line"><span>Alexia</span></span><span class="line"><em>Llobera</em></span></h1>
-        <p class="tracked">Trackside motorsport engineer <i>·</i> High-performance coach <i>·</i> Speaker</p>
-        <p class="hero__lead">Ten years at the sharp end of motorsport, turning individual excellence into collective performance.</p>
-        <div class="hero__actions">
-          <a class="btn btn--red" href="#mentoring">Book a mentoring session</a>
-          <a class="btn btn--ghost" href="#contact" data-subject="Speaking enquiry">Speaking enquiries</a>
+        <div class="hero__copy">
+          <p class="geo stack hero__kicker"><span>Trackside</span><span>in contrast</span><b>// 001</b></p>
+          <h1 class="hero__title"><span class="line"><span>Alexia</span></span><span class="line"><em>Llobera</em></span></h1>
+          <p class="geo stack hero__roles"><span>Trackside motorsport engineer · high-performance</span><span>coach</span><span>speaker</span></p>
+          <p class="hero__lead">Ten years at the sharp end of motorsport, turning individual excellence into collective performance.</p>
+          <div class="hero__actions">
+            <a class="btn btn--red" href="#mentoring">Book a mentoring session</a>
+            <a class="btn btn--ghost" href="#contact" data-subject="Speaking enquiry">Speaking enquiries</a>
+          </div>
+          <p class="sign" aria-label="Signature: Alexia Llobera">Alexia Llobera</p>
         </div>
-        <p class="sign" aria-label="Signature: Alexia Llobera">Alexia Llobera</p>
+        <figure class="hero__media">
+          <img class="settle drift" src="assets/img/alexia-hero.jpg" alt="Alexia Llobera on the pit wall with the Cadillac Formula 1 Team">
+          <span class="sweep"></span>
+          <figcaption class="geo stack"><span>Pit wall</span><span>in contrast</span><b>// 001</b></figcaption>
+        </figure>
       </div>
 
       <div class="triptych">
@@ -87,7 +90,7 @@
       <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
     </section>
 
-    <div class="stripe" aria-hidden="true"><div class="stripe__track" data-text="Pit lane // Sector 02 · About me — "></div></div>
+    <div class="divider" aria-hidden="true"><div class="divider__img" style="background-image:url('assets/img/bg/shelves-band.jpg')"></div><div class="lit"><i style="--y:28%"></i><i style="--y:74%"></i></div><p class="geo stack"><span>Sector 02</span><span>About me</span><b>// 02</b></p></div>
 
     <!-- ===== ABOUT ===== -->
     <section class="sec sec--cream" id="about">
@@ -100,7 +103,7 @@
           <figure class="vf rv">
             <div class="vf__img"><img class="drift" src="assets/img/alexia-about.jpg" alt="Alexia Llobera, NEOM McLaren Formula E Team"></div>
             <span class="vf__c vf__c--tl"></span><span class="vf__c vf__c--tr"></span><span class="vf__c vf__c--bl"></span><span class="vf__c vf__c--br"></span>
-            <figcaption class="tw">Garage · Formula E <b>// 002</b></figcaption>
+            <figcaption class="geo stack"><span>Garage</span><span>in contrast</span><b>// 002</b></figcaption>
           </figure>
           <div class="about__text rv rv--d1">
             <p class="lead">Trackside motorsport engineer with 10+ years in motorsport engineering and 180+ international race and test events across six disciplines: Formula 1, Formula E, WRC, Rallycross, TCR and the Dakar Rally.</p>
@@ -115,9 +118,11 @@
 
         <!-- material board: honours -->
         <div class="board rv">
+          <div class="board__bg" style="background-image:url('assets/img/bg/shelves-soft.jpg')"></div>
+          <div class="lit lit--dim" aria-hidden="true"><i style="--y:34%"></i><i style="--y:80%"></i></div>
           <div class="board__head">
             <p class="tracked eyebrow">Material board — Palmarès</p>
-            <p class="tw">Timber veneer · ambient red · fluted detailing</p>
+            <p class="geo stack"><span>Three titles · three first times</span><span>ambient red</span><b>// 002</b></p>
           </div>
           <p class="board__group tw">// Three FIA championship titles</p>
           <div class="tiles">
@@ -135,11 +140,23 @@
       </div>
     </section>
 
-    <div class="stripe" aria-hidden="true"><div class="stripe__track" data-text="Pit lane // Sector 03 · Motorsport — "></div></div>
+    <div class="divider" aria-hidden="true"><div class="divider__img" style="background-image:url('assets/img/bg/shelves-band.jpg')"></div><div class="lit"><i style="--y:28%"></i><i style="--y:74%"></i></div><p class="geo stack"><span>Sector 03</span><span>Motorsport</span><b>// 03</b></p></div>
+
+    <!-- ===== STATEMENT · full-bleed lit shelves ===== -->
+    <section class="statement" aria-label="Statement">
+      <div class="statement__bg" style="background-image:url('assets/img/bg/shelves-clean.jpg')"></div>
+      <div class="lit lit--strong" aria-hidden="true"><i style="--y:20%"></i><i style="--y:47%"></i><i style="--y:74%"></i></div>
+      <div class="wrap statement__inner">
+        <p class="geo stack statement__cap rv"><span>Material study</span><span>in contrast</span><b>// 002</b></p>
+        <p class="statement__big rv"><span>Strategy</span><span>is the undercut.</span></p>
+        <p class="geo stack statement__desc rv rv--d1"><span>Engineering performance · reliability</span><span>split-second</span><span>decisions</span></p>
+      </div>
+    </section>
 
     <!-- ===== MOTORSPORT · lit shelves ===== -->
     <section class="sec sec--umber" id="motorsport">
-      <div class="sec__bg" style="background-image:url('assets/img/bg/shelves.jpg')"></div>
+      <div class="sec__bg sec__bg--shelves" style="background-image:url('assets/img/bg/shelves-tall.jpg')"></div>
+      <div class="lit lit--dim" aria-hidden="true"><i style="--y:5%"></i><i style="--y:62%"></i></div>
       <div class="streaks streaks--low" aria-hidden="true"><i></i><i></i></div>
       <div class="wrap">
         <header class="head head--row rv">
@@ -159,7 +176,7 @@
       <div class="peek" id="peek" aria-hidden="true"><img alt=""><span class="tw"></span></div>
     </section>
 
-    <div class="stripe" aria-hidden="true"><div class="stripe__track" data-text="Pit lane // Sector 04 · Speaker — "></div></div>
+    <div class="divider" aria-hidden="true"><div class="divider__img" style="background-image:url('assets/img/bg/shelves-band.jpg')"></div><div class="lit"><i style="--y:28%"></i><i style="--y:74%"></i></div><p class="geo stack"><span>Sector 04</span><span>Speaker</span><b>// 04</b></p></div>
 
     <!-- ===== SPEAKER ===== -->
     <section class="sec sec--atelier" id="speaker">
@@ -170,7 +187,7 @@
           <figure class="vf vf--tall rv">
             <div class="vf__img"><img class="drift" src="assets/img/alexia-speaker.jpg" alt="Alexia Llobera speaking on stage"></div>
             <span class="vf__c vf__c--tl"></span><span class="vf__c vf__c--tr"></span><span class="vf__c vf__c--bl"></span><span class="vf__c vf__c--br"></span>
-            <figcaption class="tw">On stage <b>// 003</b></figcaption>
+            <figcaption class="geo stack"><span>On stage</span><span>in contrast</span><b>// 003</b></figcaption>
           </figure>
           <div class="speaker__copy rv rv--d1">
             <p class="tracked eyebrow">04 — Speaker</p>
@@ -192,7 +209,7 @@
       </div>
     </section>
 
-    <div class="stripe" aria-hidden="true"><div class="stripe__track" data-text="Pit lane // Sector 05 · Mentoring — "></div></div>
+    <div class="divider" aria-hidden="true"><div class="divider__img" style="background-image:url('assets/img/bg/shelves-band.jpg')"></div><div class="lit"><i style="--y:28%"></i><i style="--y:74%"></i></div><p class="geo stack"><span>Sector 05</span><span>Mentoring</span><b>// 05</b></p></div>
 
     <!-- ===== MENTORING ===== -->
     <section class="sec sec--linen" id="mentoring">
@@ -219,7 +236,7 @@
               <p class="cal__note tw" id="calNote">Times in <b id="calTz">Europe/Madrid</b></p>
             </div>
             <div class="side">
-              <figure class="side__photo vf"><div class="vf__img"><img src="assets/img/mentoring.jpg" alt="Alexia Llobera at the NEOM McLaren garage"></div><span class="vf__c vf__c--tl"></span><span class="vf__c vf__c--tr"></span><span class="vf__c vf__c--bl"></span><span class="vf__c vf__c--br"></span><figcaption class="tw">One-to-one · trackside mindset</figcaption></figure>
+              <figure class="side__photo vf"><div class="vf__img"><img src="assets/img/mentoring.jpg" alt="Alexia Llobera at the NEOM McLaren garage"></div><span class="vf__c vf__c--tl"></span><span class="vf__c vf__c--tr"></span><span class="vf__c vf__c--bl"></span><span class="vf__c vf__c--br"></span><figcaption class="geo stack"><span>One-to-one</span><span>trackside mindset</span><b>// 005</b></figcaption></figure>
               <div class="slots" id="slots"><p class="hint">Pick an offer above, then a highlighted day.</p></div>
               <form class="form" id="bookingForm" hidden novalidate>
                 <div class="summary" id="bookingSummary"></div>
@@ -274,6 +291,8 @@
   </main>
 
   <footer class="footer">
+    <div class="footer__bg" style="background-image:url('assets/img/bg/shelves-band.jpg')"></div>
+    <div class="lit lit--dim" aria-hidden="true"><i style="--y:18%"></i><i style="--y:62%"></i></div>
     <div class="wrap">
       <p class="footer__tag">Strategy is the undercut. <em>Performance is the result.</em></p>
       <div class="footer__row">
