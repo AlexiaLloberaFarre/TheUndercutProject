@@ -67,7 +67,7 @@ p { margin: 0 0 1em; }
 }
 .eyebrow::before { content: ''; width: 1px; height: 22px; background: currentColor; opacity: .8; }
 .eyebrow--light { color: rgba(243,236,225,.8); }
-.hand { font-family: var(--font-hand); font-weight: 600; color: var(--racing); font-size: 1.35em; letter-spacing: 0; text-transform: none; }
+.hand { font-family: var(--font-hand); font-weight: 600; color: var(--red); font-size: 1.35em; letter-spacing: 0; text-transform: none; }
 .section__title { font-family: var(--font-display); font-size: clamp(36px, 4.6vw, 62px); line-height: 1.04; letter-spacing: -0.01em; max-width: 18ch; }
 .section__title em { font-style: italic; font-weight: 400; color: var(--red); }
 .section--red .section__title em { color: var(--cream); opacity: .85; }
@@ -202,7 +202,7 @@ p { margin: 0 0 1em; }
 .about__grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
 .about__text p { color: var(--ink-soft); font-size: 16.5px; }
 .about__text .lead { color: var(--ink); }
-.about__note { margin-top: 24px; font-family: var(--font-hand); font-weight: 600; font-size: 38px; line-height: 1.1; color: var(--racing); transform: rotate(-2deg); display: inline-block; }
+.about__note { margin-top: 24px; font-family: var(--font-hand); font-weight: 600; font-size: 38px; line-height: 1.1; color: var(--red); transform: rotate(-2deg); display: inline-block; }
 .honours-group { margin-top: clamp(56px, 7vw, 96px); }
 .honours-group + .honours-group { margin-top: 48px; }
 .honours__label { display: flex; align-items: center; gap: 14px; margin: 0 0 18px; font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--red); }
@@ -284,7 +284,7 @@ p { margin: 0 0 1em; }
 .topics__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .topic { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); padding: 32px 28px 36px; transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s var(--ease); }
 .topic:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--black); }
-.topic__num { font-family: var(--font-hand); font-weight: 600; font-size: 28px; color: var(--racing); line-height: 1; }
+.topic__num { font-family: var(--font-hand); font-weight: 600; font-size: 28px; color: var(--red); line-height: 1; }
 .topic h4 { font-family: var(--font-display); font-size: 25px; line-height: 1.15; margin: 14px 0 12px; color: var(--ink); }
 .topic p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
 
@@ -300,7 +300,7 @@ p { margin: 0 0 1em; }
 .torn__link:hover .torn__strip { transform: scale(1.015); }
 .torn__shadow { position: absolute; inset: 10px -6px -14px -6px; background: rgba(0,0,0,.35); filter: blur(18px); border-radius: 20px; }
 .torn__text { font-family: var(--font-block); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(26px, 4.2vw, 56px); line-height: 1.05; }
-.torn__sign { margin: 8px 0 0; font-family: var(--font-hand); font-weight: 600; font-size: clamp(22px, 2.4vw, 32px); color: var(--racing); }
+.torn__sign { margin: 8px 0 0; font-family: var(--font-hand); font-weight: 600; font-size: clamp(22px, 2.4vw, 32px); color: var(--red); }
 
 /* ---------- Mentoring / pricing ---------- */
 .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: clamp(48px, 6vw, 72px); }
@@ -311,7 +311,7 @@ p { margin: 0 0 1em; }
 }
 .price:hover { border-color: var(--black); transform: translateY(-2px); }
 .price.is-selected { background: var(--red); border-color: var(--red); color: var(--cream); box-shadow: var(--shadow); }
-.price__badge { position: absolute; top: 16px; right: 16px; font-family: var(--font-hand); font-weight: 600; font-size: 20px; color: var(--racing); transform: rotate(-6deg); line-height: 1; }
+.price__badge { position: absolute; top: 16px; right: 16px; font-family: var(--font-hand); font-weight: 600; font-size: 20px; color: var(--red); transform: rotate(-6deg); line-height: 1; }
 .price.is-selected .price__badge { color: var(--cream); }
 .price__name { font-family: var(--font-display); font-size: 28px; line-height: 1.1; }
 .price__meta { font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
@@ -336,7 +336,7 @@ p { margin: 0 0 1em; }
 /* ---------- Booking: save the date ---------- */
 .booking { position: relative; color: var(--ink); border-radius: var(--r-lg); padding: clamp(24px, 4vw, 48px); background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); }
 .booking__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
-.booking__hand { display: block; font-family: var(--font-hand); font-weight: 600; font-size: 34px; line-height: 1; color: var(--racing); transform: rotate(-3deg); transform-origin: left bottom; margin-bottom: 4px; }
+.booking__hand { display: block; font-family: var(--font-hand); font-weight: 600; font-size: 34px; line-height: 1; color: var(--red); transform: rotate(-3deg); transform-origin: left bottom; margin-bottom: 4px; }
 .booking__title { font-family: var(--font-display); font-size: 32px; }
 .steps { display: flex; gap: 28px; }
 .step { display: flex; align-items: center; gap: 10px; font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
@@ -365,7 +365,7 @@ p { margin: 0 0 1em; }
 .cal__day.is-today { text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--racing); }
 .cal__day.is-empty { color: transparent; pointer-events: none; }
 .cal__circle { position: absolute; inset: -8%; width: 116%; height: 116%; pointer-events: none; }
-.cal__circle path { fill: none; stroke: var(--racing); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .7s var(--ease) forwards; }
+.cal__circle path { fill: none; stroke: var(--red); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .7s var(--ease) forwards; }
 .cal__note { margin: 18px 0 0; font-size: 12px; color: var(--muted); }
 .cal__note strong { color: var(--ink-soft); font-weight: 600; }
 .cal__note a { color: var(--red); text-decoration: underline; }
@@ -393,7 +393,7 @@ p { margin: 0 0 1em; }
 .booking__how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--line); }
 .booking__how div { display: flex; gap: 14px; align-items: flex-start; }
 .booking__how p { margin: 0; font-size: 14px; color: var(--ink-soft); }
-.how__num { flex: 0 0 auto; display: inline-grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--racing); color: var(--racing); font-family: var(--font-hand); font-weight: 600; font-size: 18px; border-radius: 50%; }
+.how__num { flex: 0 0 auto; display: inline-grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--red); color: var(--red); font-family: var(--font-hand); font-weight: 600; font-size: 18px; border-radius: 50%; }
 
 /* ---------- Forms ---------- */
 .form { display: grid; gap: 18px; }
@@ -416,7 +416,7 @@ p { margin: 0 0 1em; }
 /* ---------- Contact ---------- */
 .contact__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; }
 .contact__intro .lead { color: var(--ink-soft); font-weight: 400; }
-.contact__ready { font-family: var(--font-hand); font-weight: 600; font-size: 36px; color: var(--racing); line-height: 1; display: inline-block; transform: rotate(-3deg); margin: 6px 0 18px; }
+.contact__ready { font-family: var(--font-hand); font-weight: 600; font-size: 36px; color: var(--red); line-height: 1; display: inline-block; transform: rotate(-3deg); margin: 6px 0 18px; }
 .contact__list { display: grid; gap: 18px; margin-top: 36px; }
 .contact__list a { font-size: 16px; font-weight: 600; color: var(--ink); border-bottom: 1px solid transparent; transition: border-color .25s var(--ease), color .25s var(--ease); }
 .contact__list a:hover { border-color: var(--black); }
