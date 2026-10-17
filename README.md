@@ -14,6 +14,9 @@ A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be
 | `assets/img/` | Photos (see below) |
 | `data/availability.json` | Your mentoring availability (days, windows, blocked dates, bookings) |
 | `admin/index.html` | Private visual editor that generates `availability.json` |
+| `data/booking.json` | Scheduling-service links per offer (payment + Teams) |
+| `Backup/` | Timestamped copies of the site, one per change |
+| `scripts/backup.sh` | Creates those copies (runs automatically before each commit) |
 
 ## Brand
 
@@ -142,6 +145,10 @@ Edit the `SESSIONS` array at the top of `assets/js/main.js`:
 ## 6. Career, education and texts
 
 The timeline is generated from the `CAREER`, `EDUCATION` and `EXTRAS` arrays in `assets/js/main.js`. All other texts live directly in `index.html`.
+
+## Backups
+
+Every change leaves a full copy of the site in `Backup/<date>_<time>_<label>/`, created automatically before each commit by `scripts/backup.sh`. To restore a version, copy that folder's contents over the repository root and commit. See `Backup/README.md`.
 
 ## Local preview
 

@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1127 (Europe/Madrid)
+Label:     signature-and-backup-setup
+Based on:  9b39c3b (Add a handwritten Alexia Llobera signature to the Home page)
+
+To restore: copy the contents of this folder over the repository root and commit.
