@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2349 (Europe/Madrid)
+Label:     v1-about-lead
+Based on:  505bb5d (V1: remove the Change time button; form errors now say why (service unreachable, form awaiting activation) and the email fallback omits internal fields)
+
+To restore: copy the contents of this folder over the repository root and commit.
