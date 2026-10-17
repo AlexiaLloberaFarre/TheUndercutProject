@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2342 (Europe/Madrid)
+Label:     v1-form-errors
+Based on:  07c1d8f (V1: country-code dropdown with flags on both phone fields; mentoring photo beside the title and intro)
+
+To restore: copy the contents of this folder over the repository root and commit.

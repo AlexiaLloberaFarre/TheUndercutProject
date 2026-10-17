@@ -523,7 +523,6 @@
     $('#bookingStatus').textContent = '';
     $('#bookingStatus').className = 'form__status';
   }
-  $('#bookingBack').addEventListener('click', () => { state.slot = null; setStep(2); hideBookingForm(); renderSlots(); });
 
   bookingForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -609,9 +608,14 @@
       if (onOk) onOk();
     } catch (err) {
       console.error(err);
-      const body = Object.entries(payload).filter(([k]) => !k.startsWith('_')).map(([k, v]) => `${k}: ${v}`).join('\n');
+      const skip = ['add_to_outlook', 'calendar', 'visitor_timezone'];
+      const body = Object.entries(payload).filter(([k, v]) => !k.startsWith('_') && !skip.includes(k) && v).map(([k, v]) => `${k}: ${v}`).join('\n');
       const mailto = `mailto:${CONFIG.contactEmail}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
-      status.innerHTML = `Something went wrong sending the form. You can <a href="${mailto}">send it by email instead</a>.`;
+      const msg = String((err && err.message) || '');
+      let reason = 'the email service could not be reached from this page';
+      if (/activat/i.test(msg)) reason = 'the form is waiting to be activated by its owner';
+      else if (msg && !/failed to fetch|networkerror|load failed|request failed/i.test(msg)) reason = msg.replace(/\.$/, '');
+      status.innerHTML = `The request could not be sent (${esc(reason)}). Please <a href="${mailto}">send it by email instead</a> and Alexia will get back to you.`;
       status.className = 'form__status is-error';
     } finally {
       btn.disabled = false;
