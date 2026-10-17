@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2329 (Europe/Madrid)
+Label:     availability-all-days
+Based on:  a382aa8 (V1: selected time slot in dark red, other hours stay visible with the form below)
+
+To restore: copy the contents of this folder over the repository root and commit.
