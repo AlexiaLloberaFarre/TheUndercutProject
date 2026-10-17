@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2221 (Europe/Madrid)
+Label:     v1-subtitle-break
+Based on:  1ba440f (V1: hero subtitle adds Mentor)
+
+To restore: copy the contents of this folder over the repository root and commit.
