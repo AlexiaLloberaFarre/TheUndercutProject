@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2337 (Europe/Madrid)
+Label:     v1-phone-codes
+Based on:  1d386ae (V1: mentoring photo moves under the section intro as a wide banner)
+
+To restore: copy the contents of this folder over the repository root and commit.

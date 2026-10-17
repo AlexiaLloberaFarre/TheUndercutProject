@@ -403,9 +403,11 @@ p { margin: 0 0 1em; }
 .cal__note a { color: var(--red); text-decoration: underline; }
 
 .booking__photo { margin: 0 0 24px; }
-.section__head .booking__photo { margin: 36px 0 0; max-width: 100%; }
-.section__head .booking__photo img { aspect-ratio: 21 / 9; }
-@media (max-width: 760px) { .section__head .booking__photo img { aspect-ratio: 16 / 9; } }
+.section__head--split { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+.section__head--split .section__title { max-width: none; }
+.booking__photo--side { margin: 0; }
+.booking__photo--side img { aspect-ratio: 4 / 3; }
+@media (max-width: 900px) { .section__head--split { grid-template-columns: 1fr; } .booking__photo--side { margin-top: 28px; } .booking__photo--side img { aspect-ratio: 16 / 9; } }
 .booking__photo img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r); border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--paper); }
 .booking__photo-cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
 .booking__photo-hint { display: none; text-transform: none; letter-spacing: .02em; font-weight: 400; font-family: var(--font-mono); }
@@ -536,3 +538,23 @@ p { margin: 0 0 1em; }
   .portrait__caption { font-size: 9px; letter-spacing: .16em; }
   .torn__strip { padding: 26px 22px; }
 }
+
+/* phone field: country code dropdown with flags */
+.phone { position: relative; display: flex; align-items: stretch; }
+.phone__code { display: inline-flex; align-items: center; gap: 8px; padding: 0 12px 0 14px; background: #fff; border: 1px solid var(--line); border-right: 0; border-radius: var(--r-sm) 0 0 var(--r-sm); font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; white-space: nowrap; transition: border-color .25s var(--ease), background .25s var(--ease); }
+.phone__code:hover { background: var(--paper); }
+.phone__code:focus-visible { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(76,15,18,.15); position: relative; z-index: 1; }
+.phone__flag { width: 20px; height: 15px; object-fit: cover; border-radius: 2px; box-shadow: 0 0 0 1px rgba(28,12,12,.12); flex: none; }
+.phone__flag--emoji { font-size: 16px; line-height: 15px; box-shadow: none; text-align: center; }
+.phone__caret { width: 7px; height: 7px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg) translateY(-2px); margin-left: 2px; }
+.form .phone input[type="tel"] { border-radius: 0 var(--r-sm) var(--r-sm) 0; min-width: 0; }
+.phone__menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; width: min(360px, calc(100vw - 2 * var(--gutter))); background: #fff; border: 1px solid var(--line); border-radius: var(--r-sm); box-shadow: 0 24px 50px -20px rgba(28,12,12,.35); padding: 8px; }
+.form .phone__search { padding: 10px 12px; font-size: 14px; margin-bottom: 6px; border-radius: 12px; }
+.phone__list { list-style: none; margin: 0; padding: 0; max-height: 260px; overflow: auto; }
+.phone__list li { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; cursor: pointer; font-size: 14px; }
+.phone__list li:hover, .phone__list li[aria-selected="true"] { background: var(--paper); }
+.phone__list li[aria-selected="true"] .phone__num { color: var(--red); font-weight: 600; }
+.phone__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phone__num { color: var(--muted); font-family: var(--font-mono); font-size: 12px; }
+.phone__empty { color: var(--muted); font-size: 13px; padding: 10px; }
+@media (max-width: 560px) { .phone__menu { width: 100%; } }

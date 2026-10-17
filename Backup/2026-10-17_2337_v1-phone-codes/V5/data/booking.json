@@ -1,0 +1,9 @@
+{
+  "_help": "Paste one scheduling link per offer (Calendly, Microsoft Bookings, Cal.com, Zoho Bookings...). When a link is set, that offer opens the provider's booking page, which handles payment and the Teams link. Leave empty to use the built-in calendar (data/availability.json).",
+  "links": {
+    "career": "",
+    "student": "",
+    "sprint": ""
+  },
+  "note": "Pay securely when you book. Your confirmation email includes the Microsoft Teams link."
+}

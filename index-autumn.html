@@ -315,13 +315,15 @@
     <!-- ===== MENTORING ===== -->
     <section class="section section--beige" id="mentoring">
       <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow">04 &nbsp;/&nbsp; Mentoring</p>
-          <h2 class="section__title">One-to-one mentoring for engineers and leaders who perform <em>under pressure.</em></h2>
-          <p class="section__intro">Online sessions by video call, in English, Spanish or Catalan. For motorsport engineers at any stage, engineers stepping into leadership, and founders or managers building high-performance teams.</p>
-          <figure class="booking__photo">
-          <img src="assets/img/mentoring.jpg" alt="Alexia Llobera working on a Formula E car in the garage" loading="lazy" onerror="this.onerror=null;this.src='assets/img/career/placeholder.svg';this.closest('.booking__photo').classList.add('is-placeholder');">
-          <figcaption class="booking__photo-cap"><span>One-to-one · trackside mindset</span><span class="booking__photo-hint">assets/img/mentoring.jpg</span></figcaption>
+        <div class="section__head section__head--split reveal">
+          <div class="section__head-text">
+            <p class="eyebrow">04 &nbsp;/&nbsp; Mentoring</p>
+            <h2 class="section__title">One-to-one mentoring for engineers and leaders who perform <em>under pressure.</em></h2>
+            <p class="section__intro">Online sessions by video call, in English, Spanish or Catalan. For motorsport engineers at any stage, engineers stepping into leadership, and founders or managers building high-performance teams.</p>
+          </div>
+          <figure class="booking__photo booking__photo--side">
+            <img src="assets/img/mentoring.jpg" alt="Alexia Llobera working on a Formula E car in the garage" loading="lazy" onerror="this.onerror=null;this.src='assets/img/career/placeholder.svg';this.closest('.booking__photo').classList.add('is-placeholder');">
+            <figcaption class="booking__photo-cap"><span>One-to-one · trackside mindset</span><span class="booking__photo-hint">assets/img/mentoring.jpg</span></figcaption>
           </figure>
         </div>
 
@@ -373,7 +375,7 @@
                   </div>
                   <div>
                     <label for="bPhone">Phone</label>
-                    <input type="tel" id="bPhone" name="phone" autocomplete="tel" placeholder="+34 …">
+                    <input type="tel" id="bPhone" name="phone" autocomplete="tel-national" placeholder="600 000 000" data-phone>
                   </div>
                 </div>
                 <div class="form__row">
@@ -427,7 +429,7 @@
             </div>
             <div>
               <label for="cPhone">Phone</label>
-              <input type="tel" id="cPhone" name="phone" autocomplete="tel" placeholder="+34 …">
+              <input type="tel" id="cPhone" name="phone" autocomplete="tel-national" placeholder="600 000 000" data-phone>
             </div>
           </div>
           <div class="form__row">
@@ -472,6 +474,7 @@
     </div>
   </footer>
 
+  <script src="assets/js/dial-codes.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

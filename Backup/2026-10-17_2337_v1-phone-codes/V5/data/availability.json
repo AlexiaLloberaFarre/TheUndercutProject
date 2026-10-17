@@ -1,0 +1,28 @@
+{
+  "timezone": "Europe/Madrid",
+  "bookingWindowDays": 60,
+  "minNoticeHours": 24,
+  "slotStepMinutes": 30,
+  "weekly": {
+    "mon": [
+      "15:30-19:30"
+    ],
+    "tue": [
+      "15:30-19:30"
+    ],
+    "wed": [
+      "15:30-19:30"
+    ],
+    "thu": [
+      "15:30-19:30"
+    ],
+    "fri": [
+      "15:30-19:30"
+    ],
+    "sat": [],
+    "sun": []
+  },
+  "dates": {},
+  "blocked": [],
+  "booked": []
+}

@@ -6,6 +6,39 @@
    ============================================================= */
 (function () {
   'use strict';
+
+  /* ---------- phone: country code dropdown with flags ---------- */
+  const flagEmoji = (iso) => String.fromCodePoint(...[...iso.toUpperCase()].map((c) => 0x1F1E6 + c.charCodeAt(0) - 65));
+  const flagImg = (iso) => `<img class="phone__flag" data-iso="${iso}" src="https://flagcdn.com/w40/${iso.toLowerCase()}.png" srcset="https://flagcdn.com/w80/${iso.toLowerCase()}.png 2x" width="20" height="15" alt="" loading="lazy">`;
+  const flagFallback = (e) => { const img = e.target; if (img && img.tagName === 'IMG' && img.dataset.iso) { const sp = document.createElement('span'); sp.className = 'phone__flag phone__flag--emoji'; sp.textContent = flagEmoji(img.dataset.iso); img.replaceWith(sp); } };
+  function phoneValue(sel) { const input = $(sel); if (!input) return ''; const n = input.value.trim(); return n ? `${input.dataset.dial || ''} ${n}`.trim() : ''; }
+  function initPhone(input) {
+    const codes = window.DIAL_CODES || []; if (!codes.length) return;
+    const region = ((navigator.language || '').split('-')[1] || '').toUpperCase();
+    let current = codes.find((c) => c[0] === region) || codes.find((c) => c[0] === 'ES');
+    const wrap = document.createElement('div'); wrap.className = 'phone'; input.parentNode.insertBefore(wrap, input);
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'phone__code'; btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false');
+    const menu = document.createElement('div'); menu.className = 'phone__menu'; menu.hidden = true;
+    menu.innerHTML = '<input type="search" class="phone__search" placeholder="Search country or code" aria-label="Search country" autocomplete="off"><ul class="phone__list" role="listbox"></ul>';
+    wrap.append(btn, menu, input);
+    wrap.addEventListener('error', flagFallback, true);
+    const search = $('.phone__search', menu), list = $('.phone__list', menu);
+    const paint = () => { btn.innerHTML = `${flagImg(current[0])}<span class="phone__dial">${current[2]}</span><span class="phone__caret" aria-hidden="true"></span>`; btn.setAttribute('aria-label', `Country code: ${current[1]} ${current[2]}`); input.dataset.dial = current[2]; };
+    const render = (q) => {
+      const t = (q || '').trim().toLowerCase();
+      const rows = codes.filter((c) => !t || c[1].toLowerCase().includes(t) || c[2].includes(t) || c[0].toLowerCase() === t);
+      list.innerHTML = rows.map((c) => `<li role="option" data-iso="${c[0]}" aria-selected="${c === current}">${flagImg(c[0])}<span class="phone__name">${esc(c[1])}</span><span class="phone__num">${c[2]}</span></li>`).join('') || '<li class="phone__empty">No match</li>';
+    };
+    const open = () => { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); search.value = ''; render(''); const sel = $('[aria-selected="true"]', list); if (sel) sel.scrollIntoView({ block: 'center' }); search.focus(); };
+    const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    btn.addEventListener('click', () => (menu.hidden ? open() : close()));
+    search.addEventListener('input', () => render(search.value));
+    search.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); const first = $('li[data-iso]', list); if (first) first.click(); } if (e.key === 'Escape') { close(); btn.focus(); } });
+    list.addEventListener('click', (e) => { const li = e.target.closest('li[data-iso]'); if (!li) return; current = codes.find((c) => c[0] === li.dataset.iso); paint(); close(); input.focus(); });
+    document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) close(); });
+    paint();
+  }
+
   /* Outlook "add to calendar" link for a booked slot (opens a prefilled event in Alexia's Outlook) */
   const OUTLOOK_TAG = 'The undercut project';
   const BOOKING_INBOX = 'alexia@zenithstrategy.io';
@@ -504,14 +537,14 @@
       _replyto: $('#bEmail').value.trim(),
       _autoresponse: `Thank you — your request for the ${s.name} on ${state.day} at ${sl.start} (${state.availability.timezone}) has been received. Alexia will confirm the slot and send the payment details and the Microsoft Teams link within 24 hours.`,
       calendar: OUTLOOK_TAG,
-      add_to_outlook: outlookUrl(s, sl, state.day, state.availability.timezone, { name: $('#bName').value.trim(), email: $('#bEmail').value.trim(), phone: $('#bPhone').value.trim(), notes: $('#bNotes').value.trim() }),
+      add_to_outlook: outlookUrl(s, sl, state.day, state.availability.timezone, { name: $('#bName').value.trim(), email: $('#bEmail').value.trim(), phone: phoneValue('#bPhone'), notes: $('#bNotes').value.trim() }),
       type: 'Mentoring booking request',
       session: `${s.name} (${s.minutes} min) — ${money(s.price)}`,
       date: state.day,
       time: `${sl.start}–${sl.end} ${state.availability.timezone}`,
       name: $('#bName').value.trim(),
       email: $('#bEmail').value.trim(),
-      phone: $('#bPhone').value.trim(),
+      phone: phoneValue('#bPhone'),
       notes: $('#bNotes').value.trim(),
       visitor_timezone: visitorTz,
       _honey: bookingForm.querySelector('[name=_honey]').value
@@ -534,7 +567,7 @@
       subject: $('#cSubject').value,
       name: $('#cName').value.trim(),
       email: $('#cEmail').value.trim(),
-      phone: $('#cPhone').value.trim(),
+      phone: phoneValue('#cPhone'),
       message: $('#cMessage').value.trim(),
       _honey: contactForm.querySelector('[name=_honey]').value
     };
@@ -589,4 +622,6 @@
   $('#year').textContent = new Date().getFullYear();
   loadBooking();
   loadAvailability();
+  /* phone country-code dropdowns (after the helpers exist) */
+  $$('input[data-phone]').forEach(initPhone);
 })();
