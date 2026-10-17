@@ -415,7 +415,7 @@ p { margin: 0 0 1em; }
 .slot { padding: 12px 10px; background: #fff; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); font-family: var(--font-mono); font-size: 13px; letter-spacing: .04em; transition: border-color .25s var(--ease), background .25s var(--ease), color .25s var(--ease); display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .slot small { font-size: 10px; color: var(--muted); letter-spacing: .06em; }
 .slot:hover { border-color: var(--black); }
-.slot.is-selected { background: var(--red); border-color: var(--red); color: var(--cream); }
+.slot.is-selected { background: var(--hand-red); border-color: var(--hand-red); color: var(--cream); }
 .slot.is-selected small { color: rgba(243,236,225,.7); }
 .slots__empty { color: var(--muted); font-size: 14px; }
 .booking__summary { padding: 18px 20px; background: #fff; border: 1px solid var(--black); border-radius: var(--r); margin-bottom: 22px; font-size: 14px; display: grid; gap: 4px; }

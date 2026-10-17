@@ -482,7 +482,6 @@
       <span>${esc(d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))} · ${sl.start}–${sl.end} (${esc(state.availability.timezone)})</span>
       <span class="price-tag">${money(s.price)} · ${s.minutes} MIN · ${esc(s.tag).toUpperCase()}</span>`;
     bookingForm.hidden = false;
-    $('#slots').hidden = true;
     bookingForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
   function hideBookingForm() {
