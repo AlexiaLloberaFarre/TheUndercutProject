@@ -7,6 +7,7 @@
 
 :root {
   --red: #4c0f12;          /* Wine Red */
+  --hand-red: #581317;     /* handwritten year numbers */
   --red-deep: #36090b;
   --red-soft: #6a1a1e;
   --black: #121212;
@@ -244,7 +245,7 @@ p { margin: 0 0 1em; }
 .honour__year { font-family: var(--font-display); font-size: clamp(44px, 4vw, 64px); line-height: 1; color: var(--cream); }
 .honour--accent .honour__year { display: none; }
 .honour__body { padding: 16px 20px 22px; }
-.honour__hand { display: inline-block; font-family: var(--font-hand); font-weight: 700; font-size: 42px; line-height: 1; color: var(--red); transform: rotate(-4deg); transform-origin: left bottom; margin: 0 0 8px; }
+.honour__hand { display: inline-block; font-family: var(--font-hand); font-weight: 700; font-size: 42px; line-height: 1; color: var(--hand-red); transform: rotate(-4deg); transform-origin: left bottom; margin: 0 0 8px; }
 .honour__hand--small { font-size: 30px; }
 .honour__brand { display: block; font-weight: 800; font-size: 12px; letter-spacing: .02em; color: var(--ink); margin-bottom: 8px; }
 .honour__brand sup { font-size: 7px; vertical-align: top; }
