@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2152 (Europe/Madrid)
+Label:     v1-social-icons
+Based on:  00824ff (V5: Lights Out website in burnt orange, amber and espresso)
+
+To restore: copy the contents of this folder over the repository root and commit.
