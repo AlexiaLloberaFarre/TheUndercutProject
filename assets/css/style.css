@@ -202,7 +202,11 @@ p { margin: 0 0 1em; }
 .about__text p { color: var(--ink-soft); font-size: 16.5px; }
 .about__text .lead { color: var(--ink); }
 .about__note { margin-top: 24px; font-family: var(--font-hand); font-weight: 600; font-size: 38px; line-height: 1.1; color: var(--racing); transform: rotate(-2deg); display: inline-block; }
-.honours { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: clamp(56px, 7vw, 96px); }
+.honours-group { margin-top: clamp(56px, 7vw, 96px); }
+.honours-group + .honours-group { margin-top: 48px; }
+.honours__label { display: flex; align-items: center; gap: 14px; margin: 0 0 18px; font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--red); }
+.honours__label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.honours { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .honour { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 0; overflow: hidden; display: flex; flex-direction: column; transition: transform .35s var(--ease), box-shadow .35s var(--ease); }
 .honour:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .honour__swatch { aspect-ratio: 5 / 4; background: var(--red); display: grid; place-items: center; }
@@ -438,7 +442,6 @@ p { margin: 0 0 1em; }
   .tl { grid-template-columns: 150px 1fr 220px; gap: 0 28px; }
   .timeline::before { left: 150px; }
   .tl::before { left: 146px; }
-  .honours { grid-template-columns: repeat(2, 1fr); }
   .topics__grid { grid-template-columns: repeat(2, 1fr); }
   .stats { grid-template-columns: repeat(2, auto); gap: 24px 48px; }
 }
@@ -457,6 +460,7 @@ p { margin: 0 0 1em; }
   .btn { white-space: normal; text-align: center; }
   .about__grid, .speaker__grid, .contact__grid, .career__extras, .booking__grid { grid-template-columns: 1fr; }
   .speaker__media { max-width: 420px; }
+  .honours { grid-template-columns: 1fr; }
   .pricing { grid-template-columns: 1fr; }
   .booking__how { grid-template-columns: 1fr; }
   .timeline::before { left: 4px; }
@@ -469,7 +473,7 @@ p { margin: 0 0 1em; }
   .track path { stroke-width: 70; }
 }
 @media (max-width: 560px) {
-  .honours, .topics__grid { grid-template-columns: 1fr; }
+  .topics__grid { grid-template-columns: 1fr; }
   .form__row--2 { grid-template-columns: 1fr; }
   .stats { grid-template-columns: 1fr 1fr; }
   .stat__num { font-size: 36px; }
