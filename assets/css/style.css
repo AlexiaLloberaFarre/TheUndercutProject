@@ -108,6 +108,10 @@ p { margin: 0 0 1em; }
 .nav.is-open { background: var(--cream); backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent; }
 .nav__inner { width: min(100% - 2 * var(--gutter), 1320px); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .nav__brand { display: flex; align-items: center; gap: 14px; }
+/* hand-drawn signature as the brand mark: the SVG is a mask, so it takes the current text colour */
+.nav__sig { display: block; width: 168px; aspect-ratio: 3.715; background: currentColor; -webkit-mask: url(../img/signature.svg) left center / contain no-repeat; mask: url(../img/signature.svg) left center / contain no-repeat; color: var(--cream); transition: color .4s var(--ease); }
+.nav.is-scrolled .nav__sig, .nav.is-open .nav__sig { color: var(--red); }
+.nav__sig--footer { width: 190px; color: var(--cream); }
 .nav__mono { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; overflow: hidden; background: var(--cream); color: var(--red); box-shadow: 0 0 0 2px var(--cream); transition: box-shadow .4s var(--ease); }
 .nav__mono img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nav.is-scrolled .nav__mono, .nav.is-open .nav__mono { box-shadow: 0 0 0 2px var(--red); }
@@ -154,7 +158,7 @@ p { margin: 0 0 1em; }
 .hero__ghost { position: absolute; left: 0; top: 0; color: rgba(243,236,225,.45); filter: blur(7px); transform: translateX(-16px) scaleX(1.06); transform-origin: left center; pointer-events: none; }
 .hero__subtitle { margin-top: 28px; font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(243,236,225,.7); }
 .hero__lead { margin-top: 18px; font-size: clamp(17px, 1.6vw, 19px); color: rgba(243,236,225,.85); max-width: 52ch; }
-.hero__sign { margin: 26px 0 0; font-family: var(--font-hand); font-weight: 700; font-size: clamp(38px, 3.6vw, 54px); line-height: 1; color: var(--cream); transform: rotate(-4deg); transform-origin: left bottom; display: inline-block; letter-spacing: .01em; }
+.hero__sign { margin: 26px 0 0; display: block; width: clamp(250px, 28vw, 380px); aspect-ratio: 3.715; background: currentColor; -webkit-mask: url(../img/signature.svg) left center / contain no-repeat; mask: url(../img/signature.svg) left center / contain no-repeat; color: var(--cream); transform: rotate(-3deg); transform-origin: left bottom; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; align-items: center; }
 
 /* social icons: round buttons (Instagram · LinkedIn) */
@@ -480,7 +484,7 @@ p { margin: 0 0 1em; }
   .nav__link { font-size: 18px; }
   .nav__cta { margin: 12px 0 0; }
   .nav__toggle { display: block; }
-  .nav__wordmark { display: none; }
+  .nav__sig { width: 128px; }
   .hero { padding-top: 110px; }
   .hero__grid { grid-template-columns: 1fr; gap: 40px; }
   .hero__figure { order: -1; max-width: 300px; --arch: 130px; }

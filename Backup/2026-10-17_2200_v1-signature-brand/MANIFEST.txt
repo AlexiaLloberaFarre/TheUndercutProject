@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2200 (Europe/Madrid)
+Label:     v1-signature-brand
+Based on:  c04040d (Brand: hand-drawn signature for Alexia Llobera with 20 options)
+
+To restore: copy the contents of this folder over the repository root and commit.
