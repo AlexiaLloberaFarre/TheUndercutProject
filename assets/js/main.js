@@ -14,6 +14,7 @@
     contactEmail: 'contact@alexiallobera.com',
     formEndpoint: 'https://formsubmit.co/ajax/contact@alexiallobera.com',
     availabilityUrl: 'data/availability.json',
+    bookingUrl: 'data/booking.json',
     currency: '€'
   };
 
@@ -246,7 +247,7 @@
   renderCareer();
 
   /* ---------- Mentoring: pricing ---------- */
-  const state = { session: null, availability: null, month: null, day: null, slot: null };
+  const state = { session: null, availability: null, month: null, day: null, slot: null, booking: { links: {}, note: '' } };
   const pricing = $('#pricing');
   const clock = (min) => Math.floor(min / 60) + ':' + pad(min % 60);
   pricing.innerHTML = SESSIONS.map((s) => `
@@ -265,12 +266,56 @@
     $$('.price', pricing).forEach((b) => { b.classList.toggle('is-selected', b === btn); b.setAttribute('aria-pressed', String(b === btn)); });
     state.day = null; state.slot = null;
     setStep(2);
-    renderCalendar();
-    renderSlots();
-    hideBookingForm();
+    const link = (state.booking.links || {})[state.session.id];
+    if (link) { showProvider(link); } else { hideProvider(); renderCalendar(); renderSlots(); hideBookingForm(); }
     const cal = $('#booking');
     if (cal) cal.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
+
+  /* ---------- Mentoring: external scheduling provider (payments + Teams link) ---------- */
+  function providerEmbedUrl(link) {
+    try {
+      const u = new URL(link);
+      if (u.hostname.includes('calendly.com')) {
+        u.searchParams.set('hide_gdpr_banner', '1');
+        u.searchParams.set('background_color', 'f8f4ec');
+        u.searchParams.set('text_color', '121212');
+        u.searchParams.set('primary_color', '4c0f12');
+      }
+      return u.toString();
+    } catch (_) { return link; }
+  }
+  function showProvider(link) {
+    const box = $('#providerBox');
+    const grid = $('.booking__grid');
+    grid.hidden = true;
+    box.hidden = false;
+    const s = state.session;
+    box.innerHTML = `
+      <div class="provider__head">
+        <div>
+          <strong>${esc(s.name)}</strong>
+          <span>${s.minutes} min · ${money(s.price)}${state.booking.note ? ' · ' + esc(state.booking.note) : ''}</span>
+        </div>
+        <a class="btn btn--ghost btn--small" href="${esc(link)}" target="_blank" rel="noopener">Open in a new tab</a>
+      </div>
+      <iframe class="provider__frame" src="${esc(providerEmbedUrl(link))}" title="Book ${esc(s.name)}" loading="lazy" allow="payment"></iframe>`;
+    $$('.booking__how p').forEach((el, i) => {
+      if (i === 1 && state.booking.note) el.textContent = state.booking.note;
+    });
+  }
+  function hideProvider() {
+    const box = $('#providerBox');
+    if (box) { box.hidden = true; box.innerHTML = ''; }
+    const grid = $('.booking__grid');
+    if (grid) grid.hidden = false;
+  }
+  async function loadBooking() {
+    try {
+      const res = await fetch(CONFIG.bookingUrl, { cache: 'no-store' });
+      if (res.ok) state.booking = Object.assign({ links: {}, note: '' }, await res.json());
+    } catch (err) { console.warn('Booking links could not be loaded:', err); }
+  }
 
   function setStep(n) {
     $$('.step').forEach((el) => {
@@ -516,5 +561,6 @@
 
   /* ---------- Misc ---------- */
   $('#year').textContent = new Date().getFullYear();
+  loadBooking();
   loadAvailability();
 })();

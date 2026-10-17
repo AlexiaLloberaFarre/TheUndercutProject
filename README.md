@@ -71,9 +71,43 @@ Both the contact form and the mentoring booking form are sent through [FormSubmi
 - To use another address or provider, change `contactEmail` and `formEndpoint` at the top of `assets/js/main.js`.
 - If sending ever fails, visitors are offered a direct email link as a fallback.
 
-## 4. Managing your mentoring availability
+## 4. Bookings: availability, payment and Teams links
 
-Visitors see a calendar with your free days and the start times that fit the session they chose (90 min career session, 60 min sprint session). Everything is driven by `data/availability.json`:
+There are two ways to run the Mentoring calendar. You can use both at once: an offer with a scheduling link uses option A, the others use option B.
+
+### A. Scheduling service (recommended: payment at booking + automatic Microsoft Teams link)
+
+A static website cannot charge cards or create Teams meetings on its own, so this is handled by a scheduling service. Create one event per offer there, then paste the three links into `data/booking.json`:
+
+```json
+{
+  "links": {
+    "career":  "https://calendly.com/you/trackside-career-session",
+    "student": "https://calendly.com/you/student-rate",
+    "sprint":  "https://calendly.com/you/eight-week-sprint"
+  },
+  "note": "Pay securely when you book. Your confirmation email includes the Microsoft Teams link."
+}
+```
+
+When a visitor picks that offer, the provider's booking page opens inside the site (with an "Open in a new tab" fallback). The provider then takes care of availability, payment, confirmation emails and the Teams link.
+
+Services that cover all three needs:
+
+| Service | Availability from Outlook | Payment at booking | Teams link created automatically | Notes |
+| --- | --- | --- | --- | --- |
+| Calendly (Standard plan) | Yes | Stripe or PayPal | Yes | Most common choice, polished embed |
+| Zoho Bookings | Yes | Stripe, PayPal, others | Yes | Cheaper, slightly busier interface |
+| Cal.com | Yes | Stripe (paid plan) | Yes | Open source, can be self-hosted |
+| Microsoft Bookings (included with Microsoft 365 Business) | Yes | No native payments | Yes | Free if you already have Microsoft 365; shows prices but does not collect them |
+
+Sign up with the Microsoft account you want the meetings created on (for example `alexia@zenithstrategy.io`), connect that Outlook calendar, set your working hours, create the three event types with their durations and prices, enable "Microsoft Teams" as the location and the payment integration, then copy each event's link into `data/booking.json`.
+
+Calendly embeds pick up the site colours automatically; other providers show their own styling.
+
+### B. Built-in calendar (no payments: you confirm by email)
+
+Without a link, visitors see the built-in calendar with your free days and the start times that fit the session they chose (90 min career session, 60 min sprint session). Booking requests arrive by email and you reply with payment details and the meeting link yourself. Everything is driven by `data/availability.json`:
 
 ```json
 {
@@ -88,19 +122,12 @@ Visitors see a calendar with your free days and the start times that fit the ses
 }
 ```
 
-- `weekly` — your usual free windows for each weekday.
-- `dates` — overrides for specific days (an empty list means a day off).
-- `blocked` — days that are never bookable (travel, race weeks, holidays).
-- `booked` — confirmed sessions; those times disappear from the calendar.
+- `weekly` sets your usual free windows per weekday; `dates` overrides specific days (an empty list means a day off); `blocked` days are never bookable; `booked` sessions disappear from the calendar.
 - `minNoticeHours` hides slots that start too soon; `bookingWindowDays` limits how far ahead people can book.
 
-### The easy way: the visual editor
+The easy way: open `admin/index.html` on the published site (for example `https://<user>.github.io/TheUndercutProject/admin/`). It loads the current file, lets you click through weekdays, windows, blocked dates and bookings, previews the next 14 days, and gives you the updated JSON. Then, in GitHub: open `data/availability.json`, click the pencil, paste, and commit. The live calendar updates within a minute or two.
 
-Open `admin/index.html` on the published site (for example `https://<user>.github.io/TheUndercutProject/admin/`). It loads the current file, lets you click through weekdays, windows, blocked dates and bookings, previews the next 14 days, and gives you the updated JSON.
-
-Then, in GitHub: open `data/availability.json` → pencil icon → paste → **Commit changes**. The live calendar updates within a minute or two.
-
-> The editor page is not linked from the site and is marked `noindex`, but it is public like any file on GitHub Pages. It only generates text; nothing can be changed without committing to the repository.
+> The editor page is not linked from the site and is marked `noindex`, but it is public like any file on GitHub Pages. It only generates text; nothing changes without a commit.
 
 ## 5. Prices and session types
 
