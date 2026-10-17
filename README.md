@@ -45,6 +45,7 @@ Drop these files into `assets/img/` (JPG, ideally 1200 px wide or more). Until t
 | `alexia-hero.jpg` | Home | Portrait, 4:5 |
 | `alexia-about.jpg` | About me | Square, 1:1 |
 | `alexia-speaker.jpg` | Speaker | Portrait, 3:4 |
+| `mentoring.jpg` | Mentoring, next to the calendar | Landscape, 16:9 |
 
 ### Career photos
 

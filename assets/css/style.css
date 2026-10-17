@@ -369,6 +369,12 @@ p { margin: 0 0 1em; }
 .cal__note strong { color: var(--ink-soft); font-weight: 600; }
 .cal__note a { color: var(--red); text-decoration: underline; }
 
+.booking__photo { margin: 0 0 24px; }
+.booking__photo img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r); border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--paper); }
+.booking__photo-cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.booking__photo-hint { display: none; text-transform: none; letter-spacing: .02em; font-weight: 400; font-family: var(--font-mono); }
+.booking__photo.is-placeholder .booking__photo-hint { display: inline; }
+.booking__photo.is-placeholder img { box-shadow: none; }
 .slots__hint { color: var(--ink-soft); font-size: 14px; }
 .slots__title { font-family: var(--font-display); font-size: 26px; margin-bottom: 4px; }
 .slots__sub { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
