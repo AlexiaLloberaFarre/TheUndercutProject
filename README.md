@@ -1,5 +1,7 @@
 # The Undercut Project — alexiallobera.com
 
+> **Status (17 Oct 2026):** V1 is finished and saved (tag `v1-three-editions`, branch `saved/v1-three-editions`, folder `Backup/`). A new website is being built from scratch in `V2/`; its content lives in `V2/content/`.
+
 Personal website of **Alexia Llobera**: trackside motorsport engineer, high-performance coach, strategic consultant and speaker.
 
 A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be hosted on GitHub Pages.

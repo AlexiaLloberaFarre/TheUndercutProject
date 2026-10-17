@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1254 (Europe/Madrid)
+Label:     v1-saved-v2-started
+Based on:  cbff3b5 (Motion edition: use the mood-board photographs and add movement)
+
+To restore: copy the contents of this folder over the repository root and commit.
