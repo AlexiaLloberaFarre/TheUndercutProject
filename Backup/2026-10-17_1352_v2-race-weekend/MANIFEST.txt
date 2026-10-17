@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1352 (Europe/Madrid)
+Label:     v2-race-weekend
+Based on:  dc3e752 (Save V1 and start V2 from scratch)
+
+To restore: copy the contents of this folder over the repository root and commit.
