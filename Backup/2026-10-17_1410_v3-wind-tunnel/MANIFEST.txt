@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1410 (Europe/Madrid)
+Label:     v3-wind-tunnel
+Based on:  0f4dfd2 (V2: Race Weekend website built from the racing reference images)
+
+To restore: copy the contents of this folder over the repository root and commit.
