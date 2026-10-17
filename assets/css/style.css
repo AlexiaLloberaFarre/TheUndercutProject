@@ -403,6 +403,9 @@ p { margin: 0 0 1em; }
 .cal__note a { color: var(--red); text-decoration: underline; }
 
 .booking__photo { margin: 0 0 24px; }
+.section__head .booking__photo { margin: 36px 0 0; max-width: 100%; }
+.section__head .booking__photo img { aspect-ratio: 21 / 9; }
+@media (max-width: 760px) { .section__head .booking__photo img { aspect-ratio: 16 / 9; } }
 .booking__photo img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r); border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--paper); }
 .booking__photo-cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
 .booking__photo-hint { display: none; text-transform: none; letter-spacing: .02em; font-weight: 400; font-family: var(--font-mono); }
