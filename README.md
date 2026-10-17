@@ -26,7 +26,7 @@ The site ships with two palettes on the same content:
 | --- | --- | --- |
 | Wine (default) | `index.html` | Wine red, black, cream |
 | Warm Autumn (experiment) | `index-autumn.html`, or `index.html?theme=autumn` | Brick red, terracotta, paprika, gold, camel, chocolate, olive, petrol, from the colorimetry mood board |
-| Motion (experiment) | `index-motion.html`, or `index.html?theme=motion` | Wine, beige and brown with light trails, motion blur, a ribbon line, reeded glass, keyhole and viewfinder frames |
+| Motion (experiment) | `index-motion.html`, or `index.html?theme=motion` | Wine, beige and brown built on the long-exposure mood board: the board's photographs are the backdrops (`assets/img/motion/`), with drifting backgrounds, sweeping light streaks, blur-to-sharp reveals and a HUD layer (mono labels, bracket frames, grid, pulsing lights). Animations stop under the system's reduce-motion setting. |
 
 All pages link to each other in the footer. To make another edition the default, add `data-theme="autumn"` or `data-theme="motion"` to the `<html>` tag of `index.html`. The palettes live in `assets/css/theme-autumn.css` and `assets/css/theme-motion.css`; `scripts/build-editions.sh` regenerates the edition pages from `index.html` after content changes.
 
@@ -50,6 +50,8 @@ All colours are CSS variables at the top of `assets/css/style.css`. Fonts: Cormo
 2. Under **Build and deployment**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`. Save.
 3. The site is published at `https://<user>.github.io/TheUndercutProject/` within a couple of minutes.
 4. Optional custom domain (for example `alexiallobera.com`): add it in the same Pages screen and point the domain's DNS to GitHub Pages as instructed there.
+
+> The Motion backdrops are cropped from the reference pictures you supplied (other studios' posters and stock-style photographs). They are fine for comparing directions, but replace them with licensed or your own photography before the site goes public.
 
 ## 2. Add your photos
 

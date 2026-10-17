@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1249 (Europe/Madrid)
+Label:     motion-photos-and-animation
+Based on:  3a9b69f (Add the Motion colour edition (wine, beige, brown, light trails))
+
+To restore: copy the contents of this folder over the repository root and commit.
