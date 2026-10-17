@@ -19,30 +19,32 @@
 
   const SESSIONS = [
     {
-      id: 'initial',
-      name: 'Initial session',
+      id: 'career',
+      name: 'Trackside Career Session',
       minutes: 90,
-      price: 200,
-      meta: '1 h 30 min · one-to-one',
-      desc: 'A deep-dive first session: where you are, where you want to go, and the strategy to get there. The starting point for every mentoring relationship.'
+      price: 250,
+      meta: '90 min + follow-up call · one-to-one',
+      tag: 'Career session',
+      desc: 'A 90-minute deep dive into where you are and where you want to go in motorsport, followed by a short call a few weeks later to check progress and adjust the plan.'
     },
     {
-      id: 'followup',
-      name: 'Follow-up session',
-      minutes: 60,
-      price: 180,
-      meta: '1 h · one-to-one',
-      desc: 'Focused working sessions to review progress, work through specific challenges and keep momentum between milestones.'
+      id: 'student',
+      name: 'Student rate',
+      minutes: 90,
+      price: 150,
+      meta: '90 min + follow-up call · students',
+      badge: '2 places a month',
+      tag: 'Student rate',
+      desc: 'The same Trackside Career Session at a reduced rate for students. Two places are available each month; the first come first served.'
     },
     {
-      id: 'pack5',
-      name: 'Pack of 5 sessions',
+      id: 'sprint',
+      name: 'Eight-week sprint',
       minutes: 60,
-      price: 750,
-      meta: '5 × 1 h · one-to-one',
-      badge: 'Save €150',
-      perSession: 150,
-      desc: 'Five one-hour follow-up sessions at a reduced rate. Book the first one here; the remaining four are scheduled together at your pace.'
+      price: 700,
+      meta: '4 sessions · 8 weeks · message reviews',
+      tag: 'Sprint',
+      desc: 'Four one-to-one sessions over eight weeks, plus written feedback on your messages in between: applications, emails to teams, interview prep. Book the first session here; the rest are scheduled together.'
     }
   ];
 
@@ -252,9 +254,9 @@
       ${s.badge ? `<span class="price__badge">${esc(s.badge)}</span>` : ''}
       <span class="price__meta">${esc(s.meta)}</span>
       <span class="price__name">${esc(s.name)}</span>
-      <span class="price__amount">${money(s.price)}${s.perSession ? `<small>${money(s.perSession)} per session</small>` : `<small>per session</small>`}</span>
+      <span class="price__amount">${money(s.price)}<small>${s.id === 'sprint' ? 'for the full sprint' : 'per session'}</small></span>
       <p class="price__desc">${esc(s.desc)}</p>
-      <span class="duration" aria-label="Session length ${clock(s.minutes)}"><span>0:00</span><span class="duration__bar"><i style="left:${s.id === 'initial' ? 62 : 38}%"></i></span><span>${clock(s.minutes)}</span></span>
+      <span class="duration" aria-label="Session length ${clock(s.minutes)}"><span>0:00</span><span class="duration__bar"><i style="left:${s.minutes >= 90 ? 62 : 38}%"></i></span><span>${clock(s.minutes)}</span></span>
       <span class="price__select">Select</span>
     </button>`).join('');
 
@@ -411,7 +413,7 @@
     $('#bookingSummary').innerHTML = `
       <strong>${esc(s.name)}</strong>
       <span>${esc(d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }))} · ${sl.start}–${sl.end} (${esc(state.availability.timezone)})</span>
-      <span class="price-tag">${money(s.price)} · ${s.minutes} MIN${s.perSession ? ' · PACK OF 5' : ''}</span>`;
+      <span class="price-tag">${money(s.price)} · ${s.minutes} MIN · ${esc(s.tag).toUpperCase()}</span>`;
     bookingForm.hidden = false;
     $('#slots').hidden = true;
     bookingForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -433,7 +435,7 @@
       _template: 'table',
       _captcha: 'false',
       type: 'Mentoring booking request',
-      session: `${s.name} (${s.minutes} min) — ${money(s.price)}${s.perSession ? ' (pack of 5)' : ''}`,
+      session: `${s.name} (${s.minutes} min) — ${money(s.price)}`,
       date: state.day,
       time: `${sl.start}–${sl.end} ${state.availability.timezone}`,
       name: $('#bName').value.trim(),

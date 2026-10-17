@@ -72,7 +72,7 @@ Both the contact form and the mentoring booking form are sent through [FormSubmi
 
 ## 4. Managing your mentoring availability
 
-Visitors see a calendar with your free days and the start times that fit the session they chose (90 min initial, 60 min follow-up). Everything is driven by `data/availability.json`:
+Visitors see a calendar with your free days and the start times that fit the session they chose (90 min career session, 60 min sprint session). Everything is driven by `data/availability.json`:
 
 ```json
 {
@@ -105,11 +105,11 @@ Then, in GitHub: open `data/availability.json` → pencil icon → paste → **C
 
 Edit the `SESSIONS` array at the top of `assets/js/main.js`:
 
-| Session | Length | Price |
+| Offer | What it includes | Price |
 | --- | --- | --- |
-| Initial session | 1 h 30 min | €200 |
-| Follow-up session | 1 h | €180 |
-| Pack of 5 sessions | 5 × 1 h | €750 |
+| Trackside Career Session | 90 minutes plus a follow-up call | €250 |
+| Student rate | Same session, two places a month | €150 |
+| Eight-week sprint | Four sessions and message reviews | €700 |
 
 ## 6. Career, education and texts
 
