@@ -8,7 +8,7 @@ A static site (HTML, CSS, vanilla JavaScript) with no build step, designed to be
 
 | Path | What it is |
 | --- | --- |
-| `index.html` | The site: Home, About me, Career, Speaker, Mentoring, Contact |
+| `index.html` | The site: Home, About me, Motorsport, Speaker, Mentoring, Contact |
 | `assets/css/style.css` | Styles (carbon black / ivory / champagne gold brand) |
 | `assets/js/main.js` | Navigation, career data, booking calendar, forms |
 | `assets/img/` | Photos (see below) |
