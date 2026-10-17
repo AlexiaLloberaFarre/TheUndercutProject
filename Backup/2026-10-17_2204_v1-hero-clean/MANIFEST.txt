@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2204 (Europe/Madrid)
+Label:     v1-hero-clean
+Based on:  c750060 (V1: centre the menu between the signature and the button; Instagram handle is now @alexiallobera everywhere)
+
+To restore: copy the contents of this folder over the repository root and commit.
