@@ -46,6 +46,21 @@ Drop these files into `assets/img/` (JPG, ideally 1200 px wide or more). Until t
 | `alexia-about.jpg` | About me | Square, 1:1 |
 | `alexia-speaker.jpg` | Speaker | Portrait, 3:4 |
 
+### Career photos
+
+Each entry of the Career timeline shows a photo on the right. Drop one picture per chapter into `assets/img/career/` (landscape, 4:3, about 1200 px wide). Until a file exists, a placeholder is shown with the expected file name under it.
+
+| File | Chapter |
+| --- | --- |
+| `cadillac-f1.jpg` | Cadillac Formula 1 Team |
+| `formula-e.jpg` | Formula E |
+| `rallycross-tcr.jpg` | Rallycross and TCR |
+| `hyundai-wrc.jpg` | Hyundai Motorsport, WRC |
+| `x-raid-dakar.jpg` | X-raid, Dakar Rally |
+| `coaching.jpg` | Coaching and consulting |
+
+The file names are set in the `CAREER` array in `assets/js/main.js`.
+
 ## 3. Receiving contact and booking requests by email
 
 Both the contact form and the mentoring booking form are sent through [FormSubmit](https://formsubmit.co) to **contact@alexiallobera.com**. No account is needed.

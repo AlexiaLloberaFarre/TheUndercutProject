@@ -49,6 +49,7 @@
   const CAREER = [
     {
       period: '2025 — 2026',
+      image: 'assets/img/career/cadillac-f1.jpg',
       discipline: 'Formula 1',
       role: 'Trackside Electronics Support Engineer',
       org: 'Cadillac Formula 1 Team',
@@ -58,6 +59,7 @@
     },
     {
       period: '2023 — 2025',
+      image: 'assets/img/career/formula-e.jpg',
       discipline: 'Formula E',
       role: 'Manufacturer Systems & Power Unit Support Engineer',
       org: 'Alpine Racing · NEOM McLaren Formula E Team',
@@ -67,6 +69,7 @@
     },
     {
       period: '2022 — 2023',
+      image: 'assets/img/career/rallycross-tcr.jpg',
       discipline: 'Rallycross · TCR',
       role: 'Trackside Race Engineer',
       org: 'RX2 Rallycross · TCR touring cars',
@@ -76,6 +79,7 @@
     },
     {
       period: '2019 — 2022',
+      image: 'assets/img/career/hyundai-wrc.jpg',
       discipline: 'World Rally Championship',
       role: 'Systems Engineer',
       org: 'Hyundai Motorsport',
@@ -86,6 +90,7 @@
     },
     {
       period: '2016 — 2019',
+      image: 'assets/img/career/x-raid-dakar.jpg',
       discipline: 'Dakar Rally · Cross-Country',
       role: 'Electronics & Systems Engineer',
       org: 'X-raid',
@@ -96,6 +101,7 @@
     },
     {
       period: '2023 — Present',
+      image: 'assets/img/career/coaching.jpg',
       discipline: 'Beyond the car',
       role: 'High-Performance Teams & Executive Coach · Strategic Consultant',
       org: 'The Undercut Project',
@@ -225,6 +231,10 @@
           <p class="tl__desc">${esc(c.desc)}</p>
           <div class="tl__tags">${c.tags.map((t, i) => `<span class="${(c.gold || []).includes(i) ? 'gold' : ''}">${esc(t)}</span>`).join('')}</div>
         </div>
+        <figure class="tl__media">
+          <img src="${esc(c.image)}" alt="${esc(c.org)} — ${esc(c.discipline)}" loading="lazy" onerror="this.onerror=null;this.src='assets/img/career/placeholder.svg';this.closest('.tl__media').classList.add('is-placeholder');">
+          <figcaption class="tl__media-cap"><span>${esc(c.discipline)}</span><span class="tl__media-hint">${esc(c.image)}</span></figcaption>
+        </figure>
       </article>`).join('');
     const li = (x) => `<li><strong>${esc(x.title)}</strong><em>${esc(x.sub)}</em><p>${esc(x.desc)}</p></li>`;
     $('#educationList').innerHTML = EDUCATION.map(li).join('');
