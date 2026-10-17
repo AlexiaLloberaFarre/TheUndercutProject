@@ -175,3 +175,40 @@ python3 -m http.server 8080
 ```
 
 Then open `http://localhost:8080`.
+
+## Calendar, emails and Outlook
+
+- **Availability**: Monday to Friday, 15:30–19:30 (Europe/Madrid). Everything
+  else is blocked. Edit `data/availability.json` (or use `/admin/`) to change
+  days, hours, holidays or already-booked slots. A 90-minute session can start
+  from 15:30 to 18:00; a 60-minute one from 15:30 to 18:30.
+- **Every booking request** sends one email to contact@alexiallobera.com with a
+  copy to alexia@zenithstrategy.io, reply-to set to the client, and includes an
+  **"add_to_outlook" link**: one click opens the slot prefilled in Alexia's
+  Outlook calendar (title "The undercut project · session · client", Teams as
+  location, client details in the body). The client gets an automatic
+  acknowledgement by email.
+- **Outlook category** "The undercut project" (dark red) exists in the
+  alexia@zenithstrategy.io mailbox; apply it to the event when saving it.
+
+### Fully automatic (recommended): Microsoft Bookings
+
+A static website cannot write into an Outlook calendar by itself. Microsoft
+Bookings (included in Microsoft 365 Business) does exactly that:
+
+1. In Microsoft 365, open **Bookings** and create a booking page named
+   **The Undercut Project** (staff: Alexia, alexia@zenithstrategy.io).
+2. Add three services: *Trackside Career Session* (90 min, €250), *Student
+   rate* (90 min, €150), *Eight-week sprint — first session* (60 min, €700).
+   Turn on **Add online meeting** (Teams) for each.
+3. Set the business hours to Mon–Fri 15:30–19:30 and the buffer / lead time
+   you want. Bookings reads your Outlook free/busy automatically.
+4. Enable email confirmations and reminders to customer and staff.
+5. Copy each service's booking page link into `data/booking.json` under
+   `links` (`career`, `student`, `sprint`). From then on the website opens the
+   Bookings page for that offer: the event lands in your Outlook calendar, both
+   of you receive the email, and the Teams link is created automatically.
+
+Payment at booking time is not part of Bookings; keep sending payment details
+by email, or use Calendly (also syncs with Outlook and Teams) with Stripe or
+PayPal if you want to charge before confirming.

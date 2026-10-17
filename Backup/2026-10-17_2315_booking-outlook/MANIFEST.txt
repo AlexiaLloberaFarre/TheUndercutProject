@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_2315 (Europe/Madrid)
+Label:     booking-outlook
+Based on:  4c8b58b (V1: handwritten year numbers in the sampled red #581317)
+
+To restore: copy the contents of this folder over the repository root and commit.

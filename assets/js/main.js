@@ -6,6 +6,17 @@
    ============================================================= */
 (function () {
   'use strict';
+  /* Outlook "add to calendar" link for a booked slot (opens a prefilled event in Alexia's Outlook) */
+  const OUTLOOK_TAG = 'The undercut project';
+  const BOOKING_INBOX = 'alexia@zenithstrategy.io';
+  function outlookUrl(session, slot, day, tz, who) {
+    const start = slot.instant || slot.inst || zonedToDate(day, slot.start, tz), end = new Date(start.getTime() + session.minutes * 60000);
+    const iso = (d) => d.toISOString().replace(/\.\d{3}Z$/, 'Z');
+    const body = `${OUTLOOK_TAG} · ${session.name} (${session.minutes} min, ${CONFIG.currency}${session.price})\nClient: ${who.name} · ${who.email}${who.phone ? ' · ' + who.phone : ''}\n${who.notes ? 'Notes: ' + who.notes + '\n' : ''}Slot: ${day} ${slot.start}–${slot.end} ${tz}\nCategory: ${OUTLOOK_TAG}`;
+    const q = new URLSearchParams({ rru: 'addevent', subject: `${OUTLOOK_TAG} · ${session.name} · ${who.name}`, startdt: iso(start), enddt: iso(end), body, location: 'Microsoft Teams', online: '1' });
+    return 'https://outlook.office.com/calendar/0/action/compose?' + q.toString();
+  }
+
 
   /* ---------- CONFIG (edit here) ---------- */
   const CONFIG = {
@@ -490,6 +501,11 @@
       _subject: `Mentoring booking request — ${s.name} — ${state.day} ${sl.start}`,
       _template: 'table',
       _captcha: 'false',
+      _cc: BOOKING_INBOX,
+      _replyto: $('#bEmail').value.trim(),
+      _autoresponse: `Thank you — your request for the ${s.name} on ${state.day} at ${sl.start} (${state.availability.timezone}) has been received. Alexia will confirm the slot and send the payment details and the Microsoft Teams link within 24 hours.`,
+      calendar: OUTLOOK_TAG,
+      add_to_outlook: outlookUrl(s, sl, state.day, state.availability.timezone, { name: $('#bName').value.trim(), email: $('#bEmail').value.trim(), phone: $('#bPhone').value.trim(), notes: $('#bNotes').value.trim() }),
       type: 'Mentoring booking request',
       session: `${s.name} (${s.minutes} min) — ${money(s.price)}`,
       date: state.day,
