@@ -226,6 +226,8 @@ p { margin: 0 0 1em; }
 
 /* ---------- Chequered flag band ---------- */
 .checker { height: 44px; background: var(--checker); }
+.checker--inset { margin: 48px 0; border-radius: 6px; }
+.honours-group + .checker--inset + .honours-group { margin-top: 0; }
 
 /* ---------- Interlude A: typographic banner ---------- */
 .banner { position: relative; overflow: hidden; background: var(--red); color: var(--cream); padding: clamp(96px, 12vw, 180px) 0; text-align: center; }
