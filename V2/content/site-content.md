@@ -11,7 +11,7 @@ Everything the website says, independent of any design. Source of truth for V2.
 - Based in Andorra, available worldwide.
 - Contact: contact@alexiallobera.com (site forms) · bookings/Teams on alexia@zenithstrategy.io
 - LinkedIn: https://www.linkedin.com/in/alexia-llobera-a7177a42
-- Instagram: https://www.instagram.com/alexialloberamotorsport/
+- Instagram: https://www.instagram.com/alexiallobera/
 - Disciplines caption: F1 · FE · WRC · RX · TCR · Dakar · E1
 
 ## Menu
