@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="Photo placeholder">
+  <rect width="1200" height="900" fill="#f8f4ec"/>
+  <path d="M-80 640 C 180 640, 200 440, 420 440 S 660 640, 880 640 S 1120 440, 1340 440" fill="none" stroke="#4c0f12" stroke-width="40" stroke-linecap="round" opacity="0.9"/>
+  <text x="600" y="330" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="150" fill="#121212" letter-spacing="-4">AL</text>
+  <text x="600" y="820" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#7d766d" letter-spacing="3">ADD A PHOTO FOR THIS CHAPTER</text>
+</svg>

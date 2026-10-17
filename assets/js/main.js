@@ -178,6 +178,11 @@
   try {
     const t = new URLSearchParams(location.search).get('theme');
     if (t) document.documentElement.dataset.theme = t;
+    const cur = document.documentElement.dataset.theme;
+    if (cur) {
+      const link = document.querySelector(`[data-theme-link="${cur}"]`);
+      if (link) { link.textContent = 'Wine (default)'; link.href = 'index.html'; }
+    }
   } catch (_) {}
 
   /* ---------- Navigation ---------- */

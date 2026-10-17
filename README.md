@@ -26,8 +26,9 @@ The site ships with two palettes on the same content:
 | --- | --- | --- |
 | Wine (default) | `index.html` | Wine red, black, cream |
 | Warm Autumn (experiment) | `index-autumn.html`, or `index.html?theme=autumn` | Brick red, terracotta, paprika, gold, camel, chocolate, olive, petrol, from the colorimetry mood board |
+| Motion (experiment) | `index-motion.html`, or `index.html?theme=motion` | Wine, beige and brown with light trails, motion blur, a ribbon line, reeded glass, keyhole and viewfinder frames |
 
-Both pages link to each other in the footer. To make Warm Autumn the default, add `data-theme="autumn"` to the `<html>` tag of `index.html`. The autumn palette lives in `assets/css/theme-autumn.css`; `scripts/build-autumn.sh` regenerates `index-autumn.html` from `index.html` after content changes.
+All pages link to each other in the footer. To make another edition the default, add `data-theme="autumn"` or `data-theme="motion"` to the `<html>` tag of `index.html`. The palettes live in `assets/css/theme-autumn.css` and `assets/css/theme-motion.css`; `scripts/build-editions.sh` regenerates the edition pages from `index.html` after content changes.
 
 ## Brand
 

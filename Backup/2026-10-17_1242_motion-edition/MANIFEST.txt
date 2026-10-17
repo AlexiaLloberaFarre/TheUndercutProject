@@ -1,0 +1,5 @@
+Snapshot:  2026-10-17_1242 (Europe/Madrid)
+Label:     motion-edition
+Based on:  74cb6ae (Add the Warm Autumn colour edition as a switchable theme)
+
+To restore: copy the contents of this folder over the repository root and commit.
