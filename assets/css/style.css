@@ -154,6 +154,7 @@ p { margin: 0 0 1em; }
 .hero__ghost { position: absolute; left: 0; top: 0; color: rgba(243,236,225,.45); filter: blur(7px); transform: translateX(-16px) scaleX(1.06); transform-origin: left center; pointer-events: none; }
 .hero__subtitle { margin-top: 28px; font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(243,236,225,.7); }
 .hero__lead { margin-top: 18px; font-size: clamp(17px, 1.6vw, 19px); color: rgba(243,236,225,.85); max-width: 52ch; }
+.hero__sign { margin: 26px 0 0; font-family: var(--font-hand); font-weight: 700; font-size: clamp(38px, 3.6vw, 54px); line-height: 1; color: var(--cream); transform: rotate(-4deg); transform-origin: left bottom; display: inline-block; letter-spacing: .01em; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
 .stats { display: grid; grid-template-columns: repeat(4, auto); gap: 32px; margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--line-on-red); width: fit-content; }
 .stat { display: flex; flex-direction: column; }
