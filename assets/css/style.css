@@ -108,8 +108,9 @@ p { margin: 0 0 1em; }
 .nav.is-open { background: var(--cream); backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent; }
 .nav__inner { width: min(100% - 2 * var(--gutter), 1320px); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .nav__brand { display: flex; align-items: center; gap: 14px; }
-.nav__mono { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50% 50% 8px 8px; background: var(--cream); color: var(--red); font-family: var(--font-display); font-size: 20px; letter-spacing: -0.02em; transition: background .4s var(--ease), color .4s var(--ease); }
-.nav.is-scrolled .nav__mono, .nav.is-open .nav__mono { background: var(--red); color: var(--cream); }
+.nav__mono { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; overflow: hidden; background: var(--cream); color: var(--red); box-shadow: 0 0 0 2px var(--cream); transition: box-shadow .4s var(--ease); }
+.nav__mono img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nav.is-scrolled .nav__mono, .nav.is-open .nav__mono { box-shadow: 0 0 0 2px var(--red); }
 .nav__wordmark { font-size: 11px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--cream); transition: color .4s var(--ease); }
 .nav__links { display: flex; align-items: center; gap: 30px; }
 .nav__link { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: rgba(243,236,225,.82); position: relative; padding: 6px 0; transition: color .3s var(--ease); }
@@ -426,7 +427,7 @@ p { margin: 0 0 1em; }
 .footer .track { margin-bottom: 40px; }
 .footer__inner { display: grid; grid-template-columns: auto 1fr auto; gap: 24px 48px; align-items: center; }
 .footer__brand { display: flex; align-items: center; gap: 14px; }
-.footer .nav__mono { background: var(--cream); color: var(--red); }
+.footer .nav__mono { box-shadow: 0 0 0 2px var(--cream); }
 .footer__wordmark { font-size: 11px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: var(--cream); }
 .footer__tag { margin: 0; font-family: var(--font-display); font-style: italic; font-size: 22px; color: var(--cream); }
 .footer__links { display: flex; gap: 24px; }
