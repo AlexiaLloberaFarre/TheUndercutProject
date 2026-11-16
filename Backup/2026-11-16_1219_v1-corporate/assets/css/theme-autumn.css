@@ -1,0 +1,144 @@
+/* =============================================================
+   THE UNDERCUT PROJECT — "Warm Autumn" theme (experiment)
+   Palette sampled from the colorimetry mood board:
+   ivory #eee4d1 · cream #eedec2 · camel #bf8a5a · cognac #995933 ·
+   chocolate #442a1a · espresso #412e24 · olive #6b5a35 · moss #585136 ·
+   petrol #1b3941 · navy #232e3c · terracotta #b35c37 · paprika #973224 ·
+   warm rose #be7668 · brick #813631 · gold #b6884f
+   Activated with <html data-theme="autumn"> or index.html?theme=autumn
+   ============================================================= */
+
+:root[data-theme="autumn"] {
+  --ivory: #eee4d1;
+  --camel: #bf8a5a;
+  --cognac: #995933;
+  --chocolate: #442a1a;
+  --espresso: #412e24;
+  --olive: #6b5a35;
+  --moss: #585136;
+  --petrol: #1b3941;
+  --navy: #232e3c;
+  --terracotta: #b35c37;
+  --paprika: #973224;
+  --rose: #be7668;
+  --brick: #813631;
+  --gold: #b6884f;
+  --gold-light: #d9b97e;
+
+  /* mapping onto the site's tokens */
+  --red: var(--brick);
+  --red-deep: #5e2522;
+  --red-soft: #9a4a40;
+  --black: var(--chocolate);
+  --racing: var(--paprika);
+  --cream: #f0e7d6;
+  --beige: #e8dbc3;
+  --paper: #f8f2e6;
+  --ink: #2f211a;
+  --ink-soft: #5a4a3f;
+  --muted: #8f7d6b;
+  --line: rgba(68, 42, 26, 0.16);
+  --line-on-red: rgba(238, 228, 209, 0.2);
+  --checker: repeating-conic-gradient(var(--chocolate) 0 25%, var(--ivory) 0 50%) 0 0 / 44px 44px;
+  --success: #5b6b3a;
+  --error: var(--paprika);
+  --shadow: 0 30px 60px -30px rgba(68, 42, 26, 0.45);
+}
+
+/* ---------- typographic accents ---------- */
+[data-theme="autumn"] .eyebrow { color: var(--cognac); }
+[data-theme="autumn"] .section__title em { color: var(--terracotta); }
+[data-theme="autumn"] .section--red .section__title em { color: var(--gold-light); }
+[data-theme="autumn"] .link-arrow { color: var(--petrol); border-bottom-color: var(--terracotta); }
+[data-theme="autumn"] .stat__plus { color: var(--gold-light); }
+[data-theme="autumn"] .about__note,
+[data-theme="autumn"] .honour__hand,
+[data-theme="autumn"] .topic__num,
+[data-theme="autumn"] .torn__sign,
+[data-theme="autumn"] .price__badge,
+[data-theme="autumn"] .booking__hand,
+[data-theme="autumn"] .contact__ready { color: var(--paprika); }
+[data-theme="autumn"] .banner__hand { color: var(--gold-light); }
+[data-theme="autumn"] .honours__label,
+[data-theme="autumn"] .career__block-title,
+[data-theme="autumn"] .topics__title { color: var(--olive); }
+[data-theme="autumn"] .honours__label::after { background: rgba(107, 90, 53, 0.35); }
+
+/* ---------- navigation ---------- */
+[data-theme="autumn"] .nav.is-scrolled { background: rgba(240, 231, 214, 0.92); }
+[data-theme="autumn"] .nav__link::after { background: var(--terracotta); }
+[data-theme="autumn"] .nav.is-scrolled .nav__mono, [data-theme="autumn"] .nav.is-open .nav__mono { box-shadow: 0 0 0 2px var(--gold); }
+[data-theme="autumn"] .nav.is-scrolled .nav__toggle, [data-theme="autumn"] .nav.is-open .nav__toggle { border-color: rgba(129, 54, 49, 0.4); }
+[data-theme="autumn"] .nav__mono { box-shadow: 0 0 0 2px var(--gold-light); }
+
+/* ---------- hero: brick red with terracotta aura and gold warmth ---------- */
+[data-theme="autumn"] .hero__bg { background: radial-gradient(1100px 700px at 80% 30%, #9a4a40 0%, var(--brick) 55%, #5e2522 100%); }
+[data-theme="autumn"] .hero__aura--1 { background: radial-gradient(circle, rgba(179, 92, 55, 0.6), rgba(179, 92, 55, 0) 70%); }
+[data-theme="autumn"] .hero__aura--2 { background: radial-gradient(circle, rgba(68, 42, 26, 0.45), transparent 70%); }
+[data-theme="autumn"] .hero__glow { background: radial-gradient(circle, rgba(182, 136, 79, 0.65) 0%, rgba(182, 136, 79, 0.25) 45%, transparent 70%); }
+[data-theme="autumn"] .hero__letter { color: var(--brick); text-shadow: 1px 1px 0 rgba(238, 228, 209, 0.14), -1px -1px 0 rgba(0, 0, 0, 0.35); }
+[data-theme="autumn"] .hero__subtitle { color: var(--gold-light); }
+[data-theme="autumn"] .hero__sign { color: var(--gold-light); }
+[data-theme="autumn"] .hero .btn--gold { background: var(--gold-light); color: var(--chocolate); border-color: var(--gold-light); }
+[data-theme="autumn"] .hero .btn--gold:hover { background: #e6c98f; border-color: #e6c98f; }
+[data-theme="autumn"] .portrait::before { border-color: rgba(217, 185, 126, 0.7); }
+[data-theme="autumn"] .section--cream .portrait::before, [data-theme="autumn"] .section--beige .portrait::before { border-color: rgba(182, 136, 79, 0.6); }
+
+/* light bar under the hero: gold instead of neon red */
+[data-theme="autumn"] .marquee::before { background: linear-gradient(90deg, transparent 0%, var(--gold) 12%, #fff1d2 50%, var(--gold) 88%, transparent 100%); box-shadow: 0 0 18px 3px rgba(182, 136, 79, 0.55), 0 -6px 40px 10px rgba(182, 136, 79, 0.25); }
+[data-theme="autumn"] .marquee__track span { color: var(--cognac); }
+[data-theme="autumn"] .marquee__track span::after { background: var(--terracotta); }
+
+/* ---------- buttons ---------- */
+[data-theme="autumn"] .btn--gold { box-shadow: 0 14px 28px -16px rgba(129, 54, 49, 0.8); }
+[data-theme="autumn"] .btn--dark { background: var(--chocolate); border-color: var(--chocolate); }
+[data-theme="autumn"] .btn--dark:hover { background: var(--brick); border-color: var(--brick); }
+[data-theme="autumn"] .btn--ghost:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+/* ---------- racing line and chequered bands ---------- */
+[data-theme="autumn"] .track path { stroke: var(--terracotta); }
+[data-theme="autumn"] .track--cream path { stroke: var(--gold-light); opacity: .35; }
+
+/* ---------- statement banner and torn paper ---------- */
+[data-theme="autumn"] .banner { background: linear-gradient(160deg, var(--brick) 0%, #6a2c27 100%); }
+[data-theme="autumn"] .banner__aura { background: radial-gradient(circle, rgba(179, 92, 55, 0.6) 0%, rgba(179, 92, 55, 0) 65%); }
+[data-theme="autumn"] .banner__letter { color: var(--brick); }
+[data-theme="autumn"] .banner__title em { color: var(--gold-light); }
+[data-theme="autumn"] .torn { background: linear-gradient(135deg, var(--terracotta) 0%, var(--paprika) 100%); }
+[data-theme="autumn"] .torn::before { background: radial-gradient(800px 400px at 30% 50%, rgba(217, 185, 126, 0.25), transparent 70%); }
+[data-theme="autumn"] .torn__strip { background: var(--ivory); }
+
+/* ---------- motorsport timeline: cognac and gold ---------- */
+[data-theme="autumn"] .tl::before { background: var(--terracotta); box-shadow: 0 0 0 4px var(--beige); }
+[data-theme="autumn"] .tl__period { color: var(--cognac); }
+[data-theme="autumn"] .tl__org { color: var(--brick); }
+[data-theme="autumn"] .tl__tags span { border-color: rgba(107, 90, 53, 0.4); color: var(--moss); }
+[data-theme="autumn"] .tl__tags span.gold { border-color: var(--gold); color: var(--cognac); }
+
+/* ---------- cards ---------- */
+[data-theme="autumn"] .topic:hover { border-color: var(--olive); }
+[data-theme="autumn"] .honour:hover { box-shadow: var(--shadow); }
+[data-theme="autumn"] .price:hover { border-color: var(--camel); }
+[data-theme="autumn"] .price.is-selected { background: var(--brick); border-color: var(--brick); }
+[data-theme="autumn"] .duration__bar i { background: var(--terracotta); }
+
+/* ---------- booking and forms ---------- */
+[data-theme="autumn"] .cal__day.is-available::after { background: var(--terracotta); }
+[data-theme="autumn"] .cal__day.is-available:hover { background: rgba(179, 92, 55, 0.1); }
+[data-theme="autumn"] .cal__day.is-selected { color: var(--brick); }
+[data-theme="autumn"] .cal__circle path { stroke: var(--paprika); }
+[data-theme="autumn"] .cal__nav:hover { border-color: var(--terracotta); color: var(--terracotta); }
+[data-theme="autumn"] .slot:hover { border-color: var(--terracotta); }
+[data-theme="autumn"] .booking__summary { border-color: var(--camel); }
+[data-theme="autumn"] .form input:focus, [data-theme="autumn"] .form textarea:focus, [data-theme="autumn"] .form select:focus { border-color: var(--petrol); box-shadow: 0 0 0 3px rgba(27, 57, 65, 0.14); }
+[data-theme="autumn"] .how__num { border-color: var(--terracotta); color: var(--paprika); }
+[data-theme="autumn"] .step.is-active { color: var(--brick); }
+[data-theme="autumn"] .step.is-active span { border-color: var(--terracotta); color: var(--terracotta); }
+[data-theme="autumn"] .contact__list a:hover { border-color: var(--terracotta); }
+
+/* ---------- footer: chocolate with gold ---------- */
+[data-theme="autumn"] .footer { background: linear-gradient(180deg, var(--chocolate) 0%, #2d1a10 100%); color: rgba(238, 228, 209, 0.65); }
+[data-theme="autumn"] .footer__wordmark { color: var(--gold-light); }
+[data-theme="autumn"] .footer__tag { color: var(--gold-light); }
+[data-theme="autumn"] .footer .nav__mono { box-shadow: 0 0 0 2px var(--gold); }
+[data-theme="autumn"] .footer__links a:hover { color: var(--gold-light); }

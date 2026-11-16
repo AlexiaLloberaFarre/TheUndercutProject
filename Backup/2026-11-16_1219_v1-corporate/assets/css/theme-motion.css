@@ -1,0 +1,323 @@
+/* =============================================================
+   THE UNDERCUT PROJECT — "Motion" edition (experiment)
+   Wine · beige · brown, built on the long-exposure / motion-blur board.
+   The board's photographs are the backdrops (assets/img/motion/):
+   tachometer, light trails, night road, red shoes, reeded glass,
+   walnut chair, walnut + red fluted panel, blurred restaurant, car swirl.
+   Activated with <html data-theme="motion"> or index.html?theme=motion
+   ============================================================= */
+
+:root[data-theme="motion"] {
+  --wine: #4c0f12;
+  --wine-deep: #2b0a0c;
+  --wine-glow: #8a2a2e;
+  --trail: #ff4a3d;          /* tail-light red for light trails */
+  --trail-amber: #ffb36b;    /* warm headlight amber */
+  --brown: #3a2a22;
+  --walnut: #5a3d2e;
+  --cognac: #9a6a48;
+  --sand: #cdb59a;
+  --beige: #e9dfcf;
+  --linen: #efe7da;
+  --paper: #f6efe3;
+
+  --red: var(--wine);
+  --red-deep: var(--wine-deep);
+  --red-soft: var(--wine-glow);
+  --black: var(--brown);
+  --racing: var(--wine);
+  --cream: var(--linen);
+  --ink: #2a1c16;
+  --ink-soft: #5a4a40;
+  --muted: #8f7f70;
+  --line: rgba(58, 42, 34, 0.16);
+  --line-on-red: rgba(239, 231, 218, 0.18);
+  --checker: repeating-conic-gradient(var(--brown) 0 25%, var(--linen) 0 50%) 0 0 / 44px 44px;
+  --shadow: 0 30px 60px -30px rgba(43, 10, 12, 0.5);
+  --success: #5b6b3a;
+  --error: #a4161a;
+}
+
+/* ---------- global texture: faint horizontal pan ---------- */
+[data-theme="motion"] body::after {
+  opacity: .07;
+  background-image: repeating-linear-gradient(180deg, rgba(0,0,0,.35) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+
+/* ---------- navigation ---------- */
+[data-theme="motion"] .nav.is-scrolled { background: rgba(239, 231, 218, 0.9); }
+[data-theme="motion"] .nav__link::after { background: var(--trail); height: 2px; box-shadow: 0 0 10px rgba(255,74,61,.6); }
+[data-theme="motion"] .nav__mono { box-shadow: 0 0 0 2px var(--sand); }
+[data-theme="motion"] .nav.is-scrolled .nav__mono, [data-theme="motion"] .nav.is-open .nav__mono { box-shadow: 0 0 0 2px var(--wine); }
+
+/* ---------- hero: cinematic dark with light trails ---------- */
+[data-theme="motion"] .hero { background: var(--wine-deep); }
+[data-theme="motion"] .hero__bg {
+  background:
+    linear-gradient(90deg, rgba(27,8,9,.94) 0%, rgba(27,8,9,.78) 38%, rgba(27,8,9,.35) 68%, rgba(27,8,9,.55) 100%),
+    linear-gradient(180deg, rgba(27,8,9,.35) 0%, transparent 30%, transparent 70%, rgba(22,6,7,.75) 100%),
+    url('../img/motion/tacho.jpg') 62% 48% / cover no-repeat;
+}
+[data-theme="motion"] .hero__letter { display: none; }
+[data-theme="motion"] .hero__aura--1 { display: none; }
+[data-theme="motion"] .hero__aura--2 { display: none; }
+[data-theme="motion"] .hero .eyebrow { color: var(--sand); }
+[data-theme="motion"] .hero__title { color: var(--linen); }
+[data-theme="motion"] .hero__title em { color: var(--sand); }
+/* stronger motion trail on the name, trailing to the left like the panning references */
+[data-theme="motion"] .hero__ghost { color: rgba(255, 74, 61, .35); filter: blur(10px); transform: translateX(-34px) scaleX(1.12); }
+[data-theme="motion"] .hero__title-wrap::before {
+  content: 'Alexia Llobera'; position: absolute; left: 0; top: 0; white-space: pre; font-family: var(--font-display); font-size: inherit; line-height: inherit;
+  color: rgba(239,231,218,.22); filter: blur(18px); transform: translateX(-70px) scaleX(1.3); transform-origin: left center; pointer-events: none;
+  font-size: clamp(64px, 9.5vw, 128px); line-height: 0.92; letter-spacing: -0.02em;
+}
+[data-theme="motion"] .hero__subtitle { color: var(--sand); }
+[data-theme="motion"] .hero__lead { color: rgba(239,231,218,.82); }
+[data-theme="motion"] .hero__sign { color: var(--trail-amber); text-shadow: 0 0 18px rgba(255,179,107,.35); }
+[data-theme="motion"] .hero .btn--gold { background: var(--linen); color: var(--wine); border-color: var(--linen); }
+[data-theme="motion"] .hero .btn--ghost { border-color: rgba(239,231,218,.4); }
+[data-theme="motion"] .stat__plus { color: var(--trail); }
+[data-theme="motion"] .hero__glow { background: radial-gradient(circle, rgba(255,74,61,.45) 0%, rgba(138,42,46,.3) 40%, transparent 70%); filter: blur(46px); }
+/* reeded-glass portrait, like the "coming soon" reference */
+[data-theme="motion"] .hero .portrait { border-radius: 14px; }
+[data-theme="motion"] .hero .portrait::before { border: 0; border-radius: 14px; background: repeating-linear-gradient(90deg, rgba(255,255,255,.14) 0 2px, rgba(0,0,0,.14) 2px 4px, transparent 4px 12px); mix-blend-mode: soft-light; inset: 0; }
+[data-theme="motion"] .hero .portrait::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(239,231,218,.35), inset 0 0 80px rgba(43,10,12,.5); border-radius: 14px; }
+[data-theme="motion"] .portrait__caption { color: rgba(239,231,218,.55); }
+
+/* light bar under the hero becomes a thin tail-light streak */
+[data-theme="motion"] .marquee { background: linear-gradient(90deg, rgba(27,8,9,.55), rgba(27,8,9,.35) 50%, rgba(27,8,9,.55)), url('../img/motion/trails-band.jpg') center / cover no-repeat; border-bottom: 0; padding: 22px 0; }
+[data-theme="motion"] .marquee__track span { color: var(--linen); text-shadow: 0 1px 12px rgba(0,0,0,.6); }
+[data-theme="motion"] .marquee::before { background: linear-gradient(90deg, transparent 0%, var(--trail) 15%, #ffd4c9 50%, var(--trail) 85%, transparent 100%); box-shadow: 0 0 16px 3px rgba(255,74,61,.55), 0 -6px 36px 8px rgba(255,74,61,.22); }
+[data-theme="motion"] .marquee__track span::after { background: var(--trail); border-radius: 50%; transform: none; box-shadow: 0 0 8px rgba(255,74,61,.7); }
+
+/* ---------- ribbon line: thin, with a glowing dot at the end (design-process reference) ---------- */
+[data-theme="motion"] .track path { stroke: var(--wine); stroke-width: 3; }
+[data-theme="motion"] .track svg { filter: drop-shadow(0 0 6px rgba(76,15,18,.35)); }
+[data-theme="motion"] .track--cream path { stroke: var(--sand); opacity: .6; stroke-width: 2; }
+[data-theme="motion"] .track { padding: 0; background: linear-gradient(180deg, rgba(58,42,34,.35), rgba(58,42,34,.55)), url('../img/motion/walnut-red.jpg') center 55% / cover no-repeat; }
+[data-theme="motion"] .track path { stroke: var(--linen); stroke-width: 3; }
+[data-theme="motion"] .track svg { filter: drop-shadow(0 0 8px rgba(0,0,0,.45)); }
+[data-theme="motion"] .footer .track { background: none; }
+
+/* chequered bands become a single hairline with a dot, keeping the page quiet */
+[data-theme="motion"] .checker { height: 1px; background: linear-gradient(90deg, transparent, rgba(58,42,34,.35) 20%, rgba(58,42,34,.35) 80%, transparent); position: relative; }
+[data-theme="motion"] .checker::after { content: ''; position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--wine); transform: translate(-50%, -50%); box-shadow: 0 0 0 4px var(--linen), 0 0 0 5px rgba(76,15,18,.35); }
+[data-theme="motion"] .section--beige + .checker::after, [data-theme="motion"] .checker--inset::after { box-shadow: 0 0 0 4px var(--beige), 0 0 0 5px rgba(76,15,18,.35); }
+[data-theme="motion"] .checker--inset { margin: 48px 0; border-radius: 0; }
+[data-theme="motion"] .checker--inset::after { box-shadow: 0 0 0 4px var(--linen), 0 0 0 5px rgba(76,15,18,.35); }
+
+/* ---------- sections ---------- */
+[data-theme="motion"] .section--cream { background: var(--linen); }
+[data-theme="motion"] .section > .container { position: relative; z-index: 1; }
+[data-theme="motion"] #about::before { content: ''; position: absolute; inset: 0; background: url('../img/motion/restaurant.jpg') center 30% / cover no-repeat; opacity: .10; pointer-events: none; filter: saturate(.7); }
+[data-theme="motion"] #about::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--linen) 0%, transparent 25%, transparent 75%, var(--linen) 100%); pointer-events: none; }
+[data-theme="motion"] .section--beige { background: var(--beige); }
+[data-theme="motion"] .eyebrow { color: var(--cognac); letter-spacing: .32em; }
+[data-theme="motion"] .section__title em { color: var(--wine); }
+[data-theme="motion"] .about__note, [data-theme="motion"] .honour__hand, [data-theme="motion"] .topic__num, [data-theme="motion"] .torn__sign,
+[data-theme="motion"] .price__badge, [data-theme="motion"] .booking__hand, [data-theme="motion"] .contact__ready { color: var(--wine); }
+[data-theme="motion"] .honours__label, [data-theme="motion"] .career__block-title, [data-theme="motion"] .topics__title { color: var(--cognac); }
+[data-theme="motion"] .honours__label::after { background: linear-gradient(90deg, rgba(154,106,72,.5), transparent); }
+
+/* keyhole frame around the About portrait */
+[data-theme="motion"] .about__media .portrait { --arch: 50%; border-radius: 50% 50% 18% 18% / 42% 42% 10% 10%; box-shadow: 0 0 0 10px var(--linen), 0 0 0 11px rgba(76,15,18,.35), var(--shadow); }
+[data-theme="motion"] .about__media .portrait::before { border-color: rgba(76,15,18,.35); border-radius: inherit; inset: 10px; }
+
+/* honours chips: blurred brown shadow, hairline frames */
+[data-theme="motion"] .honour { background: var(--paper); border-color: rgba(58,42,34,.14); border-radius: 10px; }
+[data-theme="motion"] .honour:hover { box-shadow: 0 30px 50px -28px rgba(58,42,34,.55); }
+
+/* ---------- statement banner: dark room with a blurred amber doorway (gallery reference) ---------- */
+[data-theme="motion"] .banner { background: linear-gradient(180deg, rgba(22,6,7,.55) 0%, rgba(43,10,12,.45) 50%, rgba(22,6,7,.7) 100%), url('../img/motion/night-road.jpg') center 42% / cover no-repeat; }
+[data-theme="motion"] .banner::before { content: ''; position: absolute; left: 50%; top: 50%; width: min(70vw, 900px); height: min(50vw, 600px); transform: translate(-50%, -50%); background: radial-gradient(closest-side, rgba(22,6,7,.75), transparent); pointer-events: none; }
+[data-theme="motion"] .banner__letter { display: none; }
+[data-theme="motion"] .banner__aura { display: none; }
+[data-theme="motion"] .banner__title { color: var(--linen); }
+[data-theme="motion"] .banner__title em { color: var(--sand); }
+[data-theme="motion"] .banner__hand { color: var(--trail-amber); }
+[data-theme="motion"] .banner .btn--light { background: var(--linen); color: var(--wine); }
+
+/* ---------- motorsport timeline: viewfinder corners on the photos ---------- */
+[data-theme="motion"] #motorsport .section__head { position: relative; padding-bottom: 36px; }
+[data-theme="motion"] #motorsport .section__head::after { content: ''; display: block; height: 110px; margin-top: 40px; border-radius: 6px; background: linear-gradient(90deg, rgba(58,42,34,.25), transparent 30%, transparent 70%, rgba(58,42,34,.25)), url('../img/motion/runner-strip.jpg') center / cover no-repeat; }
+[data-theme="motion"] .tl::before { background: var(--trail); box-shadow: 0 0 0 4px var(--beige), 0 0 12px rgba(255,74,61,.6); border-radius: 50%; transform: none; width: 8px; height: 8px; }
+[data-theme="motion"] .timeline::before { background: linear-gradient(180deg, transparent, rgba(76,15,18,.4) 10%, rgba(76,15,18,.4) 90%, transparent); }
+[data-theme="motion"] .tl__period { color: var(--wine); }
+[data-theme="motion"] .tl__org { color: var(--walnut); }
+[data-theme="motion"] .tl__tags span { border-color: rgba(90,61,46,.35); color: var(--walnut); border-radius: 4px; }
+[data-theme="motion"] .tl__tags span.gold { border-color: var(--wine); color: var(--wine); }
+[data-theme="motion"] .tl__media { position: relative; }
+[data-theme="motion"] .tl__media img { border-radius: 6px; filter: saturate(.9) contrast(1.04); }
+[data-theme="motion"] .tl__media::before, [data-theme="motion"] .tl__media::after {
+  content: ''; position: absolute; width: 22px; height: 22px; border: 2px solid var(--linen); pointer-events: none; z-index: 2; filter: drop-shadow(0 0 2px rgba(0,0,0,.4));
+}
+[data-theme="motion"] .tl__media::before { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+[data-theme="motion"] .tl__media::after { right: 10px; top: 10px; border-left: 0; border-bottom: 0; }
+[data-theme="motion"] .tl__media-cap { color: var(--cognac); }
+
+/* ---------- speaker ---------- */
+[data-theme="motion"] #speaker::before { content: ''; position: absolute; inset: 0; background: url('../img/motion/reeded.jpg') center / cover no-repeat; opacity: .14; pointer-events: none; }
+[data-theme="motion"] #speaker::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--linen) 0%, transparent 20%, transparent 80%, var(--linen) 100%); pointer-events: none; }
+[data-theme="motion"] .speaker__media .portrait { border-radius: 10px; --arch: 10px; }
+[data-theme="motion"] .speaker__media .portrait::before { border-radius: 6px; border-color: rgba(76,15,18,.35); }
+[data-theme="motion"] .topic { background: var(--paper); border-radius: 10px; }
+[data-theme="motion"] .topic:hover { border-color: var(--wine); }
+
+/* ---------- torn paper → blurred tail-light band with a quiet caption (effe studio reference) ---------- */
+[data-theme="motion"] .torn { background: url('../img/motion/red-shoes.jpg') center 60% / cover no-repeat; min-height: 420px; display: grid; align-items: center; }
+[data-theme="motion"] .torn::before { background: linear-gradient(90deg, rgba(43,10,12,.78) 0%, rgba(43,10,12,.45) 50%, rgba(43,10,12,.25) 100%); }
+[data-theme="motion"] .torn__strip { clip-path: none; background: transparent; color: var(--linen); padding: 20px 0; text-align: left; }
+[data-theme="motion"] .torn__link { width: min(100% - 2 * var(--gutter), var(--container)); }
+[data-theme="motion"] .torn__shadow { display: none; }
+[data-theme="motion"] .torn__text { font-family: var(--font-display); font-weight: 500; letter-spacing: 0; text-transform: none; font-size: clamp(34px, 4.6vw, 64px); line-height: 1.02; color: var(--linen); max-width: 14ch; text-shadow: 0 2px 24px rgba(0,0,0,.5); }
+[data-theme="motion"] .torn__sign { color: var(--trail-amber); }
+
+/* ---------- mentoring / booking ---------- */
+[data-theme="motion"] .price { background: var(--paper); border-radius: 10px; }
+[data-theme="motion"] .price.is-selected { background: var(--wine); border-color: var(--wine); }
+[data-theme="motion"] .price:hover { border-color: var(--walnut); }
+[data-theme="motion"] .duration__bar i { background: var(--trail); box-shadow: 0 0 8px rgba(255,74,61,.7); }
+[data-theme="motion"] .booking { background: var(--paper); border-radius: 14px; }
+[data-theme="motion"] .booking__photo img { border-radius: 6px; }
+[data-theme="motion"] .cal__day.is-available::after { background: var(--trail); box-shadow: 0 0 6px rgba(255,74,61,.6); }
+[data-theme="motion"] .cal__circle path { stroke: var(--wine); }
+[data-theme="motion"] .slot { border-radius: 6px; }
+[data-theme="motion"] .slot.is-selected { background: var(--wine); }
+[data-theme="motion"] .how__num { border-color: var(--wine); color: var(--wine); }
+[data-theme="motion"] .step.is-active span { border-color: var(--trail); color: var(--wine); }
+
+/* ---------- contact ---------- */
+[data-theme="motion"] #contact::before { content: ''; position: absolute; inset: 0; background: url('../img/motion/walnut-chair.jpg') 85% 50% / cover no-repeat; opacity: .22; pointer-events: none; }
+[data-theme="motion"] #contact::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--linen) 0%, var(--linen) 42%, rgba(239,231,218,.6) 100%); pointer-events: none; }
+[data-theme="motion"] .contact__form { background: var(--paper); border-radius: 14px; }
+[data-theme="motion"] .form input, [data-theme="motion"] .form textarea, [data-theme="motion"] .form select { border-radius: 6px; }
+[data-theme="motion"] .form input:focus, [data-theme="motion"] .form textarea:focus, [data-theme="motion"] .form select:focus { border-color: var(--wine); box-shadow: 0 0 0 3px rgba(76,15,18,.14); }
+[data-theme="motion"] .btn--dark { background: var(--brown); border-color: var(--brown); }
+[data-theme="motion"] .btn--dark:hover { background: var(--wine); border-color: var(--wine); }
+
+/* ---------- footer: brown with a sand ribbon ---------- */
+[data-theme="motion"] .footer { background: linear-gradient(180deg, rgba(36,24,17,.82) 0%, rgba(36,24,17,.92) 100%), url('../img/motion/car-swirl.jpg') center 35% / cover no-repeat; color: rgba(239,231,218,.72); }
+[data-theme="motion"] .footer__wordmark { color: var(--sand); }
+[data-theme="motion"] .footer__tag { color: var(--sand); }
+[data-theme="motion"] .footer .nav__mono { box-shadow: 0 0 0 2px var(--sand); }
+[data-theme="motion"] .footer__links a:hover { color: var(--trail-amber); }
+
+@media (max-width: 900px) {
+  [data-theme="motion"] .hero__title-wrap::before { transform: translateX(-30px) scaleX(1.15); filter: blur(12px); }
+}
+
+/* =============================================================
+   MOTION LAYER — things that move, lights, HUD details
+   ============================================================= */
+
+/* ---------- keyframes ---------- */
+@keyframes mo-drift { from { transform: scale(1.1) translate(1.5%, -1%); } to { transform: scale(1) translate(0, 0); } }
+@keyframes mo-streak { 0% { transform: translateX(-70%) skewY(-4deg); opacity: 0; } 8% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(260%) skewY(-4deg); opacity: 0; } }
+@keyframes mo-sweep { from { transform: translateX(-140%) skewX(-18deg); } to { transform: translateX(440%) skewX(-18deg); } }
+@keyframes mo-pan { from { background-position-x: 30%; } to { background-position-x: 70%; } }
+@keyframes mo-pan-y { from { background-position-y: 30%; } to { background-position-y: 60%; } }
+@keyframes mo-pulse { 0%, 100% { box-shadow: 0 0 0 4px var(--beige), 0 0 10px rgba(255,74,61,.5); } 50% { box-shadow: 0 0 0 4px var(--beige), 0 0 22px 4px rgba(255,74,61,.85); } }
+@keyframes mo-blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+@keyframes mo-needle { 0% { transform: rotate(-8deg); } 50% { transform: rotate(6deg); } 100% { transform: rotate(-8deg); } }
+
+/* ---------- hero: slow drift, sweeping light streaks, HUD grid ---------- */
+[data-theme="motion"] .hero__bg {
+  background-image:
+    linear-gradient(rgba(239,231,218,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239,231,218,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27,8,9,.94) 0%, rgba(27,8,9,.78) 38%, rgba(27,8,9,.35) 68%, rgba(27,8,9,.55) 100%),
+    linear-gradient(180deg, rgba(27,8,9,.35) 0%, transparent 30%, transparent 70%, rgba(22,6,7,.75) 100%),
+    url('../img/motion/tacho.jpg');
+  background-size: 80px 80px, 80px 80px, auto, auto, cover;
+  background-position: 0 0, 0 0, 0 0, 0 0, 62% 48%;
+  background-repeat: repeat, repeat, no-repeat, no-repeat, no-repeat;
+  animation: mo-drift 26s cubic-bezier(.2,.7,.2,1) both;
+  transform-origin: 60% 50%;
+}
+[data-theme="motion"] .hero__bg::before,
+[data-theme="motion"] .hero__bg::after {
+  content: ''; position: absolute; left: 0; width: 55%; height: 2px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--trail) 25%, #ffd4c9 50%, var(--trail) 75%, transparent);
+  box-shadow: 0 0 12px 2px rgba(255,74,61,.75), 0 0 44px 12px rgba(255,74,61,.25), 0 16px 0 -1px rgba(255,74,61,.3);
+  filter: blur(.4px);
+  animation: mo-streak 7s linear infinite;
+}
+[data-theme="motion"] .hero__bg::before { top: 34%; }
+[data-theme="motion"] .hero__bg::after {
+  top: 74%; width: 40%; animation-duration: 11s; animation-delay: 3.5s;
+  background: linear-gradient(90deg, transparent, var(--trail-amber) 25%, #fff1e0 50%, var(--trail-amber) 75%, transparent);
+  box-shadow: 0 0 12px 2px rgba(255,179,107,.65), 0 0 44px 12px rgba(255,179,107,.2), 0 -14px 0 -1px rgba(255,179,107,.3);
+}
+
+/* HUD frame around the portrait (selection brackets, like a product poster) */
+[data-theme="motion"] .hero__figure::before,
+[data-theme="motion"] .hero__figure::after {
+  content: ''; position: absolute; width: 26px; height: 26px; border: 2px solid var(--linen); pointer-events: none; z-index: 3; opacity: .9;
+}
+[data-theme="motion"] .hero__figure::before { top: -14px; left: -14px; border-right: 0; border-bottom: 0; }
+[data-theme="motion"] .hero__figure::after { right: -14px; bottom: 46px; border-left: 0; border-top: 0; }
+[data-theme="motion"] .portrait__caption { font-family: var(--font-mono); letter-spacing: .18em; font-weight: 500; }
+[data-theme="motion"] .portrait__caption span:first-child::before { content: '[ '; color: var(--trail); }
+[data-theme="motion"] .portrait__caption span:last-child::after { content: ' ]'; color: var(--trail); }
+[data-theme="motion"] .portrait__caption span:first-child::after { content: ' // 001'; color: rgba(239,231,218,.45); }
+
+/* telemetry-style stats with a bracketed HUD frame */
+[data-theme="motion"] .stats { position: relative; padding: 24px 26px 22px; border: 1px solid rgba(239,231,218,.16); border-top-color: rgba(239,231,218,.16); border-radius: 4px; margin-top: 44px; }
+[data-theme="motion"] .stats::before, [data-theme="motion"] .stats::after { content: ''; position: absolute; width: 14px; height: 14px; border: 2px solid var(--trail); }
+[data-theme="motion"] .stats::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+[data-theme="motion"] .stats::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+[data-theme="motion"] .stat__label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(239,231,218,.55); }
+[data-theme="motion"] .stat__num { position: relative; }
+[data-theme="motion"] .stat:first-child .stat__value::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--trail); margin: 6px 0 0 8px; box-shadow: 0 0 10px rgba(255,74,61,.9); animation: mo-blink 1.6s ease-in-out infinite; }
+
+/* ---------- HUD labels throughout ---------- */
+[data-theme="motion"] .eyebrow { font-family: var(--font-mono); font-weight: 500; letter-spacing: .22em; }
+[data-theme="motion"] .eyebrow::before { content: '//'; width: auto; height: auto; background: none; opacity: 1; color: var(--trail); font-weight: 700; }
+[data-theme="motion"] .honours__label, [data-theme="motion"] .career__block-title, [data-theme="motion"] .topics__title,
+[data-theme="motion"] .tl__period, [data-theme="motion"] .tl__period small, [data-theme="motion"] .tl__media-cap,
+[data-theme="motion"] .price__meta, [data-theme="motion"] .step, [data-theme="motion"] .meta__label,
+[data-theme="motion"] .booking__photo-cap, [data-theme="motion"] .slots__sub, [data-theme="motion"] .cal__weekdays span { font-family: var(--font-mono); font-weight: 500; }
+[data-theme="motion"] .tl__tags span { font-family: var(--font-mono); font-weight: 500; letter-spacing: .1em; }
+
+/* ---------- reveals: blur-to-sharp slide, like a panning shot settling ---------- */
+[data-theme="motion"] .reveal { transform: translateX(-28px); filter: blur(10px); transition: opacity .9s var(--ease), transform 1s var(--ease), filter 1s var(--ease); }
+[data-theme="motion"] .reveal.is-visible { transform: none; filter: blur(0); }
+[data-theme="motion"] .reveal--delay { transition-delay: .18s; }
+
+/* ---------- moving backdrops ---------- */
+[data-theme="motion"] .marquee { overflow: hidden; position: relative; }
+[data-theme="motion"] .marquee::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 22%; background: linear-gradient(90deg, transparent, rgba(255,212,201,.22), transparent); animation: mo-sweep 6s linear infinite; pointer-events: none; }
+[data-theme="motion"] .banner { animation: mo-pan-y 28s ease-in-out infinite alternate; }
+[data-theme="motion"] .banner::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 18%; background: linear-gradient(90deg, transparent, rgba(255,74,61,.14), transparent); animation: mo-sweep 9s linear infinite; pointer-events: none; }
+[data-theme="motion"] .banner__inner { z-index: 1; }
+[data-theme="motion"] #motorsport .section__head::after { animation: mo-pan 16s ease-in-out infinite alternate; }
+[data-theme="motion"] .torn { animation: mo-pan 22s ease-in-out infinite alternate; }
+[data-theme="motion"] .torn::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 20%; background: linear-gradient(90deg, transparent, rgba(255,212,201,.16), transparent); animation: mo-sweep 8s linear infinite; pointer-events: none; }
+[data-theme="motion"] .torn__link { position: relative; z-index: 1; }
+[data-theme="motion"] .footer { animation: mo-pan-y 40s ease-in-out infinite alternate; }
+
+/* ---------- lights ---------- */
+[data-theme="motion"] .tl::before { animation: mo-pulse 2.6s ease-in-out infinite; }
+[data-theme="motion"] .cal__day.is-available::after { animation: mo-blink 2.2s ease-in-out infinite; }
+[data-theme="motion"] .nav__link.is-active::after { box-shadow: 0 0 10px rgba(255,74,61,.9), 0 0 22px rgba(255,74,61,.45); }
+[data-theme="motion"] .btn--gold, [data-theme="motion"] .hero .btn--gold { box-shadow: 0 14px 28px -16px rgba(255,74,61,.6), 0 0 0 1px rgba(255,212,201,.15); }
+
+/* light sweep across cards on hover */
+[data-theme="motion"] .honour, [data-theme="motion"] .topic, [data-theme="motion"] .price, [data-theme="motion"] .tl__media img { position: relative; overflow: hidden; }
+[data-theme="motion"] .honour::after, [data-theme="motion"] .topic::after, [data-theme="motion"] .price::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 40%; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  transform: translateX(-160%) skewX(-18deg); transition: transform .9s var(--ease); z-index: 2;
+}
+[data-theme="motion"] .honour:hover::after, [data-theme="motion"] .topic:hover::after, [data-theme="motion"] .price:hover::after { transform: translateX(300%) skewX(-18deg); }
+
+/* ---------- accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="motion"] *, [data-theme="motion"] *::before, [data-theme="motion"] *::after { animation: none !important; }
+  [data-theme="motion"] .reveal { filter: none; transform: none; }
+}
+@media (max-width: 900px) {
+  [data-theme="motion"] .hero__figure::after { bottom: 44px; }
+  [data-theme="motion"] .stats { padding: 18px 16px; }
+}

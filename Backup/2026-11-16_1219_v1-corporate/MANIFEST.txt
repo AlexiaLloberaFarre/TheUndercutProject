@@ -1,0 +1,5 @@
+Snapshot:  2026-11-16_1219 (Europe/Madrid)
+Label:     v1-corporate
+Based on:  3b87385 (V1: reposition for corporate clients)
+
+To restore: copy the contents of this folder over the repository root and commit.
