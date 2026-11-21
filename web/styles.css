@@ -367,9 +367,17 @@ tbody tr.clickable { cursor: pointer; }
 .rule { height: 1px; background: var(--line); margin: 16px 0; }
 
 @media print {
-  .topbar, nav.tabs, .no-print { display: none !important; }
+  .topbar, nav.tabs, .no-print, #banner-root { display: none !important; }
   body { background: #fff; }
   .paper { border: 0; box-shadow: none; padding: 0; max-width: none; }
+  /* A scroll container clips on paper instead of scrolling, so let the table
+     reflow to the page width rather than lose its right-hand columns. */
+  .table-scroll { overflow: visible; }
+  .table-scroll table { min-width: 0; }
+  .paper table { font-size: 10.5px; }
+  .paper th, .paper td { padding: 5px 7px; }
+  .paper tr, .paper li { break-inside: avoid; }
+  .paper h3 { break-after: avoid; }
 }
 
 @media (max-width: 860px) {
